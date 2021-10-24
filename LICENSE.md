@@ -5,6 +5,7 @@ The following files are *NOT* covered by this license and have their
 own licenses instead:
 
 * Files under the *Tools/nextsync* directory.
+* Files under the *Tools/tcc* directory.
 * Files under the *Tools/z88dk* directory.
 
 Please don't forget to properly attribute usage of this software in
