@@ -11,11 +11,11 @@ if errorlevel 1 exit /B 1
 if not exist %~dp0Build\Sync\Build mkdir %~dp0Build\Sync\Build
 if errorlevel 1 exit /B 1
 
-zcc ^
-	+zxn ^
+zcc +zxn ^
 	-clib=classic ^
 	-lndos ^
 	-lesxdos ^
+    -m ^
 	--opt-code-size ^
 	-o %~dp0Build\%NAME% ^
 	-create-app ^
