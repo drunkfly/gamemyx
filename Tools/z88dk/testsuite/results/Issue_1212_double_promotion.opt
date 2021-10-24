@@ -1,0 +1,344 @@
+
+
+
+
+
+	INCLUDE "z80_crt0.hdr"
+
+
+	SECTION	code_compiler
+
+._main
+	ld	hl,0	;const
+	push	hl
+	push	bc
+	jp	i_4
+.i_2
+	pop	de
+	pop	hl
+	inc	hl
+	push	hl
+	push	de
+.i_4
+	pop	bc
+	pop	hl
+	push	hl
+	push	bc
+	ld	a,l
+	sub	144
+	ld	a,h
+	rla
+	ccf
+	rra
+	sbc	128
+	jp	nc,i_3
+	pop	bc
+	pop	hl
+	push	hl
+	push	bc
+	call	l_int2long_s_float
+	call	dpush
+	ld	hl,i_5+0
+	call	dload
+	call	dmul
+	call	dpush
+	ld	hl,i_6+0
+	call	dload
+	call	dmul
+	ld	a,3
+	call	l_f48_ldexp
+	call	dpush
+	call	sin
+	pop	bc
+	pop	bc
+	pop	bc
+	call	dpush
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dswap
+	call	dsub
+	call	dpush
+	ld	hl,24	;const
+	call	l_int2long_u_float
+	call	dmul
+	call	ifix
+	pop	bc
+	push	hl
+	ld	hl,i_1+0
+	push	hl
+	ld	hl,4	;const
+	call	l_gintspsp	;
+	ld	hl,4	;const
+	add	hl,sp
+	call	l_gint	;
+	push	hl
+	ld	a,3
+	call	printf
+	pop	bc
+	pop	bc
+	pop	bc
+	jp	i_2
+.i_3
+	ld	hl,0	;const
+	pop	de
+	pop	bc
+	push	hl
+	push	de
+	jp	i_9
+.i_7
+	pop	de
+	pop	hl
+	inc	hl
+	push	hl
+	push	de
+.i_9
+	pop	bc
+	pop	hl
+	push	hl
+	push	bc
+	ld	a,l
+	sub	144
+	ld	a,h
+	rla
+	ccf
+	rra
+	sbc	128
+	jp	nc,i_8
+	pop	bc
+	pop	hl
+	push	hl
+	push	bc
+	call	l_int2long_s_float
+	call	dpush
+	ld	hl,i_5+0
+	call	dload
+	call	dmul
+	call	dpush
+	ld	hl,i_6+0
+	call	dload
+	call	dmul
+	ld	a,3
+	call	l_f48_ldexp
+	call	dpush
+	call	sin
+	pop	bc
+	pop	bc
+	pop	bc
+	call	dpush
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dswap
+	call	dsub
+	call	dpush
+	ld	hl,24	;const
+	call	l_int2long_u_float
+	call	dmul
+	call	ifix
+	pop	bc
+	push	hl
+	ld	hl,i_1+0
+	push	hl
+	ld	hl,4	;const
+	call	l_gintspsp	;
+	ld	hl,4	;const
+	add	hl,sp
+	call	l_gint	;
+	push	hl
+	ld	a,3
+	call	printf
+	pop	bc
+	pop	bc
+	pop	bc
+	jp	i_7
+.i_8
+	ld	hl,0	;const
+	pop	bc
+	pop	bc
+	ret
+
+
+	SECTION	rodata_compiler
+.i_1
+	defm	"%d, %d"
+	defb	10
+
+	defm	""
+	defb	0
+
+.i_5
+	;0.006944
+	defb	0x8e,0xe3,0x38,0x8e,0x63,0x79
+.i_6
+	;3.140000
+	defb	0x5c,0x8f,0xc2,0xf5,0x48,0x82
+
+
+	SECTION	bss_compiler
+	SECTION	code_compiler
+
+
+
+	GLOBAL	f16_f48
+	GLOBAL	f16_f32
+	GLOBAL	f48_f16
+	GLOBAL	f32_f16
+	GLOBAL	i16_f16
+	GLOBAL	u16_f16
+	GLOBAL	i32_f16
+	GLOBAL	u32_f16
+	GLOBAL	f16_i8
+	GLOBAL	f16_i16
+	GLOBAL	f16_i32
+	GLOBAL	f16_u8
+	GLOBAL	f16_u16
+	GLOBAL	f16_u32
+	GLOBAL	addf16
+	GLOBAL	subf16
+	GLOBAL	mulf16
+	GLOBAL	divf16
+	GLOBAL	fmaf16
+	GLOBAL	polyf16
+	GLOBAL	hypotf16
+	GLOBAL	sqrtf16
+	GLOBAL	div2f16
+	GLOBAL	mul2f16
+	GLOBAL	mul10f16
+	GLOBAL	acosf16
+	GLOBAL	asinf16
+	GLOBAL	atanf16
+	GLOBAL	cosf16
+	GLOBAL	sinf16
+	GLOBAL	tanf16
+	GLOBAL	expf16
+	GLOBAL	exp2f16
+	GLOBAL	exp10f16
+	GLOBAL	logf16
+	GLOBAL	log2f16
+	GLOBAL	log10f16
+	GLOBAL	powf16
+	GLOBAL	ceilf16
+	GLOBAL	floorf16
+	GLOBAL	frexpf16
+	GLOBAL	ldexpf16
+	GLOBAL	invf16
+	GLOBAL	invsqrtf16
+	GLOBAL	fabsf16
+	GLOBAL	negf16
+	GLOBAL	cos
+	GLOBAL	tan
+	GLOBAL	sin
+	GLOBAL	acos
+	GLOBAL	asin
+	GLOBAL	atan
+	GLOBAL	atan2
+	GLOBAL	cosh
+	GLOBAL	sinh
+	GLOBAL	tanh
+	GLOBAL	asinh
+	GLOBAL	acosh
+	GLOBAL	atanh
+	GLOBAL	pow
+	GLOBAL	sqrt
+	GLOBAL	exp
+	GLOBAL	log
+	GLOBAL	log10
+	GLOBAL	floor
+	GLOBAL	ceil
+	GLOBAL	modf
+	GLOBAL	ldexp
+	GLOBAL	frexp
+	GLOBAL	fabs
+	GLOBAL	fmod
+	GLOBAL	amax
+	GLOBAL	amin
+	GLOBAL	halfpi
+	GLOBAL	pi
+	GLOBAL	atof
+	GLOBAL	ftoa
+	GLOBAL	ftoe
+	GLOBAL	fprand
+	GLOBAL	fpseed
+	GLOBAL	fpclassify
+	GLOBAL	open
+	GLOBAL	creat
+	GLOBAL	close
+	GLOBAL	read
+	GLOBAL	write
+	GLOBAL	lseek
+	GLOBAL	readbyte
+	GLOBAL	writebyte
+	GLOBAL	getcwd
+	GLOBAL	chdir
+	GLOBAL	getwd
+	GLOBAL	rmdir
+	GLOBAL	_RND_BLOCKSIZE
+	GLOBAL	rnd_loadblock
+	GLOBAL	rnd_saveblock
+	GLOBAL	rnd_erase
+	GLOBAL	__FOPEN_MAX
+	GLOBAL	__sgoioblk
+	GLOBAL	__sgoioblk_end
+	GLOBAL	fopen_zsock
+	GLOBAL	fileno
+	GLOBAL	fopen
+	GLOBAL	freopen
+	GLOBAL	fdopen
+	GLOBAL	_freopen1
+	GLOBAL	fmemopen
+	GLOBAL	funopen
+	GLOBAL	fclose
+	GLOBAL	fflush
+	GLOBAL	closeall
+	GLOBAL	fgets
+	GLOBAL	fputs
+	GLOBAL	fputc
+	GLOBAL	fputs_callee
+	GLOBAL	fputc_callee
+	GLOBAL	fgetc
+	GLOBAL	ungetc
+	GLOBAL	feof
+	GLOBAL	ferror
+	GLOBAL	puts
+	GLOBAL	ftell
+	GLOBAL	fgetpos
+	GLOBAL	fseek
+	GLOBAL	fread
+	GLOBAL	fwrite
+	GLOBAL	gets
+	GLOBAL	printf
+	GLOBAL	fprintf
+	GLOBAL	sprintf
+	GLOBAL	snprintf
+	GLOBAL	vfprintf
+	GLOBAL	vsnprintf
+	GLOBAL	printn
+	GLOBAL	scanf
+	GLOBAL	fscanf
+	GLOBAL	sscanf
+	GLOBAL	vfscanf
+	GLOBAL	vsscanf
+	GLOBAL	getarg
+	GLOBAL	fchkstd
+	GLOBAL	fgetc_cons
+	GLOBAL	fgetc_cons_inkey
+	GLOBAL	fputc_cons
+	GLOBAL	fgets_cons
+	GLOBAL	puts_cons
+	GLOBAL	fabandon
+	GLOBAL	fdtell
+	GLOBAL	fdgetpos
+	GLOBAL	rename
+	GLOBAL	remove
+	GLOBAL	getk
+	GLOBAL	getk_inkey
+	GLOBAL	printk
+	GLOBAL	perror
+	GLOBAL	set_fputc_cons
+	GLOBAL	fputc_cons_native
+	GLOBAL	fputc_cons_generic
+	GLOBAL	fputc_cons_ansi
+	GLOBAL	_main
+
+
+
+

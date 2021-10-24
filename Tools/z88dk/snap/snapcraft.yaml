@@ -1,0 +1,96 @@
+name: z88dk
+base: core18
+summary: Development kit for Z80 machiens
+adopt-info: part-z88dk
+
+description: |
+  C compiler, assembler and libraries for over 100 z80 family machines.
+  
+  Z88DK is a collection of software development tools that targets the
+  8080 and z80 family of machines. It allows development of programs in C,
+  assembly language or any mixture of the two. What makes z88dk unique is 
+  its ease of use, built-in support for many z80 machines and its extensive 
+  set of assembly language library subroutines implementing the C standard 
+  and extensions.
+
+grade: devel 
+confinement: strict
+
+
+parts:
+  part-z88dk:
+    plugin: make
+    source-type: git
+    source: https://github.com/z88dk/z88dk.git
+    override-pull: |
+      snapcraftctl pull
+      version="$(git rev-list --count HEAD)-$(git rev-parse --short HEAD)-$(date +%Y%m%d)"
+      snapcraftctl set-version "$version"
+    build-environment:
+      - BUILD_SDCC: "1"
+      - BUILD_SDCC_HTTP: "1"
+    override-build: |
+      ./build.sh -i $SNAP 
+      make DESTDIR=$SNAPCRAFT_PART_INSTALL install
+    build-packages:
+      - build-essential
+      - dos2unix
+      - libboost-all-dev
+      - texinfo
+      - texi2html
+      - libxml2-dev
+      - subversion
+      - bison
+      - flex
+      - zlib1g-dev
+      - m4
+      - curl
+    stage-packages:
+      - libicu60
+      - libxml2
+      - m4
+
+apps:
+  zcc:
+    command: bin/zcc
+    environment:
+      ZCCCFG: "$SNAP/share/z88dk/lib/config"
+    plugs: [home, removable-media]
+  z88dk-appmake:
+    command: bin/z88dk-appmake
+    plugs: [home, removable-media]
+  z88dk-z80asm:
+    command: bin/z88dk-z80asm
+    plugs: [home, removable-media]
+  z88dk-dis:
+    command: bin/z88dk-dis
+    plugs: [home, removable-media]
+  z88dk-ticks:
+    command: bin/z88dk-ticks
+    plugs: [home, removable-media]
+  z88dk-zx7:
+    command: bin/z88dk-zx7
+    plugs: [home, removable-media]
+  z88dk-dzx7:
+    command: bin/z88dk-dzx7
+    plugs: [home, removable-media]
+  z88dk-lib:
+    command: bin/z88dk-lib
+    plugs: [home, removable-media]
+  z88dk-z80nm:
+    command: bin/z88dk-z80nm
+    plugs: [home, removable-media]
+  z88dk-zobjcopy:
+    command: bin/z88dk-zobjcopy
+    plugs: [home, removable-media]
+  z88dk-basck:
+    command: bin/z88dk-basck
+    plugs: [home, removable-media]
+  z88dk-z80svg:
+    command: bin/z88dk-z80svg
+    plugs: [home, removable-media]
+  z88dk-font2pv1000:
+    command: bin/z88dk-font2pv1000
+    plugs: [home, removable-media]
+
+

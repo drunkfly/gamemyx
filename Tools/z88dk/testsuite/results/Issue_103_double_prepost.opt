@@ -1,0 +1,260 @@
+
+
+
+
+
+	INCLUDE "z80_crt0.hdr"
+
+
+	SECTION	code_compiler
+
+._double_post_increment
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dadd
+	pop	hl
+	call	dstore
+	call	dpush
+	ld	hl,65535	;const
+	call	l_int2long_s_float
+	call	dadd
+	ld	hl,0	;const
+	add	hl,sp
+	call	dload
+	pop	bc
+	pop	bc
+	pop	bc
+	ret
+
+
+
+._double_post_increment_assign
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	push	bc
+	push	bc
+	push	bc
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	ld	hl,8	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dadd
+	pop	hl
+	call	dstore
+	call	dpush
+	ld	hl,65535	;const
+	call	l_int2long_s_float
+	call	dadd
+	pop	hl
+	call	dstore
+	ld	hl,6	;const
+	add	hl,sp
+	call	dload
+	ld	hl,12	;const
+	add	hl,sp
+	ld	sp,hl
+	ret
+
+
+
+._double_pre_increment
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dadd
+	pop	hl
+	call	dstore
+	ld	hl,0	;const
+	add	hl,sp
+	call	dload
+	pop	bc
+	pop	bc
+	pop	bc
+	ret
+
+
+
+._double_pre_increment_assign
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	push	bc
+	push	bc
+	push	bc
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	ld	hl,8	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dadd
+	pop	hl
+	call	dstore
+	pop	hl
+	call	dstore
+	ld	hl,6	;const
+	add	hl,sp
+	call	dload
+	ld	hl,12	;const
+	add	hl,sp
+	ld	sp,hl
+	ret
+
+
+
+._double_post_decrement
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,65535	;const
+	call	l_int2long_s_float
+	call	dadd
+	pop	hl
+	call	dstore
+	call	dpush
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dadd
+	ld	hl,0	;const
+	add	hl,sp
+	call	dload
+	pop	bc
+	pop	bc
+	pop	bc
+	ret
+
+
+
+._double_post_decrement_assign
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	push	bc
+	push	bc
+	push	bc
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	ld	hl,8	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,65535	;const
+	call	l_int2long_s_float
+	call	dadd
+	pop	hl
+	call	dstore
+	call	dpush
+	ld	hl,1	;const
+	call	l_int2long_u_float
+	call	dadd
+	pop	hl
+	call	dstore
+	ld	hl,6	;const
+	add	hl,sp
+	call	dload
+	ld	hl,12	;const
+	add	hl,sp
+	ld	sp,hl
+	ret
+
+
+
+._double_pre_decrement
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,65535	;const
+	call	l_int2long_s_float
+	call	dadd
+	pop	hl
+	call	dstore
+	ld	hl,0	;const
+	add	hl,sp
+	call	dload
+	pop	bc
+	pop	bc
+	pop	bc
+	ret
+
+
+
+._double_pre_decrement_assign
+	ld	hl,3	;const
+	call	l_int2long_u_float
+	call	dpush
+	push	bc
+	push	bc
+	push	bc
+	ld	hl,0	;const
+	add	hl,sp
+	push	hl
+	ld	hl,8	;const
+	add	hl,sp
+	push	hl
+	call	dldpsh
+	ld	hl,65535	;const
+	call	l_int2long_s_float
+	call	dadd
+	pop	hl
+	call	dstore
+	pop	hl
+	call	dstore
+	ld	hl,6	;const
+	add	hl,sp
+	call	dload
+	ld	hl,12	;const
+	add	hl,sp
+	ld	sp,hl
+	ret
+
+
+
+
+	SECTION	bss_compiler
+	SECTION	code_compiler
+
+
+
+	GLOBAL	_double_post_increment
+	GLOBAL	_double_post_increment_assign
+	GLOBAL	_double_pre_increment
+	GLOBAL	_double_pre_increment_assign
+	GLOBAL	_double_post_decrement
+	GLOBAL	_double_post_decrement_assign
+	GLOBAL	_double_pre_decrement
+	GLOBAL	_double_pre_decrement_assign
+
+
+
+
