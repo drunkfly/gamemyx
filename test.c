@@ -7,6 +7,8 @@ __sfr __banked __at 0x253b Next_RegisterValue;
 
 __sfr __banked __at 0x123b Next_Layer2AccessPort;
 
+#define NEXT_LAYER2_XOFFSET     0x16
+#define NEXT_LAYER2_YOFFSET     0x17
 #define NEXT_PALETTEINDEX       0x40
 #define NEXT_PALETTEVALUE8      0x41
 #define NEXT_PALETTECONTROL     0x43
@@ -38,19 +40,23 @@ int main()
     di
     __endasm;
 
+    int i = 0;
+    for (int bank = 0; bank < 3; bank++) {
+        Next_Layer2AccessPort = (bank << 6) | 3; // xx000011
+        unsigned char* p = (unsigned char*)0;
+        unsigned char* end = (unsigned char*)0x4000;
+        for (; p < end; p++, i++)
+            *p = (i & 0xff);
+    }
+
     int offset = 0;
     for (;;) {
-        int i = offset;
+        //int i = offset;
 
         ZX_Control = (offset & 7);
+        NEXT_SETREG(NEXT_LAYER2_XOFFSET, (offset & 0xff));
 
-        for (int bank = 0; bank < 3; bank++) {
-            Next_Layer2AccessPort = (bank << 6) | 3; // xx000011
-            unsigned char* p = (unsigned char*)0;
-            unsigned char* end = (unsigned char*)0x4000;
-            for (; p < end; p++, i++)
-                *p = (i & 0xff);
-        }
+        for (i = 0; i < 16384; i++) {}
 
         offset++;
     }
