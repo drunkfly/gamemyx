@@ -12,6 +12,7 @@ if not exist %~dp0Build\Sync\Build mkdir %~dp0Build\Sync\Build
 if errorlevel 1 exit /B 1
 
 zcc +zxn ^
+    -I%~dp0Engine ^
 	-clib=classic ^
 	-lndos ^
 	-lesxdos ^

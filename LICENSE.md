@@ -4,6 +4,7 @@ Text of the license can be found below.
 The following files are *NOT* covered by this license and have their
 own licenses instead:
 
+* Files under the *Data/MiniWorldSprites* directory.
 * Files under the *Tools/nextsync* directory.
 * Files under the *Tools/tcc* directory.
 * Files under the *Tools/z88dk* directory.

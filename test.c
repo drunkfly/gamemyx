@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "engine.h"
 
 __sfr __at 0xfe ZX_Control;
 
@@ -24,6 +25,7 @@ __sfr __banked __at 0x303b Next_SpriteControl;
 #define NEXT_PALETTEINDEX       0x40
 #define NEXT_PALETTEVALUE8      0x41
 #define NEXT_PALETTECONTROL     0x43
+#define NEXT_SPRITETRANSPARENCY 0x4b
 
 #define NEXT_TILEMAPCONTROL     0x6b
 #define NEXT_TILEBASE           0x6e
@@ -71,7 +73,13 @@ static const unsigned char TileData[] = {
         0x33, 0x33, 0x33, 0x44,
     };
 
+static const unsigned char SpritePalette[] = {
+#include "Game/Data/Palettes/SwordsmanPalette.h"
+};
+
 static const unsigned char SpriteData[] = {
+#include "Game/Data/Sprites/SwordsmanIdleFront.h"
+/*
         0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3,
         0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3,
         0x04, 0xFF, 0xFB, 0xFB, 0xFB, 0xFF, 0x04, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3,
@@ -88,6 +96,7 @@ static const unsigned char SpriteData[] = {
         0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0x04, 0x4D, 0x4D, 0x04, 0xE3, 0x04, 0xF5, 0x04, 0xE3,
         0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0x04, 0x04, 0xE3, 0xE3, 0xE3, 0x04, 0xFA, 0x04,
         0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0xE3, 0x04, 0x04,
+*/
     };
 
 int main()
@@ -95,15 +104,6 @@ int main()
     // Enabling layer 2
 
     Next_Layer2AccessPort = 3; // 00000011
-
-    // Loading layer2 palette
-
-    /*
-    NEXT_SETREG(NEXT_PALETTECONTROL, 0x10); // 00010000
-    NEXT_SETREG(NEXT_PALETTEINDEX, 0);
-    for (int i = 0; i < 256; i++)
-        NEXT_SETREG(NEXT_PALETTEVALUE8, (unsigned char)i);
-    */
 
     // Drawing to layer2
 
@@ -134,6 +134,12 @@ int main()
 
     NEXT_SETREG(NEXT_SPRITELAYERMODE,
         NEXT_GETREG(NEXT_SPRITELAYERMODE) | 0x01);
+
+    NEXT_SETREG(NEXT_PALETTECONTROL, 0x20); // 00100000
+    NEXT_SETREG(NEXT_PALETTEINDEX, 0);
+    for (int i = 0; i < 16; i++)
+        NEXT_SETREG(NEXT_PALETTEVALUE8, SpritePalette[i]);
+    NEXT_SETREG(NEXT_SPRITETRANSPARENCY, TRANSPARENT_COLOR_INDEX4);
 
     // Tiles
 
@@ -187,9 +193,9 @@ int main()
         x += dx;
         y += dy;
         if (x == 31) dx = 1;
-        if (x == 319) dx = -1;
+        if (x == 319-32-16) dx = -1;
         if (y == 31) dy = 1;
-        if (y == 255) dy = -1;
+        if (y == 255-32-16) dy = -1;
 
         offset++;
     }
