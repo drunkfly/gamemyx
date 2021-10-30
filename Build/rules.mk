@@ -1,7 +1,18 @@
 
-HDRS=$(wildcard *.h) $(wildcard $(ROOTDIR)/Engine/*.h)
-SRCS=$(wildcard *.c)
-OBJS=$(SRCS:%.c=$(OUTDIR)/%.o)
+HDRS=\
+    $(wildcard *.h) \
+    $(wildcard $(ROOTDIR)/Engine/*.h)
+
+SRCS=\
+    $(wildcard *.c) \
+    $(wildcard Platform/ZXNext/*.c)
+
+ASMS=\
+    $(wildcard Platform/ZXNext/*.asm)
+
+OBJS=\
+    $(SRCS:%.c=$(OUTDIR)/%.o) \
+    $(ASMS:%.asm=$(OUTDIR)/%.o)
 
 MKFIL=\
     Makefile \
@@ -19,6 +30,10 @@ $(ROOTDIR)/Build/Lib/$(NAME).lib: $(OBJS) $(OUTDIR)
 	@$(AS) -x$(ROOTDIR)/Build/Lib/$(NAME).lib $(OBJS)
 
 $(OUTDIR)/%.o: %.c $(HDRS) $(OUTDIR) $(MKFIL)
+	@echo $(NAME)/$<
+	@$(CC) $(CFLAGS) -c -o "$@" "$<"
+
+$(OUTDIR)/%.o: %.asm $(OUTDIR) $(MKFIL)
 	@echo $(NAME)/$<
 	@$(CC) $(CFLAGS) -c -o "$@" "$<"
 

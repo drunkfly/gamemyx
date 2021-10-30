@@ -16,9 +16,9 @@ $(OUTDIR)/Bin:
 $(OUTDIR)/Lib:
 	@$(MKDIR) "$(OUTDIR)/Lib"
 
-$(OUTDIR)/Bin/$(NAME).nex: $(OUTDIR)/Bin engine game tools
+$(OUTDIR)/Bin/$(NAME).nex: $(OUTDIR)/Bin mmap.h engine game tools
 	@echo $(NAME).nex
-	@$(LD) $(LDFLAGS) -o "$(OUTDIR)/Bin/$(NAME)" "-L$(OUTDIR)/Lib" -lgame -lengine Engine/main.c
+	@$(LD) $(LDFLAGS) -o "$(OUTDIR)/Bin/$(NAME)" "-L$(OUTDIR)/Lib" -lgame -lengine -pragma-include:mmap.h Engine/main.c
 
 $(OUTDIR)/Sync/Build/$(NAME).nex: $(OUTDIR)/Bin/$(NAME).nex
 	@rem FIXME slashes on POSIX
