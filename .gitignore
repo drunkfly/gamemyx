@@ -1,1 +1,5 @@
-/Build/*
+/Build/Bin
+/Build/Engine
+/Build/Game
+/Build/Lib
+/Build/Sync
