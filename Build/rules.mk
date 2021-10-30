@@ -26,7 +26,7 @@ $(OUTDIR):
 	@$(MKDIR) "$(OUTDIR)"
 
 $(ROOTDIR)/Build/Lib/$(NAME).lib: $(OBJS) $(OUTDIR)
-	@echo $(NAME)
+	@echo $(NAME).lib
 	@$(AS) -x$(ROOTDIR)/Build/Lib/$(NAME).lib $(OBJS)
 
 $(OUTDIR)/%.o: %.c $(HDRS) $(OUTDIR) $(MKFIL)
