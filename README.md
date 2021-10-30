@@ -1,16 +1,49 @@
+MYX Game Engine
+===============
+
+**M**ake **Y**our e**X**citing game engine is designed to simplify
+development of games for ZX Spectrum Next (and, in the future,
+for other platforms). Development is done in C and Z80 Assembler
+languages.
+
+For terms of use see Legal section below.
+
+Getting started
+---------------
+
+This engine has batteries included! Everything you need to start
+developing games is contained in this repository. Clone the repository
+and start making your new game!
+
+Currently only Windows platform is supported. Support for Linux and
+MacOS is planned in the future.
+
+YouTube
+-------
+
+Development of this game engine was streamed online since the beginning.
+Check out the following videos (sorry, Russian language only):
+
+* #1 https://www.youtube.com/watch?v=bbfZnLnkSbg
+* #2 https://www.youtube.com/watch?v=pxaxFXJbg7A
+
+Legal
+-----
+
 This software is licensed to you under the 3-clause BSD license.
 Text of the license can be found below.
+
+**Please don't forget to properly attribute use of this software in
+your product (as required by p.2 of the license).**
 
 The following files are *NOT* covered by this license and have their
 own licenses instead:
 
 * Files under the *Data/MiniWorldSprites* directory.
+* Files under the *Tools/make* directory.
 * Files under the *Tools/nextsync* directory.
 * Files under the *Tools/tcc* directory.
 * Files under the *Tools/z88dk* directory.
-
-Please don't forget to properly attribute usage of this software in
-your product (as required by p.2 of the license).
 
 ```
 Copyright (c) 2021 DrunkFly Team
