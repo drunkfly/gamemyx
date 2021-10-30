@@ -1,6 +1,7 @@
 
 HDRS=\
     $(wildcard *.h) \
+    $(wildcard Platform/ZXNext/*.h) \
     $(wildcard $(ROOTDIR)/Engine/*.h)
 
 SRCS=\

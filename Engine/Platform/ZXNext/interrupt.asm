@@ -22,11 +22,6 @@ _IntEntry:      push    af
                 push    hl
                 push    ix
                 push    iy
-    ld a, (count)
-    inc a
-    and a,7
-    ld (count), a
-    out (0xfe),a
                 call    _InterruptHandler
                 pop     iy
                 pop     ix
@@ -42,8 +37,6 @@ _IntEntry:      push    af
                 pop     af
                 ei
                 ret
-
-count: db 3
 
                 SECTION INT_VECTORS
 

@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2021 DrunkFly Team
+ * Licensed under 3-clause BSD license
+ */
+#include "zxnext.h"
+
+void PlatformInit()
+{
+    NEXT_SETREG(NEXT_SPRITELAYERMODE,
+        NEXT_SPRITE_127_ON_TOP |
+        NEXT_ORDER_SPRITES_LAYER2_ULA |
+        NEXT_SPRITES_VISIBLE);
+
+    NEXT_SETREG(NEXT_PALETTECONTROL,
+        NEXT_DRAW_LAYER2_PALETTE0 |
+        NEXT_DRAW_SPRITES_PALETTE0 |
+        NEXT_DRAW_ULA_PALETTE0);
+
+    NEXT_SETREG(NEXT_SPRITETRANSPARENCY, TRANSPARENT_COLOR_INDEX4);
+}

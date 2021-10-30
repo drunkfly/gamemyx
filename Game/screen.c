@@ -4,6 +4,13 @@
  */
 #include "engine_p.h"
 
-void InterruptHandler()
+void BeginFrame()
 {
+    BeginSprites();
+}
+
+void EndFrame()
+{
+    EndSprites();
+    __asm halt __endasm;
 }
