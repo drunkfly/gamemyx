@@ -7,8 +7,37 @@
 
 #include "engine.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define MAX_TILESET_NAME 64
+
+enum Func
+{
+    FUNC_NONE = 0,
+    FUNC_PLAYERSTART,
+};
+
+STRUCT(Tileset);
+
+STRUCT(Tile)
+{
+    int id;
+    Tileset* tileset;
+    bool blocking;
+    enum Func func;
+};
+
+struct Tileset
+{
+    char name[MAX_TILESET_NAME];
+    int tileCount;
+    Tile* tiles;
+    int imageWidth;
+    int imageHeight;
+    void* imagePixels;
+};
 
 STRUCT(HistogramEntry)
 {
@@ -26,11 +55,21 @@ extern int imageAreaH;
 extern unsigned char palette4[16];
 extern HistogramEntry histogram[256];
 
+extern Tileset tilesets[];
+extern int tilesetCount;
+
 void unloadImage();
 void loadImage(const char* file);
 void buildImageHistogram();
 void makeImagePalette4();
 void outputImagePalette4(const char* file);
 void output4BitImage(const char* file);
+
+void unloadTilemap();
+void loadTilemap(const char* file);
+
+void unloadTilesets();
+void loadTileset(const char* file);
+Tileset* findTileset(const char* file);
 
 #endif

@@ -13,12 +13,14 @@
 int main(int argc, char** argv)
 {
     atexit(unloadImage);
+    atexit(unloadTilesets);
+    atexit(unloadTilemap);
 
     for (int i = 0; i < 256; i++)
         histogram[i].index = i;
 
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-in")) {
+        if (!strcmp(argv[i], "-loadimage")) {
             CHECK_ARG
             loadImage(argv[++i]);
         } else if (!strcmp(argv[i], "-area16x16")) {
@@ -39,12 +41,20 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-outpalette4")) {
             CHECK_ARG
             outputImagePalette4(argv[++i]);
-        } else if (!strcmp(argv[i], "-out4")) {
+        } else if (!strcmp(argv[i], "-outsprite4")) {
             CHECK_ARG
             output4BitImage(argv[++i]);
+        } else if (!strcmp(argv[i], "-loadtsx")) {
+            CHECK_ARG
+            loadTileset(argv[++i]);
+        } else if (!strcmp(argv[i], "-loadtmx")) {
+            CHECK_ARG
+            loadTilemap(argv[++i]);
         } else {
             fprintf(stderr, "error: unknown command line argument \"%s\".\n", argv[i]);
             return 1;
         }
     }
+
+    return 0;
 }
