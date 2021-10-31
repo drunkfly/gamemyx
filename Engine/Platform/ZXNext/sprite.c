@@ -48,10 +48,13 @@ HSprite CreateSprite(const void* data, byte paletteIndex)
     pSprite->attr3 = 0x80 | /* sprite visible */
                      0x40 | /* enable attribute byte 4 */
                      (byte)(SpriteCount & 0x3f);
-    pSprite->attr4 = (SpriteCount & 0x40);
+    pSprite->attr4 = 0;
+
+    const byte* p = (const byte*)data;
+    if ((*p & SPRITE_FLAG_256COLOR) == 0) // if set, 256 color
+        pSprite->attr4 = 0x80 | (SpriteCount & 0x40);
 
     Next_SpriteControl = SpriteCount;
-    const byte* p = (const byte*)data;
     for (int i = 0; i < 16*16; i++) /* FIXME */
        Next_SpritePattern = *p++;
 

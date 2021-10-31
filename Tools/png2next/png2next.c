@@ -117,7 +117,10 @@ static void output4Bit(const char* file)
         exit(1);
     }
 
+    fprintf(f, "SPRITE_FLAG_16COLOR,\n");
+
     for (int y = 0; y < areaH; y++) {
+        unsigned char pixel = 0;
         for (int x = 0; x < areaW; x++) {
             unsigned char r = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 0];
             unsigned char g = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 1];
@@ -125,7 +128,12 @@ static void output4Bit(const char* file)
             unsigned char a = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 3];
 
             if (a < 128) {
-                fprintf(f, "0x%02X,", TRANSPARENT_COLOR_INDEX4);
+                if (x % 2 == 0)
+                    pixel = TRANSPARENT_COLOR_INDEX4;
+                else {
+                    pixel |= (TRANSPARENT_COLOR_INDEX4 << 4);
+                    fprintf(f, "0x%02X,", pixel);
+                }
                 continue;
             }
 
@@ -167,7 +175,12 @@ static void output4Bit(const char* file)
                 }
             }
 
-            fprintf(f, "0x%02X,", paletteIndex);
+            if (x % 2 == 0)
+                pixel = paletteIndex;
+            else {
+                pixel |= (paletteIndex << 4);
+                fprintf(f, "0x%02X,", pixel);
+            }
         }
         fprintf(f, "\n");
     }

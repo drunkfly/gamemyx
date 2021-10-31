@@ -7,7 +7,7 @@
 
 #include "engine_p.h"
 
-#define NEXT_MAX_SPRITES                    32
+#define NEXT_MAX_SPRITES                    64
 
 /*
  * Sprite and Layers system
