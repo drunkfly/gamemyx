@@ -12,7 +12,6 @@ STRUCT(Sprite)
     byte attr2;
     byte attr3;
     byte attr4;
-    byte reserved;
 };
 
 void BeginSprites();

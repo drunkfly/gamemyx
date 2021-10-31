@@ -5,15 +5,39 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#define TRANSPARENT_COLOR_INDEX4 0
+#include <stdbool.h>
 
-#define SPRITE_FLAG_16COLOR     0x00
-#define SPRITE_FLAG_256COLOR    0x01
+/**********************************************************************/
+/* Common */
 
 #define STRUCT(X) struct X; typedef struct X X; struct X
 
 typedef unsigned char byte;
 typedef unsigned short word;
+
+/**********************************************************************/
+/* Input */
+
+#ifdef ZXNEXT
+#include "Platform/ZXNext/keys.h"
+#endif
+
+bool IsKeyPressed(byte key)
+    __z88dk_fastcall __preserves_regs(d, e, iyl, iyh);
+
+bool IsGamepad1Pressed(byte key)
+    __z88dk_fastcall __preserves_regs(b, c, d, e, h, iyl, iyh);
+
+bool IsGamepad2Pressed(byte key)
+    __z88dk_fastcall __preserves_regs(b, c, d, e, h, iyl, iyh);
+
+/**********************************************************************/
+/* Sprites */
+
+#define TRANSPARENT_COLOR_INDEX4 0
+
+#define SPRITE_FLAG_16COLOR     0x00
+#define SPRITE_FLAG_256COLOR    0x01
 
 typedef unsigned char HSprite;
 
@@ -23,6 +47,8 @@ void DestroyAllSprites();
 void SetSpritePalette(byte index, const void* data, byte count);
 
 void PutSprite(int x, byte y, HSprite sprite);
+
+/**********************************************************************/
 
 void BeginFrame();
 void EndFrame();

@@ -12,8 +12,8 @@ ASMS=\
     $(wildcard Platform/ZXNext/*.asm)
 
 OBJS=\
-    $(SRCS:%.c=$(OUTDIR)/%.o) \
-    $(ASMS:%.asm=$(OUTDIR)/%.o)
+    $(SRCS:%.c=$(OUTDIR)/%.c.o) \
+    $(ASMS:%.asm=$(OUTDIR)/%.asm.o)
 
 MKFIL=\
     Makefile \
@@ -30,11 +30,12 @@ $(ROOTDIR)/Build/Lib/$(NAME).lib: $(OBJS) $(OUTDIR)
 	@echo $(NAME).lib
 	@$(AS) -x$(ROOTDIR)/Build/Lib/$(NAME).lib $(OBJS)
 
-$(OUTDIR)/%.o: %.c $(HDRS) $(OUTDIR) $(MKFIL)
+$(OUTDIR)/%.c.o: %.c $(HDRS) $(OUTDIR) $(MKFIL)
 	@echo $(NAME)/$<
 	@$(CC) $(CFLAGS) -c -o "$@" "$<"
+	@$(CC) $(CFLAGS) -S -o "$@.asm" "$<"
 
-$(OUTDIR)/%.o: %.asm $(OUTDIR) $(MKFIL)
+$(OUTDIR)/%.asm.o: %.asm $(OUTDIR) $(MKFIL)
 	@echo $(NAME)/$<
 	@$(CC) $(CFLAGS) -c -o "$@" "$<"
 

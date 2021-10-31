@@ -29,6 +29,7 @@ include "../../clib_rodata.inc"
 SECTION rodata_lib
 SECTION rodata_compiler
 SECTION rodata_user
+SECTION engine_input
 SECTION CODE_END
 
 SECTION DATA

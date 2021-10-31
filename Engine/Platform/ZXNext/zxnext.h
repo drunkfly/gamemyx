@@ -10,6 +10,61 @@
 #define NEXT_MAX_SPRITES                    64
 
 /*
+ * Peripheral 1 setting
+ */
+
+#define NEXT_PERIPHERALCONTROL1             0x05
+
+#define NEXT_JOY1_SINCLAIR2                 0x00
+#define NEXT_JOY1_KEMPSTON1                 0x40
+#define NEXT_JOY1_CURSOR                    0x80
+#define NEXT_JOY1_SINCLAIR1                 0xC0
+#define NEXT_JOY1_KEMPSTON2                 0x08
+#define NEXT_JOY1_MEGADRIVE1                0x48
+#define NEXT_JOY1_MEGADRIVE2                0x88
+
+#define NEXT_JOY2_SINCLAIR2                 0x00
+#define NEXT_JOY2_KEMPSTON1                 0x10
+#define NEXT_JOY2_CURSOR                    0x20
+#define NEXT_JOY2_SINCLAIR1                 0x30
+#define NEXT_JOY2_KEMPSTON2                 0x02
+#define NEXT_JOY2_MEGADRIVE1                0x12
+#define NEXT_JOY2_MEGADRIVE2                0x22
+
+#define NEXT_50HZ_MODE                      0x00
+#define NEXT_60HZ_MODE                      0x04
+
+#define NEXT_ENABLE_SCANDOUBLER             0x01
+
+/*
+ * Peripheral 2 setting
+ */
+
+#define NEXT_PERIPHERALCONTROL2             0x06
+
+#define NEXT_ENABLE_TURBOMODE_KEY           0x80
+#define NEXT_ENABLE_50HZ_KEY                0x20
+#define NEXT_ENABLE_DIVMMC_NMI              0x10
+#define NEXT_ENABLE_MULTIFACE_NMI           0x08
+
+#define NEXT_PS2MODE_KEYBOARD               0x00
+#define NEXT_PS2MODE_MOUSE                  0x04
+
+#define NEXT_AUDIOCHIP_YAMAHA               0x00
+#define NEXT_AUDIOCHIP_AY                   0x01
+
+/*
+ * Turbo mode
+ */
+
+#define NEXT_TURBOMODE                      0x07
+
+#define NEXT_3_5MHZ                         0x00
+#define NEXT_7MHZ                           0x01
+#define NEXT_14MHZ                          0x02
+#define NEXT_28MHZ                          0x03
+
+/*
  * Sprite and Layers system
  */
 
@@ -100,5 +155,7 @@ __sfr __banked __at 0x253b Next_RegisterValue;
 __sfr __banked __at 0x123b Next_Layer2AccessPort;
 
 __sfr __banked __at 0x303b Next_SpriteControl;
+
+void ReadInput() __preserves_regs(a, iyl, iyh);
 
 #endif
