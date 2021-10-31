@@ -42,6 +42,7 @@ own licenses instead:
 * File *Tools/importer/stb_image.h* directory.
 * Files under the *Data/MiniWorldSprites* directory.
 * Files under the *Tools/importer/ezxml* directory.
+* Files under the *Tools/importer/md5* directory.
 * Files under the *Tools/make* directory.
 * Files under the *Tools/nextsync* directory.
 * Files under the *Tools/tcc* directory.
