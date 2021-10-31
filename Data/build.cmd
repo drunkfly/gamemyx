@@ -3,7 +3,7 @@
 cd %~dp0
 if errorlevel 1 exit /B 1
 
-..\Tools\png2next\png2next ^
+..\Tools\importer\importer ^
     -in MiniWorldSprites/SwordsmanTemplate.png ^
     -histogram ^
     -palette4 ^

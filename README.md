@@ -39,6 +39,7 @@ your product (as required by p.2 of the license).**
 The following files are *NOT* covered by this license and have their
 own licenses instead:
 
+* File *Tools/importer/stb_image.h* directory.
 * Files under the *Data/MiniWorldSprites* directory.
 * Files under the *Tools/make* directory.
 * Files under the *Tools/nextsync* directory.

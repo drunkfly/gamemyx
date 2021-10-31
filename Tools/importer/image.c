@@ -1,34 +1,26 @@
-#include <stdio.h>
-#include "engine.h"
+/*
+ * Copyright (c) 2021 DrunkFly Team
+ * Licensed under 3-clause BSD license
+ */
+#include "importer.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_SIMD
 #include "stb_image.h"
 
-#define CHECK_ARG \
-    if (i == argc - 1) { \
-        fprintf(stderr, "error: missing command line argument after \"%s\".\n", argv[i]); \
-        return 1; \
-    }
-
-struct HistogramEntry
-{
-    unsigned char index;
-    unsigned char count;
-};
-
 static stbi_uc* image;
-static int imageWidth;
-static int imageHeight;
-static int areaX;
-static int areaY;
-static int areaW;
-static int areaH;
 
-static unsigned char palette4[16];
-static struct HistogramEntry histogram[256];
+int imageWidth;
+int imageHeight;
+int imageAreaX;
+int imageAreaY;
+int imageAreaW;
+int imageAreaH;
 
-static void unloadFile()
+unsigned char palette4[16];
+HistogramEntry histogram[256];
+
+void unloadImage()
 {
     if (image != NULL) {
         stbi_image_free(image);
@@ -36,9 +28,9 @@ static void unloadFile()
     }
 }
 
-static void loadFile(const char* file)
+void loadImage(const char* file)
 {
-    unloadFile();
+    unloadImage();
 
     image = stbi_load(file, &imageWidth, &imageHeight, NULL, 4);
     if (!image) {
@@ -46,20 +38,20 @@ static void loadFile(const char* file)
         exit(1);
     }
 
-    areaX = 0;
-    areaY = 0;
-    areaW = imageWidth;
-    areaH = imageHeight;
+    imageAreaX = 0;
+    imageAreaY = 0;
+    imageAreaW = imageWidth;
+    imageAreaH = imageHeight;
 }
 
-static void buildHistogram()
+void buildImageHistogram()
 {
-    for (int y = 0; y < areaH; y++) {
-        for (int x = 0; x < areaW; x++) {
-            unsigned char r = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 0];
-            unsigned char g = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 1];
-            unsigned char b = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 2];
-            unsigned char a = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 3];
+    for (int y = 0; y < imageAreaH; y++) {
+        for (int x = 0; x < imageAreaW; x++) {
+            unsigned char r = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 0];
+            unsigned char g = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 1];
+            unsigned char b = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 2];
+            unsigned char a = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 3];
 
             if (a < 128)
                 continue; // skip transparent color
@@ -72,8 +64,8 @@ static void buildHistogram()
 
 static int histogramSort(const void* p1, const void* p2)
 {
-    struct HistogramEntry* e1 = (struct HistogramEntry*)p1;
-    struct HistogramEntry* e2 = (struct HistogramEntry*)p2;
+    HistogramEntry* e1 = (HistogramEntry*)p1;
+    HistogramEntry* e2 = (HistogramEntry*)p2;
     if (e1->count > e2->count)
         return -1;
     else if (e1->count < e2->count)
@@ -81,11 +73,11 @@ static int histogramSort(const void* p1, const void* p2)
     return 0;
 }
 
-static void makePalette4()
+void makeImagePalette4()
 {
-    struct HistogramEntry sortedHistogram[256];
-    memcpy(sortedHistogram, histogram, sizeof(struct HistogramEntry) * 256);
-    qsort(sortedHistogram, 256, sizeof(struct HistogramEntry), histogramSort);
+    HistogramEntry sortedHistogram[256];
+    memcpy(sortedHistogram, histogram, sizeof(HistogramEntry) * 256);
+    qsort(sortedHistogram, 256, sizeof(HistogramEntry), histogramSort);
 
     int paletteIndex = 0;
     for (int i = 0; i < 15; i++) {
@@ -95,7 +87,7 @@ static void makePalette4()
     }
 }
 
-static void outputPalette4(const char* file)
+void outputImagePalette4(const char* file)
 {
     FILE* f = fopen(file, "w");
     if (!f) {
@@ -109,7 +101,7 @@ static void outputPalette4(const char* file)
     fclose(f);
 }
 
-static void output4Bit(const char* file)
+void output4BitImage(const char* file)
 {
     FILE* f = fopen(file, "w");
     if (!f) {
@@ -119,13 +111,13 @@ static void output4Bit(const char* file)
 
     fprintf(f, "SPRITE_FLAG_16COLOR,\n");
 
-    for (int y = 0; y < areaH; y++) {
+    for (int y = 0; y < imageAreaH; y++) {
         unsigned char pixel = 0;
-        for (int x = 0; x < areaW; x++) {
-            unsigned char r = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 0];
-            unsigned char g = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 1];
-            unsigned char b = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 2];
-            unsigned char a = image[((areaY + y) * imageWidth + (areaX + x)) * 4 + 3];
+        for (int x = 0; x < imageAreaW; x++) {
+            unsigned char r = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 0];
+            unsigned char g = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 1];
+            unsigned char b = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 2];
+            unsigned char a = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 3];
 
             if (a < 128) {
                 if (x % 2 == 0)
@@ -186,43 +178,4 @@ static void output4Bit(const char* file)
     }
 
     fclose(f);
-}
-
-int main(int argc, char** argv)
-{
-    atexit(unloadFile);
-
-    for (int i = 0; i < 256; i++)
-        histogram[i].index = i;
-
-    for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-in")) {
-            CHECK_ARG
-            loadFile(argv[++i]);
-        } else if (!strcmp(argv[i], "-area16x16")) {
-            CHECK_ARG
-            int x = atoi(argv[++i]);
-            CHECK_ARG
-            int y = atoi(argv[++i]);
-            areaX = x * 16;
-            areaY = y * 16;
-            areaW = 16;
-            areaH = 16;
-        } else if (!strcmp(argv[i], "-histogram")) {
-            CHECK_ARG
-            buildHistogram();
-        } else if (!strcmp(argv[i], "-palette4")) {
-            CHECK_ARG
-            makePalette4();
-        } else if (!strcmp(argv[i], "-outpalette4")) {
-            CHECK_ARG
-            outputPalette4(argv[++i]);
-        } else if (!strcmp(argv[i], "-out4")) {
-            CHECK_ARG
-            output4Bit(argv[++i]);
-        } else {
-            fprintf(stderr, "error: unknown command line argument \"%s\".\n", argv[i]);
-            return 1;
-        }
-    }
 }

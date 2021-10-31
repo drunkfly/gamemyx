@@ -1,10 +1,9 @@
 
-.PHONY: png2next
+all: importer
+.PHONY: importer
 
-all: png2next
-
-png2next:
-	@$(MAKE) -C png2next "ROOTDIR=$(ROOTDIR)"
+importer:
+	@$(MAKE) -C importer "ROOTDIR=$(ROOTDIR)"
 
 clean:
-	@-$(MAKE) -C png2next "ROOTDIR=$(ROOTDIR)" clean
+	@-$(MAKE) -C importer "ROOTDIR=$(ROOTDIR)" clean

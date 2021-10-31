@@ -10,7 +10,18 @@
 /**********************************************************************/
 /* Common */
 
-#define STRUCT(X) struct X; typedef struct X X; struct X
+#define STRUCT(X) \
+    struct X; \
+    typedef struct X X; \
+    struct X
+
+#ifdef ZXNEXT
+ #define Z88DK_FASTCALL __z88dk_fastcall
+ #define Z88DK_PRESERVES(REGS) __preserves_regs REGS
+#else
+ #define Z88DK_FASTCALL
+ #define Z88DK_PRESERVES(REGS)
+#endif
 
 typedef unsigned char byte;
 typedef unsigned short word;
@@ -23,13 +34,13 @@ typedef unsigned short word;
 #endif
 
 bool IsKeyPressed(byte key)
-    __z88dk_fastcall __preserves_regs(d, e, iyl, iyh);
+    Z88DK_FASTCALL Z88DK_PRESERVES((d, e, iyl, iyh));
 
 bool IsGamepad1Pressed(byte key)
-    __z88dk_fastcall __preserves_regs(b, c, d, e, h, iyl, iyh);
+    Z88DK_FASTCALL Z88DK_PRESERVES((b, c, d, e, h, iyl, iyh));
 
 bool IsGamepad2Pressed(byte key)
-    __z88dk_fastcall __preserves_regs(b, c, d, e, h, iyl, iyh);
+    Z88DK_FASTCALL Z88DK_PRESERVES((b, c, d, e, h, iyl, iyh));
 
 /**********************************************************************/
 /* Sprites */
