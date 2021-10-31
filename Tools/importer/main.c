@@ -16,9 +16,6 @@ int main(int argc, char** argv)
     atexit(unloadTilesets);
     atexit(unloadTilemap);
 
-    for (int i = 0; i < 256; i++)
-        histogram[i].index = i;
-
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-loadimage")) {
             CHECK_ARG
@@ -50,6 +47,12 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-loadtmx")) {
             CHECK_ARG
             loadTilemap(argv[++i]);
+        } else if (!strcmp(argv[i], "-outmap")) {
+            CHECK_ARG
+            outputTilemap(argv[++i]);
+        } else if (!strcmp(argv[i], "-outtiles4")) {
+            CHECK_ARG
+            outputTileset4Bit(argv[++i]);
         } else {
             fprintf(stderr, "error: unknown command line argument \"%s\".\n", argv[i]);
             return 1;

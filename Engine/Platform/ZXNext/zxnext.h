@@ -127,6 +127,24 @@
 
 #define NEXT_SPRITETRANSPARENCY 0x4b
 
+/*
+ * Tilemap control
+ */
+
+#define NEXT_TILEMAPCONTROL                 0x6b
+
+/*
+ * Tilemap base address
+ */
+
+#define NEXT_TILEMAPBASE                    0x6e
+
+/*
+ * Tile definitions base address
+ */
+
+#define NEXT_TILEDEFINITIONSBASE            0x6f
+
 /*****************/
 
 #define NEXT_LAYER2_XOFFSET     0x16
@@ -136,9 +154,6 @@
 #define NEXT_SPRITEY            0x36
 #define NEXT_SPRITEATTR2        0x37
 
-#define NEXT_TILEMAPCONTROL     0x6b
-#define NEXT_TILEBASE           0x6e
-#define NEXT_TILEDEFINITIONS    0x6f
 
 #define NEXT_GETREG(reg) \
     (Next_RegisterNumber = (reg), Next_RegisterValue)

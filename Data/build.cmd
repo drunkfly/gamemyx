@@ -23,5 +23,9 @@ if errorlevel 1 exit /B 1
 ..\Tools\importer\importer ^
     -loadtsx tiles.tsx ^
     -loadtsx control.tsx ^
-    -loadtmx map.tmx
+    -loadtmx map.tmx ^
+    -outmap ..\Game\Data\Map\Tilemap.h ^
+    -outtiles4 ..\Game\Data\Map\Tileset.h
 if errorlevel 1 exit /B 1
+
+echo Done!

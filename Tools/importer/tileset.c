@@ -24,8 +24,16 @@ void loadTileset(const char* file)
         exit(1);
     }
 
+    int tileWidth = atoi(ezxml_attr(xml, "tilewidth"));
+    int tileHeight = atoi(ezxml_attr(xml, "tileheight"));
+    if (tileWidth != TILE_WIDTH || tileHeight != TILE_HEIGHT) {
+        fprintf(stderr, "error: invalid tile set \"%s\".\n", file);
+        ezxml_free(xml);
+        exit(1);
+    }
+
     int tileCount = atoi(ezxml_attr(xml, "tilecount"));
-    int columns = atoi(ezxml_attr(xml, "columns"));
+    int columnCount = atoi(ezxml_attr(xml, "columns"));
 
     ezxml_t image = ezxml_child(xml, "image");
     if (!image) {
@@ -123,6 +131,7 @@ void loadTileset(const char* file)
 
     strcpy(tilesets[tilesetCount].name, fileName);
     tilesets[tilesetCount].tileCount = tileCount;
+    tilesets[tilesetCount].columnCount = columnCount;
     tilesets[tilesetCount].tiles = tiles;
     tilesets[tilesetCount].imageWidth = w;
     tilesets[tilesetCount].imageHeight = h;

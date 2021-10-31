@@ -12,12 +12,20 @@ void gotoxy(byte x, byte y)
 	#endif
 }
 
-static const unsigned char SpritePalette[] = {
+static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
 };
 
-static const unsigned char SpriteData[] = {
+static const byte SpriteData[] = {
 #include "Data/Sprites/SwordsmanIdleFront.h"
+};
+
+static const byte TilemapData[] = {
+#include "Data/Map/Tilemap.h"
+};
+
+static const byte TilesetData[] = {
+#include "Data/Map/Tileset.h"
 };
 
 static HSprite IdleFrontSprite;
@@ -31,6 +39,9 @@ void GameMain()
 
     #define MAX 32
     int x = 0, y = 0;
+
+    LoadTileset(TilesetData);
+    LoadTilemap(TilemapData);
 
     for (;;) {
         gotoxy(1, 1);

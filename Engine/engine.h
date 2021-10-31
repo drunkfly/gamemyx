@@ -6,6 +6,7 @@
 #define ENGINE_H
 
 #include <stdbool.h>
+#include <string.h>
 
 /**********************************************************************/
 /* Common */
@@ -43,6 +44,19 @@ bool IsGamepad2Pressed(byte key)
     Z88DK_FASTCALL Z88DK_PRESERVES((b, c, d, e, h, iyl, iyh));
 
 /**********************************************************************/
+/* Tiles */
+
+#define TILE_WIDTH 16
+#define TILE_HEIGHT 16
+#define TILE_SMALL_WIDTH 8
+#define TILE_SMALL_HEIGHT 8
+
+void SetTilemapPalette(byte index, const void* data, byte count);
+
+void LoadTileset(const byte* tileset);
+void LoadTilemap(const byte* tilemap);
+
+/**********************************************************************/
 /* Sprites */
 
 #define TRANSPARENT_COLOR_INDEX4 0
@@ -50,7 +64,7 @@ bool IsGamepad2Pressed(byte key)
 #define SPRITE_FLAG_16COLOR     0x00
 #define SPRITE_FLAG_256COLOR    0x01
 
-typedef unsigned char HSprite;
+typedef byte HSprite;
 
 HSprite CreateSprite(const void* data, byte paletteIndex);
 void DestroyAllSprites();

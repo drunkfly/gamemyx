@@ -33,6 +33,7 @@ struct Tileset
 {
     char name[MAX_TILESET_NAME];
     int tileCount;
+    int columnCount;
     Tile* tiles;
     int imageWidth;
     int imageHeight;
@@ -43,6 +44,13 @@ STRUCT(HistogramEntry)
 {
     unsigned char index;
     unsigned char count;
+};
+
+STRUCT(TileCacheEntry)
+{
+    char md5[16];
+    unsigned char pixels[TILE_SMALL_WIDTH * TILE_SMALL_HEIGHT * 4];
+    int paletteIndex;
 };
 
 extern int imageWidth;
@@ -58,18 +66,31 @@ extern HistogramEntry histogram[256];
 extern Tileset tilesets[];
 extern int tilesetCount;
 
+extern TileCacheEntry cachedTiles[];
+extern int cachedCount;
+
+extern int* tilemap;
+extern int tilemapWidth;
+extern int tilemapHeight;
+
 void unloadImage();
 void loadImage(const char* file);
 void buildImageHistogram();
 void makeImagePalette4();
 void outputImagePalette4(const char* file);
 void output4BitImage(const char* file);
+int histogramSort(const void* p1, const void* p2);
 
 void unloadTilemap();
 void loadTilemap(const char* file);
+void outputTilemap(const char* file);
 
 void unloadTilesets();
 void loadTileset(const char* file);
 Tileset* findTileset(const char* file);
+void outputTileset4Bit(const char* file);
+
+void clearTileCache();
+int addTile(const unsigned char* pixels);
 
 #endif

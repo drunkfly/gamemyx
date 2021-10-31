@@ -4,6 +4,19 @@
  */
 #include "zxnext.h"
 
+void SetTilemapPalette(byte index, const void* data, byte count)
+{
+    NEXT_SETREG(NEXT_PALETTECONTROL,
+        (NEXT_GETREG(NEXT_PALETTECONTROL) & ~NEXT_IO_PALETTE_MASK)
+            | NEXT_IO_TILEMAP_FIRST_PALETTE);
+
+    NEXT_SETREG(NEXT_PALETTEINDEX, index);
+
+    const byte* p = (const byte*)data;
+    for (byte i = 0; i < count; i++)
+        NEXT_SETREG(NEXT_PALETTEVALUE8, *p++);
+}
+
 void SetSpritePalette(byte index, const void* data, byte count)
 {
     NEXT_SETREG(NEXT_PALETTECONTROL,

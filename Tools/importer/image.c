@@ -46,6 +46,11 @@ void loadImage(const char* file)
 
 void buildImageHistogram()
 {
+    for (int i = 0; i < 256; i++) {
+        histogram[i].index = i;
+        histogram[i].count = 0;
+    }
+
     for (int y = 0; y < imageAreaH; y++) {
         for (int x = 0; x < imageAreaW; x++) {
             unsigned char r = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 0];
@@ -62,7 +67,7 @@ void buildImageHistogram()
     }
 }
 
-static int histogramSort(const void* p1, const void* p2)
+int histogramSort(const void* p1, const void* p2)
 {
     HistogramEntry* e1 = (HistogramEntry*)p1;
     HistogramEntry* e2 = (HistogramEntry*)p2;
