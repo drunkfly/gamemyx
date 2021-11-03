@@ -28,6 +28,10 @@ static const byte TilesetData[] = {
 #include "Data/Map/Tileset.h"
 };
 
+static const byte MapInfo[] = {
+#include "Data/Map/Info.h"
+};
+
 static HSprite IdleFrontSprite;
 
 extern byte RawKeys[8];
@@ -41,11 +45,11 @@ void GameMain()
     int x = 0, y = 0;
 
     LoadTileset(TilesetData);
+    LoadTilemap(TilemapData);
 
-    const unsigned char* map = TilemapData;
+    const unsigned char* map = MapInfo;
     unsigned char playerX = *map++;
     unsigned char playerY = *map++;
-    LoadTilemap(map);
 
     x = playerX * TILE_WIDTH;
     y = playerY * TILE_HEIGHT;
@@ -54,20 +58,32 @@ void GameMain()
         BeginFrame();
 
         if (IsKeyPressed(KEY_O) || IsGamepad1Pressed(GAMEPAD_LEFT)) {
-            if (x > 0)
+            if (x > 0) {
                 --x;
+                if (CollidesWithMap16x16(x, y))
+                    ++x;
+            }
         }
         if (IsKeyPressed(KEY_P) || IsGamepad1Pressed(GAMEPAD_RIGHT)) {
-            if (x < 255-16)
+            if (x < 255-16) {
                 ++x;
+                if (CollidesWithMap16x16(x, y))
+                    --x;
+            }
         }
         if (IsKeyPressed(KEY_Q) || IsGamepad1Pressed(GAMEPAD_UP)) {
-            if (y > 0)
+            if (y > 0) {
                 --y;
+                if (CollidesWithMap16x16(x, y))
+                    ++y;
+            }
         }
         if (IsKeyPressed(KEY_A) || IsGamepad1Pressed(GAMEPAD_DOWN)) {
-            if (y < 192-16)
+            if (y < 192-16) {
                 ++y;
+                if (CollidesWithMap16x16(x, y))
+                    --y;
+            }
         }
 
         PutSprite(x, y, IdleFrontSprite);

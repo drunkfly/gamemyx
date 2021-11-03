@@ -53,6 +53,8 @@ bool IsGamepad2Pressed(byte key)
 
 void SetTilemapPalette(byte index, const void* data, byte count);
 
+bool IsSmallTileBlocking(byte x, byte y);
+
 void LoadTileset(const byte* tileset);
 void LoadTilemap(const byte* tilemap);
 
@@ -72,6 +74,11 @@ void DestroyAllSprites();
 void SetSpritePalette(byte index, const void* data, byte count);
 
 void PutSprite(int x, byte y, HSprite sprite);
+
+/**********************************************************************/
+/* Collisions */
+
+bool CollidesWithMap16x16(word x, word y);
 
 /**********************************************************************/
 

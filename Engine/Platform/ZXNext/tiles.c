@@ -4,6 +4,17 @@
  */
 #include "zxnext.h"
 
+static byte tilemapWidth;
+static const byte* collisionMap;
+
+bool IsSmallTileBlocking(byte x, byte y)
+{
+    byte xOff = x >> 3;
+    byte xShift = x & 7;
+    byte mask = collisionMap[y * ((tilemapWidth + 7) >> 3) + xOff];
+    return (mask & (1 << xShift)) != 0;
+}
+
 void LoadTileset(const byte* tileset)
 {
     byte paletteCount = *tileset++;
@@ -17,15 +28,16 @@ void LoadTileset(const byte* tileset)
 
 void LoadTilemap(const byte* tilemap)
 {
-    byte w = *tilemap++;
+    tilemapWidth = *tilemap++;
     byte h = *tilemap++;
 
     byte* dst = (byte*)(0x6000 + 4 + 40 * 4);
     for (int y = 0; y < h; y++) {
-        for (int x = 0; x < w; x++) {
-            memcpy(dst, tilemap, w);
-        }
+        for (int x = 0; x < tilemapWidth; x++)
+            memcpy(dst, tilemap, tilemapWidth);
         dst += 40;
-        tilemap += w;
+        tilemap += tilemapWidth;
     }
+
+    collisionMap = tilemap;
 }

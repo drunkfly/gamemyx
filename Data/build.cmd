@@ -24,6 +24,7 @@ if errorlevel 1 exit /B 1
     -loadtsx tiles.tsx ^
     -loadtsx control.tsx ^
     -loadtmx map.tmx ^
+    -outmapinfo ..\Game\Data\Map\Info.h ^
     -outmap ..\Game\Data\Map\Tilemap.h ^
     -outtiles4 ..\Game\Data\Map\Tileset.h
 if errorlevel 1 exit /B 1

@@ -50,6 +50,9 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-outmap")) {
             CHECK_ARG
             outputTilemap(argv[++i]);
+        } else if (!strcmp(argv[i], "-outmapinfo")) {
+            CHECK_ARG
+            outputTilemapInfo(argv[++i]);
         } else if (!strcmp(argv[i], "-outtiles4")) {
             CHECK_ARG
             outputTileset4Bit(argv[++i]);

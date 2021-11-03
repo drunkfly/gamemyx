@@ -84,6 +84,7 @@ int histogramSort(const void* p1, const void* p2);
 void unloadTilemap();
 void loadTilemap(const char* file);
 void outputTilemap(const char* file);
+void outputTilemapInfo(const char* file);
 
 void unloadTilesets();
 void loadTileset(const char* file);

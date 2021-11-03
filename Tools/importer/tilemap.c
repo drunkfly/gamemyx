@@ -21,6 +21,7 @@ static TilemapLayer tilemapLayers[MAX_LAYERS];
 static int layerCount;
 static int tilesetRefCount;
 int* tilemap;
+unsigned char* collision;
 int tilemapWidth;
 int tilemapHeight;
 int playerStartX;
@@ -33,6 +34,9 @@ void unloadTilemap()
     layerCount = 0;
     tilesetRefCount = 0;
     free(tilemap);
+    free(collision);
+    tilemap = NULL;
+    collision = NULL;
 }
 
 static int compareTilesetRefs(const void* a, const void* b)
@@ -213,6 +217,13 @@ void loadTilemap(const char* file)
         exit(1);
     }
 
+    collision = (unsigned char*)calloc(width * 2 * height * 2, sizeof(unsigned char));
+    if (!collision) {
+        fprintf(stderr, "error: out of memory parsing \"%s\".\n", file);
+        ezxml_free(xml);
+        exit(1);
+    }
+
     tilemapWidth = width * 2;
     tilemapHeight = height * 2;
 
@@ -226,6 +237,13 @@ void loadTilemap(const char* file)
                         Tile* tile = tilemapLayers[i].data[y * width + x];
                         if (!tile)
                             continue;
+
+                        if (tile->blocking) {
+                            collision[(y * 2 + 0) * tilemapWidth + x * 2 + 0] = 1;
+                            collision[(y * 2 + 0) * tilemapWidth + x * 2 + 1] = 1;
+                            collision[(y * 2 + 1) * tilemapWidth + x * 2 + 0] = 1;
+                            collision[(y * 2 + 1) * tilemapWidth + x * 2 + 1] = 1;
+                        }
 
                         if (tile->func != FUNC_NONE) {
                             switch (tile->func) {
@@ -294,7 +312,6 @@ void outputTilemap(const char* file)
         exit(1);
     }
 
-    fprintf(f, "%d,%d,\n", playerStartX, playerStartY);
     fprintf(f, "%d,%d,\n", tilemapWidth, tilemapHeight);
 
     /*
@@ -309,6 +326,42 @@ void outputTilemap(const char* file)
             fprintf(f, "0x%02X,", tilemap[y * tilemapWidth + x]);
         fprintf(f, "\n");
     }
+
+    fprintf(f, "\n");
+
+    for (int y = 0; y < tilemapHeight; y++) {
+        unsigned char byte = 0;
+        for (int x = 0; x < tilemapWidth; x++) {
+            byte >>= 1;
+            if (collision[y * tilemapWidth + x])
+                byte |= 0x80;
+
+            if ((x & 7) == 7) {
+                fprintf(f, "0x%02X,", byte);
+                byte = 0;
+            }
+        }
+
+        if ((tilemapWidth & 7) != 0) {
+            byte >>= 8 - (tilemapWidth & 7);
+            fprintf(f, "0x%02X,", byte);
+        }
+
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
+}
+
+void outputTilemapInfo(const char* file)
+{
+    FILE* f = fopen(file, "w");
+    if (!f) {
+        fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
+        exit(1);
+    }
+
+    fprintf(f, "%d,%d, /* playerX, playerY */\n", playerStartX, playerStartY);
 
     fclose(f);
 }
