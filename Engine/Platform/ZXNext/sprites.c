@@ -53,6 +53,7 @@ HSprite CreateSprite(const void* data, byte paletteIndex)
     const byte* p = (const byte*)data;
     if ((*p & SPRITE_FLAG_256COLOR) == 0) // if set, 256 color
         pSprite->attr4 = 0x80 | (SpriteCount & 0x40);
+    p++;
 
     Next_SpriteControl = SpriteCount;
     for (int i = 0; i < 16*16; i++) /* FIXME */

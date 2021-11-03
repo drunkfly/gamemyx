@@ -126,9 +126,9 @@ void output4BitImage(const char* file)
 
             if (a < 128) {
                 if (x % 2 == 0)
-                    pixel = TRANSPARENT_COLOR_INDEX4;
+                    pixel = (TRANSPARENT_COLOR_INDEX4 << 4);
                 else {
-                    pixel |= (TRANSPARENT_COLOR_INDEX4 << 4);
+                    pixel |= TRANSPARENT_COLOR_INDEX4;
                     fprintf(f, "0x%02X,", pixel);
                 }
                 continue;
@@ -173,9 +173,9 @@ void output4BitImage(const char* file)
             }
 
             if (x % 2 == 0)
-                pixel = paletteIndex;
+                pixel = (paletteIndex << 4);
             else {
-                pixel |= (paletteIndex << 4);
+                pixel |= paletteIndex;
                 fprintf(f, "0x%02X,", pixel);
             }
         }

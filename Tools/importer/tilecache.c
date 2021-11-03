@@ -99,9 +99,9 @@ void outputTileset4Bit(const char* file)
         qsort(histogram, 256, sizeof(HistogramEntry), histogramSort);
 
         int paletteIndex = -1;
-        for (int i = 0; i < tilesetPaletteCount; i++) {
-            if (paletteCanFitColors(&tilesetPalette[i], cachedTiles[i].pixels)) {
-                paletteIndex = i;
+        for (int j = 0; j < tilesetPaletteCount; j++) {
+            if (paletteCanFitColors(&tilesetPalette[j], cachedTiles[i].pixels)) {
+                paletteIndex = j;
                 break;
             }
         }
@@ -114,11 +114,11 @@ void outputTileset4Bit(const char* file)
 
             paletteIndex = tilesetPaletteCount++;
 
-            for (int i = 0; i < 15; i++) {
-                if (histogram[i].count == 0)
+            for (int j = 0; j < 15; j++) {
+                if (histogram[j].count == 0)
                     break;
-                int j = tilesetPalette[paletteIndex].colorCount++;
-                tilesetPalette[paletteIndex].colors[j] = histogram[i].index;
+                int k = tilesetPalette[paletteIndex].colorCount++;
+                tilesetPalette[paletteIndex].colors[k] = histogram[j].index;
             }
         }
 
@@ -139,7 +139,7 @@ void outputTileset4Bit(const char* file)
             fprintf(f, "0x%02X,\n", tilesetPalette[i].colors[j]);
     }
 
-    fprintf(f, "%d,\n", cachdeCount);
+    fprintf(f, "\n%d,\n", cachedCount);
 
     for (int i = 0; i < cachedCount; i++) {
         fprintf(f, "\n");
@@ -154,9 +154,9 @@ void outputTileset4Bit(const char* file)
                 unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
 
                 signed char paletteIndex = -1;
-                for (int i = 0; i < 16; i++) {
-                    if (tilesetPalette[cachedTiles[i].paletteIndex].colors[i] == c) {
-                        paletteIndex = i;
+                for (int j = 0; j < 16; j++) {
+                    if (tilesetPalette[cachedTiles[i].paletteIndex].colors[j] == c) {
+                        paletteIndex = j;
                         break;
                     }
                 }
@@ -185,9 +185,9 @@ void outputTileset4Bit(const char* file)
                 }
 
                 if (x % 2 == 0)
-                    pixel = paletteIndex;
+                    pixel = (paletteIndex << 4);
                 else {
-                    pixel |= (paletteIndex << 4);
+                    pixel |= paletteIndex;
                     fprintf(f, "0x%02X,", pixel);
                 }
             }

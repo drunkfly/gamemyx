@@ -23,6 +23,8 @@ static int tilesetRefCount;
 int* tilemap;
 int tilemapWidth;
 int tilemapHeight;
+int playerStartX;
+int playerStartY;
 
 void unloadTilemap()
 {
@@ -55,6 +57,9 @@ void loadTilemap(const char* file)
         fprintf(stderr, "error: unable to load \"%s\".\n", file);
         exit(1);
     }
+
+    playerStartX = 0;
+    playerStartY = 0;
 
     int width = atoi(ezxml_attr(xml, "width"));
     int height = atoi(ezxml_attr(xml, "height"));
@@ -222,6 +227,16 @@ void loadTilemap(const char* file)
                         if (!tile)
                             continue;
 
+                        if (tile->func != FUNC_NONE) {
+                            switch (tile->func) {
+                                case FUNC_PLAYERSTART:
+                                    playerStartX = x;
+                                    playerStartY = y;
+                                    break;
+                            }
+                            continue;
+                        }
+
                         int id = tile->id;
                         int ix = (id % tile->tileset->columnCount) * TILE_WIDTH  + xx * TILE_SMALL_WIDTH;
                         int iy = (id / tile->tileset->columnCount) * TILE_HEIGHT + yy * TILE_SMALL_HEIGHT;
@@ -235,7 +250,7 @@ void loadTilemap(const char* file)
                                 unsigned char b1 = src[off1 + 2];
                                 unsigned char a1 = src[off1 + 3];
 
-                                int off2 = cy * TILE_SMALL_WIDTH + cx;
+                                int off2 = (cy * TILE_SMALL_WIDTH + cx) * 4;
                                 unsigned char* r2 = &pixels[off2 + 0];
                                 unsigned char* g2 = &pixels[off2 + 1];
                                 unsigned char* b2 = &pixels[off2 + 2];
@@ -279,7 +294,15 @@ void outputTilemap(const char* file)
         exit(1);
     }
 
+    fprintf(f, "%d,%d,\n", playerStartX, playerStartY);
     fprintf(f, "%d,%d,\n", tilemapWidth, tilemapHeight);
+
+    /*
+    for (int y = 0; y < tilemapHeight; y++) {
+        for (int x = 0; x < tilemapWidth; x++) {
+            for (int i = 0; i < layerCount; i++) {
+                Tile* tile = tilemapLayers[i].data[y * width + x];
+    */
 
     for (int y = 0; y < tilemapHeight; y++) {
         for (int x = 0; x < tilemapWidth; x++)

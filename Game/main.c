@@ -41,22 +41,16 @@ void GameMain()
     int x = 0, y = 0;
 
     LoadTileset(TilesetData);
-    LoadTilemap(TilemapData);
+
+    const unsigned char* map = TilemapData;
+    unsigned char playerX = *map++;
+    unsigned char playerY = *map++;
+    LoadTilemap(map);
+
+    x = playerX * TILE_WIDTH;
+    y = playerY * TILE_HEIGHT;
 
     for (;;) {
-        gotoxy(1, 1);
-        printf("%02X\n", RawKeys[0]);
-        printf("%02X\n", RawKeys[1]);
-        printf("%02X\n", RawKeys[2]);
-        printf("%02X\n", RawKeys[3]);
-        printf("%02X\n", RawKeys[4]);
-        printf("%02X\n", RawKeys[5]);
-        printf("%02X\n", RawKeys[6]);
-        printf("%02X\n", RawKeys[7]);
-
-        printf("%d %d %d\n", IsKeyPressed(KEY_O), IsGamepad1Pressed(GAMEPAD_LEFT) , IsGamepad2Pressed(GAMEPAD_LEFT) );
-        printf("%d %d %d\n", IsKeyPressed(KEY_P), IsGamepad1Pressed(GAMEPAD_RIGHT), IsGamepad2Pressed(GAMEPAD_RIGHT));
-
         BeginFrame();
 
         if (IsKeyPressed(KEY_O) || IsGamepad1Pressed(GAMEPAD_LEFT)) {
@@ -75,6 +69,7 @@ void GameMain()
             if (y < 192-16)
                 ++y;
         }
+
         PutSprite(x, y, IdleFrontSprite);
 
         EndFrame();

@@ -8,3 +8,4 @@
     %~dp0tileset.c ^
     %~dp0main.c
 if errorlevel 1 exit /B 1
+echo Done!
