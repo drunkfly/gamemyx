@@ -1,12 +1,13 @@
-MYX Game Engine
-===============
+GameMYX
+=======
 
-**M**ake **Y**our e**X**citing game engine is designed to simplify
-development of games for ZX Spectrum Next (and, in the future,
-for other platforms). Development is done in C and Z80 Assembler
-languages.
+GameMYX engine is designed to simplify development of games for
+ZX Spectrum Next (and, in the future, for other platforms). Development
+is done in C and Z80 Assembler languages.
 
 For terms of use see Legal section below.
+
+<h3>NOTE: This software is still under development!</h3>
 
 Getting started
 ---------------
@@ -22,10 +23,12 @@ YouTube
 -------
 
 Development of this game engine was streamed online since the beginning.
-Check out the following videos (sorry, Russian language only):
+Check out the following videos (sorry, **Russian language only**):
 
 * #1 https://www.youtube.com/watch?v=bbfZnLnkSbg
 * #2 https://www.youtube.com/watch?v=pxaxFXJbg7A
+* #3 https://www.youtube.com/watch?v=UUUQ1-xtE_E
+* #4 https://www.youtube.com/watch?v=SXmMb-UzpgM
 
 Legal
 -----
@@ -39,7 +42,8 @@ your product (as required by p.2 of the license).**
 The following files are *NOT* covered by this license and have their
 own licenses instead:
 
-* File *Tools/importer/stb_image.h* directory.
+* File *Tools/importer/stb_image.h*.
+* Files under the *Data/16x16OutdoorsTileset* directory.
 * Files under the *Data/MiniWorldSprites* directory.
 * Files under the *Tools/importer/ezxml* directory.
 * Files under the *Tools/importer/md5* directory.
