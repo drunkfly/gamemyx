@@ -75,6 +75,7 @@ IMPORTER(
     -loadimage "${src}/MiniWorldSprites/RedDemon.png"
     -histogram
     -palette4
+
     -area16x16 0 0
     -outsprite4 Sprites/RedDemonIdleFront.h
     -area16x16 1 0
@@ -85,6 +86,40 @@ IMPORTER(
     -outsprite4 Sprites/RedDemonWalkFront3.h
     -area16x16 4 0
     -outsprite4 Sprites/RedDemonWalkFront4.h
+
+    -area16x16 0 1
+    -outsprite4 Sprites/RedDemonIdleBack.h
+    -area16x16 1 1
+    -outsprite4 Sprites/RedDemonWalkBack1.h
+    -area16x16 2 1
+    -outsprite4 Sprites/RedDemonWalkBack2.h
+    -area16x16 3 1
+    -outsprite4 Sprites/RedDemonWalkBack3.h
+    -area16x16 4 1
+    -outsprite4 Sprites/RedDemonWalkBack4.h
+
+    -area16x16 0 2
+    -outsprite4 Sprites/RedDemonIdleRight.h
+    -area16x16 1 2
+    -outsprite4 Sprites/RedDemonWalkRight1.h
+    -area16x16 2 2
+    -outsprite4 Sprites/RedDemonWalkRight2.h
+    -area16x16 3 2
+    -outsprite4 Sprites/RedDemonWalkRight3.h
+    -area16x16 4 2
+    -outsprite4 Sprites/RedDemonWalkRight4.h
+
+    -area16x16 0 3
+    -outsprite4 Sprites/RedDemonIdleLeft.h
+    -area16x16 1 3
+    -outsprite4 Sprites/RedDemonWalkLeft1.h
+    -area16x16 2 3
+    -outsprite4 Sprites/RedDemonWalkLeft2.h
+    -area16x16 3 3
+    -outsprite4 Sprites/RedDemonWalkLeft3.h
+    -area16x16 4 3
+    -outsprite4 Sprites/RedDemonWalkLeft4.h
+
     -outpalette4 Palettes/RedDemonPalette.h
     )
 

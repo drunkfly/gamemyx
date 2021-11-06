@@ -10,6 +10,7 @@ void Character_Init(Character* c, byte x, byte y, const void* sprites)
     c->direction = DIR_DOWN;
     c->x = x;
     c->y = y;
+    c->timer = 0;
 
     for (byte dir = 0; dir < 4; dir++) {
         c->idle[dir] = MYX_LoadAnimSprite(&sprites);
@@ -136,4 +137,36 @@ void Character_HandleInput(Character* c)
 
     if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN))
         Character_MoveDown(c);
+}
+
+void Character_ForwardBackwardMove(Character* c)
+{
+    if (c->state == CHAR_DEAD)
+        return;
+
+    (c->timer)++;
+    if (c->timer < 4) {
+        c->state = CHAR_WALK;
+        return;
+    }
+    c->timer = 0;
+
+    switch (c->direction) {
+        case DIR_LEFT:
+            if (!Character_MoveLeft(c))
+                c->direction = DIR_RIGHT;
+            break;
+        case DIR_RIGHT:
+            if (!Character_MoveRight(c))
+                c->direction = DIR_LEFT;
+            break;
+        case DIR_UP:
+            if (!Character_MoveUp(c))
+                c->direction = DIR_DOWN;
+            break;
+        case DIR_DOWN:
+            if (!Character_MoveDown(c))
+                c->direction = DIR_UP;
+            break;
+    }
 }

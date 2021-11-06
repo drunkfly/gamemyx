@@ -18,10 +18,7 @@ static const byte SpritePalette[] = {
 };
 
 #include "swordsman.h"
-
-static const byte RedDemonIdleFrontData[] = {
-#include "Data/Sprites/RedDemonIdleFront.h"
-};
+#include "reddemon.h"
 
 static const byte TilemapData[] = {
 #include "Data/Map/Tilemap.h"
@@ -38,6 +35,7 @@ static const byte MapInfo[] = {
 static MYXSprite RedDemonIdleFrontSprite;
 
 static Character player;
+static Character demon;
 
 static void OnPlayerCollision(byte tag)
 {
@@ -52,8 +50,6 @@ void GameMain()
 {
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
-    RedDemonIdleFrontSprite = MYX_CreateSprite(RedDemonIdleFrontData, 2);
-
     MYX_LoadTileset(TilesetData);
     MYX_LoadTilemap(TilemapData);
 
@@ -62,16 +58,20 @@ void GameMain()
     byte py = (*map++) * MYX_TILE_HEIGHT;
     Character_Init(&player, px, py, SwordsmanData);
 
-    unsigned char demonX = 5 * MYX_TILE_WIDTH;
-    unsigned char demonY = 5 * MYX_TILE_HEIGHT;
+    byte demonX = 10 * MYX_TILE_WIDTH;
+    byte demonY = 1 * MYX_TILE_HEIGHT;
+    Character_Init(&demon, demonX, demonY, RedDemonData);
+    demon.direction = DIR_LEFT;
 
     MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
 
     for (;;) {
         MYX_BeginFrame();
 
-        MYX_PutSprite(demonX, demonY, RedDemonIdleFrontSprite);
-        MYX_AddCollision(demonX, demonY, 16, 16, TAG_ENEMY);
+        Character_Draw(&demon);
+        Character_ForwardBackwardMove(&demon);
+
+        MYX_AddCollision(demon.x, demon.y, 16, 16, TAG_ENEMY);
 
         Character_Draw(&player);
         Character_HandleInput(&player);
