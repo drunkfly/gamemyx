@@ -3,7 +3,7 @@
 cd %~dp0
 if errorlevel 1 exit /B 1
 
-..\Tools\importer\importer ^
+..\Importer\importer ^
     -loadimage MiniWorldSprites/SwordsmanTemplate.png ^
     -histogram ^
     -palette4 ^
@@ -20,7 +20,7 @@ if errorlevel 1 exit /B 1
     -outpalette4 ..\Game\Data\Palettes\SwordsmanPalette.h
 if errorlevel 1 exit /B 1
 
-..\Tools\importer\importer ^
+..\Importer\importer ^
     -loadtsx tiles.tsx ^
     -loadtsx control.tsx ^
     -loadtmx map.tmx ^

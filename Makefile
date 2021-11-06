@@ -6,7 +6,7 @@ ROOTDIR:=$(patsubst %/,%,$(dir $(MAKEFILE)))
 OUTDIR:=$(ROOTDIR)/Build
 
 include Build/common.mk
-.PHONY: all engine game tools clean
+.PHONY: all engine game clean
 
 all: $(OUTDIR)/Sync/Build/$(NAME).nex
 
@@ -16,7 +16,7 @@ $(OUTDIR)/Bin:
 $(OUTDIR)/Lib:
 	@$(MKDIR) "$(OUTDIR)/Lib"
 
-$(OUTDIR)/Bin/$(NAME).nex: $(OUTDIR)/Bin mmap.h engine game tools
+$(OUTDIR)/Bin/$(NAME).nex: $(OUTDIR)/Bin mmap.h engine game
 	@echo $(NAME).nex
 	@$(LD) $(LDFLAGS) -o "$(OUTDIR)/Bin/$(NAME)" "-L$(OUTDIR)/Lib" -lgame -lengine -pragma-include:mmap.h Engine/main.c
 
@@ -30,13 +30,9 @@ engine: $(OUTDIR)/Lib
 game: $(OUTDIR)/Lib
 	@$(MAKE) -s -C Game "ROOTDIR=$(ROOTDIR)"
 
-tools: $(OUTDIR)/Lib
-	@$(MAKE) -s -C Tools "ROOTDIR=$(ROOTDIR)"
-
 clean:
 	@-$(RM) "$(OUTDIR)/Sync/Build/$(NAME).nex"
 	@-$(RMDIR) "$(OUTDIR)/Bin"
 	@-$(RMDIR) "$(OUTDIR)/Lib"
 	@-$(MAKE) -s -C Engine "ROOTDIR=$(ROOTDIR)" clean
 	@-$(MAKE) -s -C Game "ROOTDIR=$(ROOTDIR)" clean
-	@-$(MAKE) -s -C Tools "ROOTDIR=$(ROOTDIR)" clean

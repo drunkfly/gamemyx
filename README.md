@@ -42,15 +42,12 @@ your product (as required by p.2 of the license).**
 The following files are *NOT* covered by this license and have their
 own licenses instead:
 
-* File *Tools/importer/stb_image.h*.
+* File *Importer/stb_image.h*.
+* Files under the *Importer/ezxml* directory.
+* Files under the *Importer/md5* directory.
 * Files under the *Data/16x16OutdoorsTileset* directory.
 * Files under the *Data/MiniWorldSprites* directory.
-* Files under the *Tools/importer/ezxml* directory.
-* Files under the *Tools/importer/md5* directory.
-* Files under the *Tools/make* directory.
-* Files under the *Tools/nextsync* directory.
-* Files under the *Tools/tcc* directory.
-* Files under the *Tools/z88dk* directory.
+* Files under the *Tools* directory.
 
 ```
 Copyright (c) 2021 DrunkFly Team
