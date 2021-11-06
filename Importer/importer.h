@@ -94,4 +94,6 @@ void outputTileset4Bit(const char* file);
 void clearTileCache();
 int addTile(const unsigned char* pixels);
 
+void createDirectories(const char* file);
+
 #endif

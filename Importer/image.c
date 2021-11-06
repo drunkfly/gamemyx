@@ -94,6 +94,7 @@ void makeImagePalette4()
 
 void outputImagePalette4(const char* file)
 {
+    createDirectories(file);
     FILE* f = fopen(file, "w");
     if (!f) {
         fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
@@ -108,6 +109,7 @@ void outputImagePalette4(const char* file)
 
 void output4BitImage(const char* file)
 {
+    createDirectories(file);
     FILE* f = fopen(file, "w");
     if (!f) {
         fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));

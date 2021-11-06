@@ -125,6 +125,7 @@ void outputTileset4Bit(const char* file)
         cachedTiles[i].paletteIndex = paletteIndex;
     }
 
+    createDirectories(file);
     FILE* f = fopen(file, "w");
     if (!f) {
         fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));

@@ -54,14 +54,15 @@ void loadTileset(const char* file)
     if (fileEnd2 && (!fileEnd || fileEnd < fileEnd2))
         fileEnd = fileEnd2;
 
-    const char* fileName = (fileEnd ? fileEnd + 1 : file);
-
+    const char* fileName;
     char sourcePath[1024];
-    if (!fileEnd)
+    if (!fileEnd) {
+        fileName = file;
         strcpy(sourcePath, source);
-    else {
-        memcpy(sourcePath, file, fileEnd - file);
-        strcpy(sourcePath + (fileEnd - file), source);
+    } else {
+        fileName = fileEnd + 1;
+        memcpy(sourcePath, file, fileName - file);
+        strcpy(sourcePath + (fileName - file), source);
     }
 
     Tile* tiles = (Tile*)calloc(tileCount, sizeof(Tile));

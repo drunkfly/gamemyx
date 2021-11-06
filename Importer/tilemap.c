@@ -306,6 +306,7 @@ void loadTilemap(const char* file)
 
 void outputTilemap(const char* file)
 {
+    createDirectories(file);
     FILE* f = fopen(file, "w");
     if (!f) {
         fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
@@ -355,6 +356,7 @@ void outputTilemap(const char* file)
 
 void outputTilemapInfo(const char* file)
 {
+    createDirectories(file);
     FILE* f = fopen(file, "w");
     if (!f) {
         fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));

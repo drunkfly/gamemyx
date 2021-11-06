@@ -1,12 +1,84 @@
 cmake_minimum_required(VERSION 3.12)
 project(GameMYX C ASM)
 
+get_filename_component(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
+get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
+
+########################################################################
+## Importer
+
+file(MAKE_DIRECTORY "${ROOT_DIR}/Build/Importer")
+if(CMAKE_HOST_WIN32)
+    add_custom_target(Importer
+        COMMAND
+            "${CMAKE_COMMAND}"
+                -G "MinGW Makefiles"
+                -DCMAKE_TOOLCHAIN_FILE="${ROOT_DIR}/Build/tcc.cmake"
+                -DCMAKE_MAKE_PROGRAM="${ROOT_DIR}/Tools/make/mingw32-make"
+                -DCMAKE_BUILD_TYPE=Release
+                "${ROOT_DIR}/Importer"
+        COMMAND
+            "${ROOT_DIR}/Tools/make/mingw32-make"
+        WORKING_DIRECTORY
+            "${ROOT_DIR}/Build/Importer"
+        )
+else()
+    add_custom_target(Importer
+        COMMAND
+            "${CMAKE_COMMAND}"
+                -DCMAKE_BUILD_TYPE=Release
+                "${ROOT_DIR}/Importer"
+        COMMAND
+            "${CMAKE_COMMAND}"
+                --build . --config Release
+        WORKING_DIRECTORY
+            "${ROOT_DIR}/Build/Importer"
+        )
+endif()
+
+########################################################################
+## Assets
+
+macro(IMPORTER)
+
+    set(inputs)
+    set(outputs)
+
+    foreach(arg ${ARGN})
+        if("${arg}" MATCHES "\\.(bmp|jpg|png|psd|gif|hdr|pic|ppm|pgm|tsx|tmx)$")
+            LIST(APPEND inputs "${arg}")
+        elseif("${arg}" MATCHES "\\.h$")
+            LIST(APPEND outputs "${arg}")
+        endif()
+    endforeach()
+
+    add_custom_command(
+        OUTPUT
+            ${outputs}
+        COMMAND
+            "${ROOT_DIR}/Build/Importer/Importer" ${ARGN}
+        DEPENDS
+            ${inputs} Importer
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_BINARY_DIR}"
+        )
+
+    if(NOT TARGET Assets)
+        add_custom_target(Assets)
+    endif()
+
+    target_sources(Assets PRIVATE ${outputs})
+
+endmacro()
+
+add_subdirectory("${ROOT_DIR}/Data" Data)
+
+########################################################################
+## Code
+
 add_definitions(
     -DZXNEXT
     )
-
-get_filename_component(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
-get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 
 file(GLOB_RECURSE engine_src
     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -36,12 +108,15 @@ add_executable(Game
     ${game_src}
     )
 
+add_dependencies(Game Assets)
+target_include_directories(Game PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_link_libraries(Game Engine)
 set_target_properties(Game PROPERTIES
     OUTPUT_NAME "${GAME_NAME}"
     PREFIX ""
     SUFFIX ".nex"
-    LINK_FLAGS "-pragma-include:${ROOT_DIR}/mmap.h -Cm -I${ROOT_DIR}")
+    LINK_FLAGS "-pragma-include:${ROOT_DIR}/mmap.h -Cm -I${ROOT_DIR}"
+    )
 
 add_custom_command(TARGET Game
     POST_BUILD COMMAND
