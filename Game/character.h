@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2021 DrunkFly Team
+ * Licensed under 3-clause BSD license
+ */
+#ifndef CHARACTER_H
+#define CHARACTER_H
+
+#include "engine.h"
+
+enum Direction
+{
+    DIR_LEFT = 0,
+    DIR_RIGHT,
+    DIR_UP,
+    DIR_DOWN,
+};
+
+enum State
+{
+    CHAR_IDLE,
+    CHAR_WALK,
+};
+
+STRUCT(Character)
+{
+    MYXAnimSprite idle[4];
+    MYXAnimSprite walk[4];
+    byte x;
+    byte y;
+    byte direction;
+    byte state;
+};
+
+void Character_Init(Character* c, byte x, byte y, const void* sprites);
+
+void Character_Draw(Character* c);
+
+bool Character_MoveLeft(Character* c);
+bool Character_MoveRight(Character* c);
+bool Character_MoveUp(Character* c);
+bool Character_MoveDown(Character* c);
+
+void Character_HandleInput(Character* c);
+
+#endif

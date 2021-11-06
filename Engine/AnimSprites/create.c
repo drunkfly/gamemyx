@@ -20,7 +20,7 @@ MYXAnimSprite MYX_CreateAnimSprite(
         MYXSprite sprite = MYX_CreateSprite(data, paletteIndex);
         if (i == 0)
             anim->first = sprite;
-        MYXP_AdvanceSprite(&data);
+        MYXP_AdvanceSprite(&data, 1);
     }
 
     return index;

@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) 2021 DrunkFly Team
+ * Licensed under 3-clause BSD license
+ */
+#include "character.h"
+
+void Character_Init(Character* c, byte x, byte y, const void* sprites)
+{
+    c->state = CHAR_IDLE;
+    c->direction = DIR_DOWN;
+    c->x = x;
+    c->y = y;
+
+    for (byte dir = 0; dir < 4; dir++) {
+        c->idle[dir] = MYX_LoadAnimSprite(&sprites);
+        c->walk[dir] = MYX_LoadAnimSprite(&sprites);
+    }    
+}
+
+void Character_Draw(Character* c)
+{
+    switch (c->state) {
+        case CHAR_IDLE:
+            MYX_PutAnimSprite(c->x, c->y, c->idle[c->direction]);
+            break;
+        case CHAR_WALK:
+            c->state = CHAR_IDLE;
+            MYX_PutAnimSprite(c->x, c->y, c->walk[c->direction]);
+            break;
+    }
+}
+
+bool Character_MoveLeft(Character* c)
+{
+    c->state = CHAR_WALK;
+    c->direction = DIR_LEFT;
+
+    if (c->x > 0) {
+        --(c->x);
+        if (!MYX_CollidesWithMap16x16(c->x, c->y))
+            return true;
+        ++(c->x);
+    }
+
+    return false;
+}
+
+bool Character_MoveRight(Character* c)
+{
+    c->state = CHAR_WALK;
+    c->direction = DIR_RIGHT;
+
+    if (c->x < 255-16) {
+        ++(c->x);
+        if (!MYX_CollidesWithMap16x16(c->x, c->y))
+            return true;
+        --(c->x);
+    }
+
+    return false;
+}
+
+bool Character_MoveUp(Character* c)
+{
+    c->state = CHAR_WALK;
+    c->direction = DIR_UP;
+
+    if (c->y > 0) {
+        --(c->y);
+        if (!MYX_CollidesWithMap16x16(c->x, c->y))
+            return true;
+        ++(c->y);
+    }
+
+    return false;
+}
+
+bool Character_MoveDown(Character* c)
+{
+    c->state = CHAR_WALK;
+    c->direction = DIR_DOWN;
+
+    if (c->y < 192-16) {
+        ++(c->y);
+        if (!MYX_CollidesWithMap16x16(c->x, c->y))
+            return true;
+        --(c->y);
+    }
+
+    return false;
+}
+
+void Character_HandleInput(Character* c)
+{
+    if (MYX_IsKeyPressed(KEY_O) || MYX_IsGamepad1Pressed(GAMEPAD_LEFT))
+        Character_MoveLeft(c);
+
+    if (MYX_IsKeyPressed(KEY_P) || MYX_IsGamepad1Pressed(GAMEPAD_RIGHT))
+        Character_MoveRight(c);
+
+    if (MYX_IsKeyPressed(KEY_Q) || MYX_IsGamepad1Pressed(GAMEPAD_UP))
+        Character_MoveUp(c);
+
+    if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN))
+        Character_MoveDown(c);
+}

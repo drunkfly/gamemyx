@@ -3,7 +3,7 @@
  * Licensed under 3-clause BSD license
  */
 #include "engine.h"
-#include <stdio.h>
+#include "character.h"
 
 enum
 {
@@ -16,16 +16,7 @@ static const byte SpritePalette[] = {
 #include "Data/Palettes/RedDemonPalette.h"
 };
 
-static const byte SwordsmanIdleFrontData[] = {
-#include "Data/Sprites/SwordsmanIdleFront.h"
-};
-
-static const byte SwordsmanWalkFrontData[] = {
-#include "Data/Sprites/SwordsmanWalkFront1.h"
-#include "Data/Sprites/SwordsmanWalkFront2.h"
-#include "Data/Sprites/SwordsmanWalkFront3.h"
-#include "Data/Sprites/SwordsmanWalkFront4.h"
-};
+#include "swordsman.h"
 
 static const byte RedDemonIdleFrontData[] = {
 #include "Data/Sprites/RedDemonIdleFront.h"
@@ -43,11 +34,11 @@ static const byte MapInfo[] = {
 #include "Data/Map/Info.h"
 };
 
-static MYXSprite IdleFrontSprite;
-static MYXAnimSprite WalkFrontSprite;
 static MYXSprite RedDemonIdleFrontSprite;
 
 static bool collidesWithEnemy;
+
+static Character player;
 
 static void OnPlayerCollision(byte tag)
 {
@@ -61,8 +52,6 @@ static void OnPlayerCollision(byte tag)
 void GameMain()
 {
     MYX_SetSpritePalette(0, SpritePalette, 32);
-    IdleFrontSprite = MYX_CreateSprite(SwordsmanIdleFrontData, 0);
-    WalkFrontSprite = MYX_CreateAnimSprite(SwordsmanWalkFrontData, 4, 4, 0);
 
     RedDemonIdleFrontSprite = MYX_CreateSprite(RedDemonIdleFrontData, 1);
 
@@ -70,58 +59,25 @@ void GameMain()
     MYX_LoadTilemap(TilemapData);
 
     const unsigned char* map = MapInfo;
-    unsigned char playerX = *map++;
-    unsigned char playerY = *map++;
+    byte px = (*map++) * MYX_TILE_WIDTH;
+    byte py = (*map++) * MYX_TILE_HEIGHT;
+    Character_Init(&player, px, py, SwordsmanData);
 
     unsigned char demonX = 5 * MYX_TILE_WIDTH;
     unsigned char demonY = 5 * MYX_TILE_HEIGHT;
-
-    int x = playerX * MYX_TILE_WIDTH;
-    int y = playerY * MYX_TILE_HEIGHT;
 
     MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
 
     for (;;) {
         MYX_BeginFrame();
 
-        if (MYX_IsKeyPressed(KEY_O) || MYX_IsGamepad1Pressed(GAMEPAD_LEFT)) {
-            if (x > 0) {
-                --x;
-                if (MYX_CollidesWithMap16x16(x, y))
-                    ++x;
-            }
-        }
-        if (MYX_IsKeyPressed(KEY_P) || MYX_IsGamepad1Pressed(GAMEPAD_RIGHT)) {
-            if (x < 255-16) {
-                ++x;
-                if (MYX_CollidesWithMap16x16(x, y))
-                    --x;
-            }
-        }
-        if (MYX_IsKeyPressed(KEY_Q) || MYX_IsGamepad1Pressed(GAMEPAD_UP)) {
-            if (y > 0) {
-                --y;
-                if (MYX_CollidesWithMap16x16(x, y))
-                    ++y;
-            }
-        }
-        if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN)) {
-            if (y < 192-16) {
-                ++y;
-                if (MYX_CollidesWithMap16x16(x, y))
-                    --y;
-            }
-        }
-
         MYX_PutSprite(demonX, demonY, RedDemonIdleFrontSprite);
         MYX_AddCollision(demonX, demonY, 16, 16, TAG_ENEMY);
 
-        if (collidesWithEnemy)
-            MYX_PutSprite(x, y, IdleFrontSprite);
-        else
-            MYX_PutAnimSprite(x, y, WalkFrontSprite);
+        Character_Draw(&player);
+        Character_HandleInput(&player);
 
-        MYX_AddCollision(x, y, 16, 16, TAG_PLAYER);
+        MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
 
         collidesWithEnemy = false;
         MYX_EndFrame();

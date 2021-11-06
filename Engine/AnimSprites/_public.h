@@ -11,6 +11,8 @@ typedef byte MYXAnimSprite;
 MYXAnimSprite MYX_CreateAnimSprite(
     const void* data, byte count, byte delay, byte paletteIndex);
 
+MYXAnimSprite MYX_LoadAnimSprite(const void** data);
+
 void MYX_PutAnimSprite(int x, byte y, MYXAnimSprite sprite);
 
 #endif

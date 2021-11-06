@@ -19,7 +19,8 @@ STRUCT(MYXPSprite)
 
 void MYXP_BeginSprites();
 void MYXP_EndSprites();
-void MYXP_AdvanceSprite(const void** data);
+
+void MYXP_AdvanceSprite(const void** data, byte count);
 
 void MYXP_PlatformInit();
 

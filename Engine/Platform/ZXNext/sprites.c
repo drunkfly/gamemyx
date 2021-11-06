@@ -65,13 +65,15 @@ MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex)
     return SpriteCount++;
 }
 
-void MYXP_AdvanceSprite(const void** data)
+void MYXP_AdvanceSprite(const void** data, byte count)
 {
-    const byte* p = (const byte*)*data;
-    if ((*p & MYX_SPRITE_FLAG_256COLOR) == 0)
-        *data = p + (1 + NEXT_SPRITESIZE4);
-    else
-        *data = p + (1 + NEXT_SPRITESIZE8);
+    while (count-- > 0) {
+        const byte* p = (const byte*)*data;
+        if ((*p & MYX_SPRITE_FLAG_256COLOR) == 0)
+            *data = p + (1 + NEXT_SPRITESIZE4);
+        else
+            *data = p + (1 + NEXT_SPRITESIZE8);
+    }
 }
 
 void MYX_DestroyAllSprites()
