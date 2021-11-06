@@ -19,5 +19,5 @@ if exist %~dp0Build\CMake\CMakeCache.txt goto cmake_exists
 if errorlevel 1 exit /B 1
 :cmake_exists
 
-%~dp0Tools\make\mingw32-make
+%~dp0Tools\make\mingw32-make -j 4
 if errorlevel 1 exit /B 1

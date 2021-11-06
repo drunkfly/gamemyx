@@ -2,7 +2,7 @@
  * Copyright (c) 2021 DrunkFly Team
  * Licensed under 3-clause BSD license
  */
-#include "_private.h"
+#include "engine_p.h"
 #if ENABLE_ANIMATED_SPRITES
 
 MYXAnimSprite MYX_CreateAnimSprite(

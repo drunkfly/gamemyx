@@ -4,8 +4,7 @@
  */
 #ifndef ENGINE_ANIMSPRITES_PRIVATE_H
 #define ENGINE_ANIMSPRITES_PRIVATE_H
-
-#include "engine_p.h"
+#if ENABLE_ANIMATED_SPRITES
 
 STRUCT(MYXPAnimSprite)
 {
@@ -23,4 +22,5 @@ extern MYXPAnimSprite MYXP_AnimSprites[MAX_ANIMATED_SPRITES];
 void MYXP_DestroyAllAnimSprites();
 void MYXP_UpdateAnimSprites();
 
+#endif
 #endif

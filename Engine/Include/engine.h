@@ -79,17 +79,7 @@ void MYX_SetSpritePalette(byte index, const void* data, byte count);
 void MYX_PutSprite(int x, byte y, MYXSprite sprite);
 
 #include "../AnimSprites/_public.h"
-
-/**********************************************************************/
-/* Collisions */
-
-typedef void (*MYXCOLLISIONCALLBACK)(byte tag);
-
-bool MYX_CollidesWithMap16x16(word x, word y);
-
-void MYX_SetCollisionCallback(byte tag, MYXCOLLISIONCALLBACK callback);
-
-void MYX_AddCollision(byte x, byte y, byte w, byte h, byte tag);
+#include "../Collisions/_public.h"
 
 /**********************************************************************/
 

@@ -11,13 +11,6 @@ enum
     TAG_ENEMY,
 };
 
-void gotoxy(byte x, byte y)
-{
-	#ifndef __WIN32__
-	printf("\26%c%c", x, y);
-	#endif
-}
-
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
 #include "Data/Palettes/RedDemonPalette.h"

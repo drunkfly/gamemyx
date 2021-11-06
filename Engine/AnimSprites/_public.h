@@ -4,6 +4,7 @@
  */
 #ifndef ENGINE_ANIMSPRITES_PUBLIC_H
 #define ENGINE_ANIMSPRITES_PUBLIC_H
+#if ENABLE_ANIMATED_SPRITES
 
 typedef byte MYXAnimSprite;
 
@@ -12,4 +13,5 @@ MYXAnimSprite MYX_CreateAnimSprite(
 
 void MYX_PutAnimSprite(int x, byte y, MYXAnimSprite sprite);
 
+#endif
 #endif

@@ -7,7 +7,11 @@
 void MYX_BeginFrame()
 {
     MYXP_BeginSprites();
+
+  #if ENABLE_COLLISION
     MYXP_BeginCollisions();
+  #endif
+
   #if ENABLE_ANIMATED_SPRITES
     MYXP_UpdateAnimSprites();
   #endif
@@ -15,8 +19,12 @@ void MYX_BeginFrame()
 
 void MYX_EndFrame()
 {
+  #if ENABLE_COLLISION
     MYXP_EndCollisions();
+  #endif
+
     MYXP_EndSprites();
+
     __asm halt __endasm;
 }
 

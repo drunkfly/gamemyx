@@ -7,7 +7,7 @@ set(CMAKE_C_COMPILER_WORKS TRUE)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 set(CMAKE_C_COMPILER "zcc")
-set(CMAKE_C_FLAGS "+zxn -clib=sdcc_iy -startup=5 --opt-code-size" CACHE INTERNAL "")
+set(CMAKE_C_FLAGS "+zxn -clib=sdcc_iy -startup=31 --opt-code-size" CACHE INTERNAL "")
 set(CMAKE_C_FLAGS_DEBUG "" CACHE INTERNAL "")
 set(CMAKE_C_FLAGS_RELEASE "" CACHE INTERNAL "")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "" CACHE INTERNAL "")
