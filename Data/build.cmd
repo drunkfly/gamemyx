@@ -21,6 +21,23 @@ if errorlevel 1 exit /B 1
 if errorlevel 1 exit /B 1
 
 ..\Importer\importer ^
+    -loadimage MiniWorldSprites/RedDemon.png ^
+    -histogram ^
+    -palette4 ^
+    -area16x16 0 0 ^
+    -outsprite4 ..\Game\Data\Sprites\RedDemonIdleFront.h ^
+    -area16x16 1 0 ^
+    -outsprite4 ..\Game\Data\Sprites\RedDemonWalkFront1.h ^
+    -area16x16 2 0 ^
+    -outsprite4 ..\Game\Data\Sprites\RedDemonWalkFront2.h ^
+    -area16x16 3 0 ^
+    -outsprite4 ..\Game\Data\Sprites\RedDemonWalkFront3.h ^
+    -area16x16 4 0 ^
+    -outsprite4 ..\Game\Data\Sprites\RedDemonWalkFront4.h ^
+    -outpalette4 ..\Game\Data\Palettes\RedDemonPalette.h
+if errorlevel 1 exit /B 1
+
+..\Importer\importer ^
     -loadtsx tiles.tsx ^
     -loadtsx control.tsx ^
     -loadtmx map.tmx ^

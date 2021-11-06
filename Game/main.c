@@ -5,6 +5,12 @@
 #include "engine_p.h"
 #include <stdio.h>
 
+enum
+{
+    TAG_PLAYER,
+    TAG_ENEMY,
+};
+
 void gotoxy(byte x, byte y)
 {
 	#ifndef __WIN32__
@@ -14,10 +20,19 @@ void gotoxy(byte x, byte y)
 
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
+#include "Data/Palettes/RedDemonPalette.h"
 };
 
-static const byte SpriteData[] = {
+static const byte SwordsmanIdleFrontData[] = {
 #include "Data/Sprites/SwordsmanIdleFront.h"
+};
+
+static const byte SwordsmanWalkFront1Data[] = {
+#include "Data/Sprites/SwordsmanWalkFront1.h"
+};
+
+static const byte RedDemonIdleFrontData[] = {
+#include "Data/Sprites/RedDemonIdleFront.h"
 };
 
 static const byte TilemapData[] = {
@@ -33,16 +48,26 @@ static const byte MapInfo[] = {
 };
 
 static HSprite IdleFrontSprite;
+static HSprite WalkFront1Sprite;
+static HSprite RedDemonIdleFrontSprite;
 
-extern byte RawKeys[8];
+static bool collidesWithEnemy;
+
+static void OnPlayerCollision(byte tag)
+{
+    switch (tag) {
+        case TAG_ENEMY:
+            collidesWithEnemy = true;
+            break;
+    }
+}
 
 void GameMain()
 {
-    SetSpritePalette(0, SpritePalette, 16);
-    IdleFrontSprite = CreateSprite(SpriteData, 0);
-
-    #define MAX 32
-    int x = 0, y = 0;
+    SetSpritePalette(0, SpritePalette, 32);
+    IdleFrontSprite = CreateSprite(SwordsmanIdleFrontData, 0);
+    WalkFront1Sprite = CreateSprite(SwordsmanWalkFront1Data, 0);
+    RedDemonIdleFrontSprite = CreateSprite(RedDemonIdleFrontData, 1);
 
     LoadTileset(TilesetData);
     LoadTilemap(TilemapData);
@@ -51,8 +76,13 @@ void GameMain()
     unsigned char playerX = *map++;
     unsigned char playerY = *map++;
 
-    x = playerX * TILE_WIDTH;
-    y = playerY * TILE_HEIGHT;
+    unsigned char demonX = 5 * TILE_WIDTH;
+    unsigned char demonY = 5 * TILE_HEIGHT;
+
+    int x = playerX * TILE_WIDTH;
+    int y = playerY * TILE_HEIGHT;
+
+    SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
 
     for (;;) {
         BeginFrame();
@@ -86,8 +116,13 @@ void GameMain()
             }
         }
 
-        PutSprite(x, y, IdleFrontSprite);
+        PutSprite(demonX, demonY, RedDemonIdleFrontSprite);
+        AddCollision(demonX, demonY, 16, 16, TAG_ENEMY);
 
+        PutSprite(x, y, (collidesWithEnemy ? WalkFront1Sprite : IdleFrontSprite));
+        AddCollision(x, y, 16, 16, TAG_PLAYER);
+
+        collidesWithEnemy = false;
         EndFrame();
     }
 }

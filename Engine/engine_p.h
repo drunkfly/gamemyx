@@ -17,6 +17,9 @@ STRUCT(Sprite)
 void BeginSprites();
 void EndSprites();
 
+void BeginCollisions();
+void EndCollisions();
+
 void PlatformInit();
 
 #endif

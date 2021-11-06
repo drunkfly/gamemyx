@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include "../config.h"
 
 /**********************************************************************/
 /* Common */
@@ -78,7 +79,13 @@ void PutSprite(int x, byte y, HSprite sprite);
 /**********************************************************************/
 /* Collisions */
 
+typedef void (*PFNCOLLISIONCALLBACK)(byte tag);
+
 bool CollidesWithMap16x16(word x, word y);
+
+void SetCollisionCallback(byte tag, PFNCOLLISIONCALLBACK callback);
+
+void AddCollision(byte x, byte y, byte w, byte h, byte tag);
 
 /**********************************************************************/
 

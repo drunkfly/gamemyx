@@ -7,10 +7,12 @@
 void BeginFrame()
 {
     BeginSprites();
+    BeginCollisions();
 }
 
 void EndFrame()
 {
     EndSprites();
+    EndCollisions();
     __asm halt __endasm;
 }
