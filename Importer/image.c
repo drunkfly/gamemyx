@@ -44,6 +44,24 @@ void loadImage(const char* file)
     imageAreaH = imageHeight;
 }
 
+void setTransparentColor(int color)
+{
+    unsigned char cr = (color >> 16) & 0xff;
+    unsigned char cg = (color >>  8) & 0xff;
+    unsigned char cb = (color      ) & 0xff;
+
+    for (int y = 0; y < imageAreaH; y++) {
+        for (int x = 0; x < imageAreaW; x++) {
+            unsigned char r = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 0];
+            unsigned char g = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 1];
+            unsigned char b = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 2];
+
+            if (cr == r && cg == g && cb == b)
+                image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 3] = 0;
+        }
+    }
+}
+
 void buildImageHistogram()
 {
     for (int i = 0; i < 256; i++) {

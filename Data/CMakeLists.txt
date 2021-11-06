@@ -54,6 +54,24 @@ IMPORTER(
     )
 
 IMPORTER(
+    -loadimage "${src}/death.png"
+    -transparent 0xffffff
+    -histogram
+    -palette4
+
+    -area16x16 0 0
+    -outsprite4 Sprites/SwordsmanDeath1.h
+    -area16x16 1 0
+    -outsprite4 Sprites/SwordsmanDeath2.h
+    -area16x16 2 0
+    -outsprite4 Sprites/SwordsmanDeath3.h
+    -area16x16 3 0
+    -outsprite4 Sprites/SwordsmanDeath4.h
+
+    -outpalette4 Palettes/SwordsmanDeathPalette.h
+    )
+
+IMPORTER(
     -loadimage "${src}/MiniWorldSprites/RedDemon.png"
     -histogram
     -palette4

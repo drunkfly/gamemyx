@@ -13,6 +13,7 @@ enum
 
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
+#include "Data/Palettes/SwordsmanDeathPalette.h"
 #include "Data/Palettes/RedDemonPalette.h"
 };
 
@@ -36,24 +37,22 @@ static const byte MapInfo[] = {
 
 static MYXSprite RedDemonIdleFrontSprite;
 
-static bool collidesWithEnemy;
-
 static Character player;
 
 static void OnPlayerCollision(byte tag)
 {
     switch (tag) {
         case TAG_ENEMY:
-            collidesWithEnemy = true;
+            Character_Kill(&player);
             break;
     }
 }
 
 void GameMain()
 {
-    MYX_SetSpritePalette(0, SpritePalette, 32);
+    MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
-    RedDemonIdleFrontSprite = MYX_CreateSprite(RedDemonIdleFrontData, 1);
+    RedDemonIdleFrontSprite = MYX_CreateSprite(RedDemonIdleFrontData, 2);
 
     MYX_LoadTileset(TilesetData);
     MYX_LoadTilemap(TilemapData);
@@ -79,7 +78,6 @@ void GameMain()
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
 
-        collidesWithEnemy = false;
         MYX_EndFrame();
     }
 }

@@ -30,10 +30,11 @@ int main(int argc, char** argv)
             imageAreaW = 16;
             imageAreaH = 16;
         } else if (!strcmp(argv[i], "-histogram")) {
-            CHECK_ARG
             buildImageHistogram();
-        } else if (!strcmp(argv[i], "-palette4")) {
+        } else if (!strcmp(argv[i], "-transparent")) {
             CHECK_ARG
+            setTransparentColor(strtol(argv[++i], NULL, 0));
+        } else if (!strcmp(argv[i], "-palette4")) {
             makeImagePalette4();
         } else if (!strcmp(argv[i], "-outpalette4")) {
             CHECK_ARG

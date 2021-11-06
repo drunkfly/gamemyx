@@ -15,6 +15,9 @@ void Character_Init(Character* c, byte x, byte y, const void* sprites)
         c->idle[dir] = MYX_LoadAnimSprite(&sprites);
         c->walk[dir] = MYX_LoadAnimSprite(&sprites);
     }    
+
+    c->death = MYX_LoadAnimSprite(&sprites);
+    MYX_SetAnimSpritePlayOnce(c->death);
 }
 
 void Character_Draw(Character* c)
@@ -27,11 +30,29 @@ void Character_Draw(Character* c)
             c->state = CHAR_IDLE;
             MYX_PutAnimSprite(c->x, c->y, c->walk[c->direction]);
             break;
+        case CHAR_DEAD:
+            if (c->timer < 32) {
+                MYX_PutAnimSprite(c->x, c->y, c->death);
+                ++(c->timer);
+            }
+            break;
     }
+}
+
+void Character_Kill(Character* c)
+{
+    if (c->state == CHAR_DEAD)
+        return;
+
+    c->state = CHAR_DEAD;
+    c->timer = 0;
 }
 
 bool Character_MoveLeft(Character* c)
 {
+    if (c->state == CHAR_DEAD)
+        return false;
+
     c->state = CHAR_WALK;
     c->direction = DIR_LEFT;
 
@@ -47,6 +68,9 @@ bool Character_MoveLeft(Character* c)
 
 bool Character_MoveRight(Character* c)
 {
+    if (c->state == CHAR_DEAD)
+        return false;
+
     c->state = CHAR_WALK;
     c->direction = DIR_RIGHT;
 
@@ -62,6 +86,9 @@ bool Character_MoveRight(Character* c)
 
 bool Character_MoveUp(Character* c)
 {
+    if (c->state == CHAR_DEAD)
+        return false;
+
     c->state = CHAR_WALK;
     c->direction = DIR_UP;
 
@@ -77,6 +104,9 @@ bool Character_MoveUp(Character* c)
 
 bool Character_MoveDown(Character* c)
 {
+    if (c->state == CHAR_DEAD)
+        return false;
+
     c->state = CHAR_WALK;
     c->direction = DIR_DOWN;
 
@@ -92,6 +122,9 @@ bool Character_MoveDown(Character* c)
 
 void Character_HandleInput(Character* c)
 {
+    if (c->state == CHAR_DEAD)
+        return;
+
     if (MYX_IsKeyPressed(KEY_O) || MYX_IsGamepad1Pressed(GAMEPAD_LEFT))
         Character_MoveLeft(c);
 

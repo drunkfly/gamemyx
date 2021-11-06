@@ -17,7 +17,7 @@ void MYXP_UpdateAnimSprites()
 {
     MYXPAnimSprite* sprite = MYXP_AnimSprites;
     for (byte i = 0; i < MYXP_AnimSpriteCount; i++) {
-        if (!sprite->visible) {
+        if ((sprite->flags & MYXP_ANIM_SPRITE_VISIBLE) == 0) {
             sprite->index = 0;
             sprite->timer = 0;
         } else {
@@ -25,11 +25,15 @@ void MYXP_UpdateAnimSprites()
             if (sprite->timer >= sprite->delay) {
                 sprite->timer = 0;
                 sprite->index++;
-                if (sprite->index >= sprite->count)
-                    sprite->index = 0;
+                if (sprite->index >= sprite->count) {
+                    if ((sprite->flags & MYXP_ANIM_SPRITE_PLAY_ONCE) == 0)
+                        sprite->index = 0;
+                    else
+                        sprite->index = sprite->count - 1;
+                }
             }
         }
-        sprite->visible = 0;
+        sprite->flags &= ~MYXP_ANIM_SPRITE_VISIBLE;
         ++sprite;
     }
 }

@@ -10,7 +10,7 @@ MYXAnimSprite MYX_CreateAnimSprite(
 {
     MYXAnimSprite index = MYXP_AnimSpriteCount++;
     MYXPAnimSprite* anim = &MYXP_AnimSprites[index];
-    anim->visible = 0;
+    anim->flags = 0;
     anim->index = 0;
     anim->count = count;
     anim->delay = delay;

@@ -80,6 +80,7 @@ void makeImagePalette4();
 void outputImagePalette4(const char* file);
 void output4BitImage(const char* file);
 int histogramSort(const void* p1, const void* p2);
+void setTransparentColor(int color);
 
 void unloadTilemap();
 void loadTilemap(const char* file);

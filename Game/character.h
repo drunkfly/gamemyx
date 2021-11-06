@@ -19,21 +19,26 @@ enum State
 {
     CHAR_IDLE,
     CHAR_WALK,
+    CHAR_DEAD,
 };
 
 STRUCT(Character)
 {
     MYXAnimSprite idle[4];
     MYXAnimSprite walk[4];
+    MYXAnimSprite death;
     byte x;
     byte y;
     byte direction;
     byte state;
+    byte timer;
 };
 
 void Character_Init(Character* c, byte x, byte y, const void* sprites);
 
 void Character_Draw(Character* c);
+
+void Character_Kill(Character* c);
 
 bool Character_MoveLeft(Character* c);
 bool Character_MoveRight(Character* c);

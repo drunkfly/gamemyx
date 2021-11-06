@@ -6,10 +6,13 @@
 #define ENGINE_ANIMSPRITES_PRIVATE_H
 #if ENABLE_ANIMATED_SPRITES
 
+#define MYXP_ANIM_SPRITE_VISIBLE    0x01
+#define MYXP_ANIM_SPRITE_PLAY_ONCE  0x02
+
 STRUCT(MYXPAnimSprite)
 {
     MYXSprite first;
-    byte visible;
+    byte flags;
     byte index;
     byte count;
     byte delay;

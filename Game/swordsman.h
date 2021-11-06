@@ -46,4 +46,11 @@ static const byte SwordsmanData[] = {
 #include "Data/Sprites/SwordsmanWalkFront2.h"
 #include "Data/Sprites/SwordsmanWalkFront3.h"
 #include "Data/Sprites/SwordsmanWalkFront4.h"
+
+// death
+/*count=*/ 4, /* delay= */ 8, /* paletteIndex= */ 1,
+#include "Data/Sprites/SwordsmanDeath1.h"
+#include "Data/Sprites/SwordsmanDeath2.h"
+#include "Data/Sprites/SwordsmanDeath3.h"
+#include "Data/Sprites/SwordsmanDeath4.h"
 };
