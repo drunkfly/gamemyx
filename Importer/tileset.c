@@ -11,7 +11,7 @@ void unloadTilesets()
 {
     for (int i = 0; i < tilesetCount; i++) {
         free(tilesets[i].tiles);
-        stbi_image_free(tilesets[i].tiles);
+        stbi_image_free(tilesets[i].imagePixels);
     }
     tilesetCount = 0;
 }

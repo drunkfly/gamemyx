@@ -8,7 +8,9 @@ get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 ## Importer
 
 file(MAKE_DIRECTORY "${ROOT_DIR}/Build/Importer")
+
 if(CMAKE_HOST_WIN32)
+    set(importer "${ROOT_DIR}/Build/Importer/Importer.exe")
     add_custom_target(Importer
         COMMAND
             "${CMAKE_COMMAND}"
@@ -23,6 +25,7 @@ if(CMAKE_HOST_WIN32)
             "${ROOT_DIR}/Build/Importer"
         )
 else()
+    set(importer "${ROOT_DIR}/Build/Importer/Importer")
     add_custom_target(Importer
         COMMAND
             "${CMAKE_COMMAND}"
@@ -58,7 +61,7 @@ macro(IMPORTER)
         COMMAND
             "${ROOT_DIR}/Build/Importer/Importer" ${ARGN}
         DEPENDS
-            ${inputs} Importer
+            ${inputs} "${importer}" Importer
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_BINARY_DIR}"
         )
