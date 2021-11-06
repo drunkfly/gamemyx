@@ -1,5 +1,2 @@
-/Build/Bin
-/Build/Engine
-/Build/Game
-/Build/Lib
+/Build/CMake
 /Build/Sync

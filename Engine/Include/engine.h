@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 #include <string.h>
-#include "../config.h"
+#include "../../config.h"
 
 /**********************************************************************/
 /* Common */
@@ -32,7 +32,7 @@ typedef unsigned short word;
 /* Input */
 
 #ifdef ZXNEXT
-#include "Platform/ZXNext/keys.h"
+#include "../Platform/ZXNext/keys.h"
 #endif
 
 bool MYX_IsKeyPressed(byte key)

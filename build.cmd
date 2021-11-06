@@ -3,31 +3,19 @@ setlocal
 
 set PATH=%~dp0Tools\z88dk\bin;%PATH%
 set ZCCCFG=%~dp0Tools\z88dk\lib\config
-rem set NAME=MyxDemo
 
-Tools\make\mingw32-make
+if not exist %~dp0Build\CMake mkdir %~dp0Build\CMake
+if errorlevel 1 exit /B 1
 
-rem cd %~dp0
-rem if errorlevel 1 exit /B 1
+cd %~dp0Build\CMake
+if errorlevel 1 exit /B 1
 
-rem if not exist %~dp0Build\Sync\Build mkdir %~dp0Build\Sync\Build
-rem if errorlevel 1 exit /B 1
+%~dp0Tools\cmake\bin\cmake ^
+    -G "MinGW Makefiles" ^
+    -DCMAKE_MAKE_PROGRAM=%~dp0Tools\make\mingw32-make ^
+    -DCMAKE_TOOLCHAIN_FILE=%~dp0Build\z88dk.cmake ^
+    %~dp0Build
+if errorlevel 1 exit /B 1
 
-rem zcc +zxn ^
-rem     -IC:/Work2/NextGame/Engine ^
-rem 	-clib=classic ^
-rem     --opt-code-size ^
-rem 	-lndos ^
-rem 	-lesxdos ^
-rem     -m ^
-rem 	-create-app ^
-rem 	-subtype=nex ^
-rem     -o "C:/Work2/NextGame/Build/Bin/MyxDemo.nex" ^
-rem 	test.c
-rem if errorlevel 1 exit /B 1
-
-rem zcc +zxn -IC:/Work2/NextGame/Engine -clib=classic
-rem --opt-code-size  -lndos -lesxdos -m -create-app -subtype=nex -o "C:/Work2/NextGame/Build/Bin/MyxDemo.nex" test.c
-
-rem copy /b %~dp0Build\%NAME%.nex %~dp0Build\Sync\Build\%NAME%.nex
-rem if errorlevel 1 exit /B 1
+%~dp0Tools\make\mingw32-make
+if errorlevel 1 exit /B 1

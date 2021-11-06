@@ -4,7 +4,7 @@
  */
 #include "zxnext.h"
 
-void MYX_PlatformInit()
+void MYXP_PlatformInit()
 {
     NEXT_SETREG(NEXT_SPRITELAYERMODE,
         NEXT_SPRITE_127_ON_TOP |
