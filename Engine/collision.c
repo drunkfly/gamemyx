@@ -1,6 +1,6 @@
 #include "engine_p.h"
 
-STRUCT(CollisionRect)
+STRUCT(MYXPCollisionRect)
 {
     byte x1;
     byte y1;
@@ -9,77 +9,77 @@ STRUCT(CollisionRect)
     byte tag;
 };
 
-static PFNCOLLISIONCALLBACK callbacks[MAX_COLLISION_CALLBACKS];
-static CollisionRect rects[MAX_COLLISION_RECTANGLES];
-static CollisionRect* currentRect;
+static MYXCOLLISIONCALLBACK Callbacks[MAX_COLLISION_CALLBACKS];
+static MYXPCollisionRect Rects[MAX_COLLISION_RECTANGLES];
+static MYXPCollisionRect* CurrentRect;
 
-bool CollidesWithMap16x16(word x, word y)
+bool MYX_CollidesWithMap16x16(word x, word y)
 {
     word tileX = x >> 3;
     word tileY = y >> 3;
 
-    if (IsSmallTileBlocking(tileX, tileY))
+    if (MYX_IsSmallTileBlocking(tileX, tileY))
         return true;
-    if (IsSmallTileBlocking(tileX + 1, tileY))
+    if (MYX_IsSmallTileBlocking(tileX + 1, tileY))
         return true;
-    if (IsSmallTileBlocking(tileX, tileY + 1))
+    if (MYX_IsSmallTileBlocking(tileX, tileY + 1))
         return true;
-    if (IsSmallTileBlocking(tileX + 1, tileY + 1))
+    if (MYX_IsSmallTileBlocking(tileX + 1, tileY + 1))
         return true;
 
     if ((x & 7) != 0) {
-        if (IsSmallTileBlocking(tileX + 2, tileY))
+        if (MYX_IsSmallTileBlocking(tileX + 2, tileY))
             return true;
-        if (IsSmallTileBlocking(tileX + 2, tileY + 1))
+        if (MYX_IsSmallTileBlocking(tileX + 2, tileY + 1))
             return true;
-        if ((y & 7) != 0 && IsSmallTileBlocking(tileX + 2, tileY + 2))
+        if ((y & 7) != 0 && MYX_IsSmallTileBlocking(tileX + 2, tileY + 2))
             return true;
     }
 
     if ((y & 7) != 0) {
-        if (IsSmallTileBlocking(tileX, tileY + 2))
+        if (MYX_IsSmallTileBlocking(tileX, tileY + 2))
             return true;
-        if (IsSmallTileBlocking(tileX + 1, tileY + 2))
+        if (MYX_IsSmallTileBlocking(tileX + 1, tileY + 2))
             return true;
     }
 
     return false;
 }
 
-void SetCollisionCallback(byte tag, PFNCOLLISIONCALLBACK callback)
+void MYX_SetCollisionCallback(byte tag, MYXCOLLISIONCALLBACK callback)
 {
-    callbacks[tag] = callback;
+    Callbacks[tag] = callback;
 }
 
-void AddCollision(byte x, byte y, byte w, byte h, byte tag)
+void MYX_AddCollision(byte x, byte y, byte w, byte h, byte tag)
 {
-    currentRect->x1 = x;
-    currentRect->y1 = y;
-    currentRect->x2 = x + w - 1;
-    currentRect->y2 = y + h - 1;
-    currentRect->tag = tag;
-    currentRect++;
+    CurrentRect->x1 = x;
+    CurrentRect->y1 = y;
+    CurrentRect->x2 = x + w - 1;
+    CurrentRect->y2 = y + h - 1;
+    CurrentRect->tag = tag;
+    CurrentRect++;
 }
 
-void BeginCollisions()
+void MYXP_BeginCollisions()
 {
-    currentRect = rects;
+    CurrentRect = Rects;
 }
 
-void EndCollisions()
+void MYXP_EndCollisions()
 {
     // FIXME: quadratic complexity, very ineffective
-    for (const CollisionRect* p1 = rects; p1 != currentRect; p1++) {
-        for (const CollisionRect* p2 = p1 + 1; p2 != currentRect; p2++) {
+    for (const MYXPCollisionRect* p1 = Rects; p1 != CurrentRect; p1++) {
+        for (const MYXPCollisionRect* p2 = p1 + 1; p2 != CurrentRect; p2++) {
             if (p1->x2 >= p2->x1 && p1->x1 <= p2->x2 &&
                 p1->y2 >= p2->y1 && p1->y1 <= p2->y2 &&
                 p1->tag != p2->tag) {
 
-                PFNCOLLISIONCALLBACK cb1 = callbacks[p1->tag];
+                MYXCOLLISIONCALLBACK cb1 = Callbacks[p1->tag];
                 if (cb1)
                     cb1(p2->tag);
 
-                PFNCOLLISIONCALLBACK cb2 = callbacks[p2->tag];
+                MYXCOLLISIONCALLBACK cb2 = Callbacks[p2->tag];
                 if (cb2)
                     cb2(p1->tag);
             }

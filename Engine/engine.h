@@ -35,62 +35,62 @@ typedef unsigned short word;
 #include "Platform/ZXNext/keys.h"
 #endif
 
-bool IsKeyPressed(byte key)
+bool MYX_IsKeyPressed(byte key)
     Z88DK_FASTCALL Z88DK_PRESERVES((d, e, iyl, iyh));
 
-bool IsGamepad1Pressed(byte key)
+bool MYX_IsGamepad1Pressed(byte key)
     Z88DK_FASTCALL Z88DK_PRESERVES((b, c, d, e, h, iyl, iyh));
 
-bool IsGamepad2Pressed(byte key)
+bool MYX_IsGamepad2Pressed(byte key)
     Z88DK_FASTCALL Z88DK_PRESERVES((b, c, d, e, h, iyl, iyh));
 
 /**********************************************************************/
 /* Tiles */
 
-#define TILE_WIDTH 16
-#define TILE_HEIGHT 16
-#define TILE_SMALL_WIDTH 8
-#define TILE_SMALL_HEIGHT 8
+#define MYX_TILE_WIDTH 16
+#define MYX_TILE_HEIGHT 16
+#define MYX_TILE_SMALL_WIDTH 8
+#define MYX_TILE_SMALL_HEIGHT 8
 
-void SetTilemapPalette(byte index, const void* data, byte count);
+void MYX_SetTilemapPalette(byte index, const void* data, byte count);
 
-bool IsSmallTileBlocking(byte x, byte y);
+bool MYX_IsSmallTileBlocking(byte x, byte y);
 
-void LoadTileset(const byte* tileset);
-void LoadTilemap(const byte* tilemap);
+void MYX_LoadTileset(const byte* tileset);
+void MYX_LoadTilemap(const byte* tilemap);
 
 /**********************************************************************/
 /* Sprites */
 
-#define TRANSPARENT_COLOR_INDEX4 0
+#define MYX_TRANSPARENT_COLOR_INDEX4    0
 
-#define SPRITE_FLAG_16COLOR     0x00
-#define SPRITE_FLAG_256COLOR    0x01
+#define MYX_SPRITE_FLAG_16COLOR         0x00
+#define MYX_SPRITE_FLAG_256COLOR        0x01
 
-typedef byte HSprite;
+typedef byte MYXSprite;
 
-HSprite CreateSprite(const void* data, byte paletteIndex);
-void DestroyAllSprites();
+MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex);
+void MYX_DestroyAllSprites();
 
-void SetSpritePalette(byte index, const void* data, byte count);
+void MYX_SetSpritePalette(byte index, const void* data, byte count);
 
-void PutSprite(int x, byte y, HSprite sprite);
+void MYX_PutSprite(int x, byte y, MYXSprite sprite);
 
 /**********************************************************************/
 /* Collisions */
 
-typedef void (*PFNCOLLISIONCALLBACK)(byte tag);
+typedef void (*MYXCOLLISIONCALLBACK)(byte tag);
 
-bool CollidesWithMap16x16(word x, word y);
+bool MYX_CollidesWithMap16x16(word x, word y);
 
-void SetCollisionCallback(byte tag, PFNCOLLISIONCALLBACK callback);
+void MYX_SetCollisionCallback(byte tag, MYXCOLLISIONCALLBACK callback);
 
-void AddCollision(byte x, byte y, byte w, byte h, byte tag);
+void MYX_AddCollision(byte x, byte y, byte w, byte h, byte tag);
 
 /**********************************************************************/
 
-void BeginFrame();
-void EndFrame();
+void MYX_BeginFrame();
+void MYX_EndFrame();
 
 /* should be declared in game code. */
 void GameMain();

@@ -49,7 +49,7 @@ STRUCT(HistogramEntry)
 STRUCT(TileCacheEntry)
 {
     char md5[16];
-    unsigned char pixels[TILE_SMALL_WIDTH * TILE_SMALL_HEIGHT * 4];
+    unsigned char pixels[MYX_TILE_SMALL_WIDTH * MYX_TILE_SMALL_HEIGHT * 4];
     int paletteIndex;
 };
 

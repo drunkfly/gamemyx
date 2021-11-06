@@ -47,9 +47,9 @@ static const byte MapInfo[] = {
 #include "Data/Map/Info.h"
 };
 
-static HSprite IdleFrontSprite;
-static HSprite WalkFront1Sprite;
-static HSprite RedDemonIdleFrontSprite;
+static MYXSprite IdleFrontSprite;
+static MYXSprite WalkFront1Sprite;
+static MYXSprite RedDemonIdleFrontSprite;
 
 static bool collidesWithEnemy;
 
@@ -64,65 +64,65 @@ static void OnPlayerCollision(byte tag)
 
 void GameMain()
 {
-    SetSpritePalette(0, SpritePalette, 32);
-    IdleFrontSprite = CreateSprite(SwordsmanIdleFrontData, 0);
-    WalkFront1Sprite = CreateSprite(SwordsmanWalkFront1Data, 0);
-    RedDemonIdleFrontSprite = CreateSprite(RedDemonIdleFrontData, 1);
+    MYX_SetSpritePalette(0, SpritePalette, 32);
+    IdleFrontSprite = MYX_CreateSprite(SwordsmanIdleFrontData, 0);
+    WalkFront1Sprite = MYX_CreateSprite(SwordsmanWalkFront1Data, 0);
+    RedDemonIdleFrontSprite = MYX_CreateSprite(RedDemonIdleFrontData, 1);
 
-    LoadTileset(TilesetData);
-    LoadTilemap(TilemapData);
+    MYX_LoadTileset(TilesetData);
+    MYX_LoadTilemap(TilemapData);
 
     const unsigned char* map = MapInfo;
     unsigned char playerX = *map++;
     unsigned char playerY = *map++;
 
-    unsigned char demonX = 5 * TILE_WIDTH;
-    unsigned char demonY = 5 * TILE_HEIGHT;
+    unsigned char demonX = 5 * MYX_TILE_WIDTH;
+    unsigned char demonY = 5 * MYX_TILE_HEIGHT;
 
-    int x = playerX * TILE_WIDTH;
-    int y = playerY * TILE_HEIGHT;
+    int x = playerX * MYX_TILE_WIDTH;
+    int y = playerY * MYX_TILE_HEIGHT;
 
-    SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
+    MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
 
     for (;;) {
-        BeginFrame();
+        MYX_BeginFrame();
 
-        if (IsKeyPressed(KEY_O) || IsGamepad1Pressed(GAMEPAD_LEFT)) {
+        if (MYX_IsKeyPressed(KEY_O) || MYX_IsGamepad1Pressed(GAMEPAD_LEFT)) {
             if (x > 0) {
                 --x;
-                if (CollidesWithMap16x16(x, y))
+                if (MYX_CollidesWithMap16x16(x, y))
                     ++x;
             }
         }
-        if (IsKeyPressed(KEY_P) || IsGamepad1Pressed(GAMEPAD_RIGHT)) {
+        if (MYX_IsKeyPressed(KEY_P) || MYX_IsGamepad1Pressed(GAMEPAD_RIGHT)) {
             if (x < 255-16) {
                 ++x;
-                if (CollidesWithMap16x16(x, y))
+                if (MYX_CollidesWithMap16x16(x, y))
                     --x;
             }
         }
-        if (IsKeyPressed(KEY_Q) || IsGamepad1Pressed(GAMEPAD_UP)) {
+        if (MYX_IsKeyPressed(KEY_Q) || MYX_IsGamepad1Pressed(GAMEPAD_UP)) {
             if (y > 0) {
                 --y;
-                if (CollidesWithMap16x16(x, y))
+                if (MYX_CollidesWithMap16x16(x, y))
                     ++y;
             }
         }
-        if (IsKeyPressed(KEY_A) || IsGamepad1Pressed(GAMEPAD_DOWN)) {
+        if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN)) {
             if (y < 192-16) {
                 ++y;
-                if (CollidesWithMap16x16(x, y))
+                if (MYX_CollidesWithMap16x16(x, y))
                     --y;
             }
         }
 
-        PutSprite(demonX, demonY, RedDemonIdleFrontSprite);
-        AddCollision(demonX, demonY, 16, 16, TAG_ENEMY);
+        MYX_PutSprite(demonX, demonY, RedDemonIdleFrontSprite);
+        MYX_AddCollision(demonX, demonY, 16, 16, TAG_ENEMY);
 
-        PutSprite(x, y, (collidesWithEnemy ? WalkFront1Sprite : IdleFrontSprite));
-        AddCollision(x, y, 16, 16, TAG_PLAYER);
+        MYX_PutSprite(x, y, (collidesWithEnemy ? WalkFront1Sprite : IdleFrontSprite));
+        MYX_AddCollision(x, y, 16, 16, TAG_PLAYER);
 
         collidesWithEnemy = false;
-        EndFrame();
+        MYX_EndFrame();
     }
 }

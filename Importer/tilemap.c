@@ -70,7 +70,7 @@ void loadTilemap(const char* file)
 
     int tileWidth = atoi(ezxml_attr(xml, "tilewidth"));
     int tileHeight = atoi(ezxml_attr(xml, "tileheight"));
-    if (tileWidth != TILE_WIDTH || tileHeight != TILE_HEIGHT) {
+    if (tileWidth != MYX_TILE_WIDTH || tileHeight != MYX_TILE_HEIGHT) {
         fprintf(stderr, "error: invalid tile set \"%s\".\n", file);
         ezxml_free(xml);
         exit(1);
@@ -231,7 +231,7 @@ void loadTilemap(const char* file)
         for (int x = 0; x < width; x++) {
             for (int yy = 0; yy < 2; yy++) {
                 for (int xx = 0; xx < 2; xx++) {
-                    unsigned char pixels[TILE_SMALL_WIDTH * TILE_SMALL_HEIGHT * 4];
+                    unsigned char pixels[MYX_TILE_SMALL_WIDTH * MYX_TILE_SMALL_HEIGHT * 4];
                     memset(pixels, 0, sizeof(pixels));
                     for (int i = 0; i < layerCount; i++) {
                         Tile* tile = tilemapLayers[i].data[y * width + x];
@@ -256,19 +256,19 @@ void loadTilemap(const char* file)
                         }
 
                         int id = tile->id;
-                        int ix = (id % tile->tileset->columnCount) * TILE_WIDTH  + xx * TILE_SMALL_WIDTH;
-                        int iy = (id / tile->tileset->columnCount) * TILE_HEIGHT + yy * TILE_SMALL_HEIGHT;
+                        int ix = (id % tile->tileset->columnCount) * MYX_TILE_WIDTH  + xx * MYX_TILE_SMALL_WIDTH;
+                        int iy = (id / tile->tileset->columnCount) * MYX_TILE_HEIGHT + yy * MYX_TILE_SMALL_HEIGHT;
 
                         const unsigned char* src = tile->tileset->imagePixels;
-                        for (int cy = 0; cy < TILE_SMALL_WIDTH; cy++) {
-                            for (int cx = 0; cx < TILE_SMALL_HEIGHT; cx++) {
+                        for (int cy = 0; cy < MYX_TILE_SMALL_WIDTH; cy++) {
+                            for (int cx = 0; cx < MYX_TILE_SMALL_HEIGHT; cx++) {
                                 int off1 = ((iy + cy) * tile->tileset->imageWidth + (ix + cx)) * 4;
                                 unsigned char r1 = src[off1 + 0];
                                 unsigned char g1 = src[off1 + 1];
                                 unsigned char b1 = src[off1 + 2];
                                 unsigned char a1 = src[off1 + 3];
 
-                                int off2 = (cy * TILE_SMALL_WIDTH + cx) * 4;
+                                int off2 = (cy * MYX_TILE_SMALL_WIDTH + cx) * 4;
                                 unsigned char* r2 = &pixels[off2 + 0];
                                 unsigned char* g2 = &pixels[off2 + 1];
                                 unsigned char* b2 = &pixels[off2 + 2];

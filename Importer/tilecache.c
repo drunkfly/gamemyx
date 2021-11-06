@@ -27,7 +27,7 @@ int addTile(const unsigned char* pixels)
 
     MD5_CTX ctx;
     MD5_Init(&ctx);
-    MD5_Update(&ctx, pixels, TILE_SMALL_WIDTH * TILE_SMALL_HEIGHT * 4);
+    MD5_Update(&ctx, pixels, MYX_TILE_SMALL_WIDTH * MYX_TILE_SMALL_HEIGHT * 4);
     MD5_Final(md5, &ctx);
 
     for (int i = 0; i < cachedCount; i++) {
@@ -39,19 +39,19 @@ int addTile(const unsigned char* pixels)
         return -1;
 
     memcpy(cachedTiles[cachedCount].md5, md5, 16);
-    memcpy(cachedTiles[cachedCount].pixels, pixels, TILE_SMALL_WIDTH * TILE_SMALL_HEIGHT * 4);
+    memcpy(cachedTiles[cachedCount].pixels, pixels, MYX_TILE_SMALL_WIDTH * MYX_TILE_SMALL_HEIGHT * 4);
     return cachedCount++;
 }
 
 static bool paletteCanFitColors(Palette* palette, unsigned char* pixels)
 {
     int colorCount = palette->colorCount;
-    for (int y = 0; y < TILE_SMALL_WIDTH; y++) {
-        for (int x = 0; x < TILE_SMALL_HEIGHT; x++) {
-            unsigned char r = pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 0];
-            unsigned char g = pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 1];
-            unsigned char b = pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 2];
-            unsigned char a = pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 3];
+    for (int y = 0; y < MYX_TILE_SMALL_WIDTH; y++) {
+        for (int x = 0; x < MYX_TILE_SMALL_HEIGHT; x++) {
+            unsigned char r = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 0];
+            unsigned char g = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 1];
+            unsigned char b = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 2];
+            unsigned char a = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
 
             unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
 
@@ -85,12 +85,12 @@ void outputTileset4Bit(const char* file)
             histogram[j].count = 0;
         }
 
-        for (int y = 0; y < TILE_SMALL_WIDTH; y++) {
-            for (int x = 0; x < TILE_SMALL_HEIGHT; x++) {
-                unsigned char r = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 0];
-                unsigned char g = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 1];
-                unsigned char b = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 2];
-                unsigned char a = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 3];
+        for (int y = 0; y < MYX_TILE_SMALL_WIDTH; y++) {
+            for (int x = 0; x < MYX_TILE_SMALL_HEIGHT; x++) {
+                unsigned char r = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 0];
+                unsigned char g = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 1];
+                unsigned char b = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 2];
+                unsigned char a = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
                 unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
                 histogram[c].count++;
             }
@@ -143,13 +143,13 @@ void outputTileset4Bit(const char* file)
 
     for (int i = 0; i < cachedCount; i++) {
         fprintf(f, "\n");
-        for (int y = 0; y < TILE_SMALL_WIDTH; y++) {
+        for (int y = 0; y < MYX_TILE_SMALL_WIDTH; y++) {
             unsigned char pixel = 0;
-            for (int x = 0; x < TILE_SMALL_HEIGHT; x++) {
-                unsigned char r = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 0];
-                unsigned char g = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 1];
-                unsigned char b = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 2];
-                unsigned char a = cachedTiles[i].pixels[(y * TILE_SMALL_WIDTH + x) * 4 + 3];
+            for (int x = 0; x < MYX_TILE_SMALL_HEIGHT; x++) {
+                unsigned char r = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 0];
+                unsigned char g = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 1];
+                unsigned char b = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 2];
+                unsigned char a = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
 
                 unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
 

@@ -3,14 +3,14 @@
 ; Licensed under 3-clause BSD license
 ;
 
-                PUBLIC  _IntVectors
-                PUBLIC  _IntEntry
+                PUBLIC  _MYXP_IntVectors
+                PUBLIC  _MYXP_IntEntry
 
-                EXTERN  _InterruptHandler
+                EXTERN  _MYXP_InterruptHandler
 
-                SECTION INT_ENTRY
+                SECTION MYX_INTENTRY
 
-_IntEntry:      push    af
+_MYXP_IntEntry: push    af
                 push    bc
                 push    de
                 push    hl
@@ -22,7 +22,7 @@ _IntEntry:      push    af
                 push    hl
                 push    ix
                 push    iy
-                call    _InterruptHandler
+                call    _MYXP_InterruptHandler
                 pop     iy
                 pop     ix
                 pop     hl
@@ -38,7 +38,8 @@ _IntEntry:      push    af
                 ei
                 ret
 
-                SECTION INT_VECTORS
+                SECTION MYX_INTVECTORS
 
-_IntVectors:    dw      _IntEntry
+_MYXP_IntVectors:
+                dw      _MYXP_IntEntry
                 defs    255, 0x81

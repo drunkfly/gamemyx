@@ -156,21 +156,21 @@
 
 
 #define NEXT_GETREG(reg) \
-    (Next_RegisterNumber = (reg), Next_RegisterValue)
+    (NEXT_RegisterNumber = (reg), NEXT_RegisterValue)
 
 #define NEXT_SETREG(reg, value) \
-    (Next_RegisterNumber = (reg), Next_RegisterValue = (value))
+    (NEXT_RegisterNumber = (reg), NEXT_RegisterValue = (value))
 
-__sfr __at 0x57 Next_SpriteAttribute;
-__sfr __at 0x5b Next_SpritePattern;
+__sfr __at 0x57 NEXT_SpriteAttribute;
+__sfr __at 0x5b NEXT_SpritePattern;
 
-__sfr __banked __at 0x243b Next_RegisterNumber;
-__sfr __banked __at 0x253b Next_RegisterValue;
+__sfr __banked __at 0x243b NEXT_RegisterNumber;
+__sfr __banked __at 0x253b NEXT_RegisterValue;
 
-__sfr __banked __at 0x123b Next_Layer2AccessPort;
+__sfr __banked __at 0x123b NEXT_Layer2AccessPort;
 
-__sfr __banked __at 0x303b Next_SpriteControl;
+__sfr __banked __at 0x303b NEXT_SpriteControl;
 
-void ReadInput() __preserves_regs(a, iyl, iyh);
+void MYXP_ReadInput() __preserves_regs(a, iyl, iyh);
 
 #endif

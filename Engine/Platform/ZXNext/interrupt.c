@@ -4,7 +4,7 @@
  */
 #include "zxnext.h"
 
-void InterruptHandler()
+void MYXP_InterruptHandler()
 {
-    ReadInput();
+    MYXP_ReadInput();
 }

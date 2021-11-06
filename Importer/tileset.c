@@ -26,7 +26,7 @@ void loadTileset(const char* file)
 
     int tileWidth = atoi(ezxml_attr(xml, "tilewidth"));
     int tileHeight = atoi(ezxml_attr(xml, "tileheight"));
-    if (tileWidth != TILE_WIDTH || tileHeight != TILE_HEIGHT) {
+    if (tileWidth != MYX_TILE_WIDTH || tileHeight != MYX_TILE_HEIGHT) {
         fprintf(stderr, "error: invalid tile set \"%s\".\n", file);
         ezxml_free(xml);
         exit(1);

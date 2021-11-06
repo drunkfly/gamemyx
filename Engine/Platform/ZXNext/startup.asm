@@ -8,7 +8,7 @@
                 EXTERN  _EngineMain
                 EXTERN  _IntVectors
 
-                SECTION ENGINE_INIT
+                SECTION MYX_STARTUP
 
 _main:          ld      sp, 0x8300
                 di

@@ -4,15 +4,15 @@
  */
 #include "engine_p.h"
 
-void BeginFrame()
+void MYX_BeginFrame()
 {
-    BeginSprites();
-    BeginCollisions();
+    MYXP_BeginSprites();
+    MYXP_BeginCollisions();
 }
 
-void EndFrame()
+void MYX_EndFrame()
 {
-    EndSprites();
-    EndCollisions();
+    MYXP_EndSprites();
+    MYXP_EndCollisions();
     __asm halt __endasm;
 }

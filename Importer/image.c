@@ -86,7 +86,7 @@ void makeImagePalette4()
 
     int paletteIndex = 0;
     for (int i = 0; i < 15; i++) {
-        if (paletteIndex == TRANSPARENT_COLOR_INDEX4)
+        if (paletteIndex == MYX_TRANSPARENT_COLOR_INDEX4)
             ++paletteIndex;
         palette4[i] = sortedHistogram[i].index;
     }
@@ -114,7 +114,7 @@ void output4BitImage(const char* file)
         exit(1);
     }
 
-    fprintf(f, "SPRITE_FLAG_16COLOR,\n");
+    fprintf(f, "MYX_SPRITE_FLAG_16COLOR,\n");
 
     for (int y = 0; y < imageAreaH; y++) {
         unsigned char pixel = 0;
@@ -126,9 +126,9 @@ void output4BitImage(const char* file)
 
             if (a < 128) {
                 if (x % 2 == 0)
-                    pixel = (TRANSPARENT_COLOR_INDEX4 << 4);
+                    pixel = (MYX_TRANSPARENT_COLOR_INDEX4 << 4);
                 else {
-                    pixel |= TRANSPARENT_COLOR_INDEX4;
+                    pixel |= MYX_TRANSPARENT_COLOR_INDEX4;
                     fprintf(f, "0x%02X,", pixel);
                 }
                 continue;
@@ -138,7 +138,7 @@ void output4BitImage(const char* file)
 
             signed char paletteIndex = -1;
             for (int i = 0; i < 16; i++) {
-                if (i == TRANSPARENT_COLOR_INDEX4)
+                if (i == MYX_TRANSPARENT_COLOR_INDEX4)
                     continue;
                 if (palette4[i] == c) {
                     paletteIndex = i;
@@ -153,7 +153,7 @@ void output4BitImage(const char* file)
 
                 int nearestDistance;
                 for (int i = 0; i < 16; i++) {
-                    if (i == TRANSPARENT_COLOR_INDEX4)
+                    if (i == MYX_TRANSPARENT_COLOR_INDEX4)
                         continue;
                     
                     unsigned char pR = c >> 5;

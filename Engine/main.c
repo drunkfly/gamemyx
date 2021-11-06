@@ -4,9 +4,9 @@
  */
 #include "engine_p.h"
 
-void EngineMain()
+void MYXP_EngineMain()
 {
-    PlatformInit();
+    MYXP_PlatformInit();
 
     GameMain();
 

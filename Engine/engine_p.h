@@ -7,19 +7,19 @@
 
 #include "engine.h"
 
-STRUCT(Sprite)
+STRUCT(MYXPSprite)
 {
     byte attr2;
     byte attr3;
     byte attr4;
 };
 
-void BeginSprites();
-void EndSprites();
+void MYXP_BeginSprites();
+void MYXP_EndSprites();
 
-void BeginCollisions();
-void EndCollisions();
+void MYXP_BeginCollisions();
+void MYXP_EndCollisions();
 
-void PlatformInit();
+void MYXP_PlatformInit();
 
 #endif

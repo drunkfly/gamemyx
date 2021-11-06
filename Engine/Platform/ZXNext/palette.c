@@ -4,7 +4,7 @@
  */
 #include "zxnext.h"
 
-void SetTilemapPalette(byte index, const void* data, byte count)
+void MYX_SetTilemapPalette(byte index, const void* data, byte count)
 {
     NEXT_SETREG(NEXT_PALETTECONTROL,
         (NEXT_GETREG(NEXT_PALETTECONTROL) & ~NEXT_IO_PALETTE_MASK)
@@ -17,7 +17,7 @@ void SetTilemapPalette(byte index, const void* data, byte count)
         NEXT_SETREG(NEXT_PALETTEVALUE8, *p++);
 }
 
-void SetSpritePalette(byte index, const void* data, byte count)
+void MYX_SetSpritePalette(byte index, const void* data, byte count)
 {
     NEXT_SETREG(NEXT_PALETTECONTROL,
         (NEXT_GETREG(NEXT_PALETTECONTROL) & ~NEXT_IO_PALETTE_MASK)
