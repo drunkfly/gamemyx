@@ -6,6 +6,7 @@
 #define ENGINE_P_H
 
 #include "engine.h"
+#include "AnimSprites/_private.h"
 
 STRUCT(MYXPSprite)
 {
@@ -16,6 +17,7 @@ STRUCT(MYXPSprite)
 
 void MYXP_BeginSprites();
 void MYXP_EndSprites();
+void MYXP_AdvanceSprite(const void** data);
 
 void MYXP_BeginCollisions();
 void MYXP_EndCollisions();

@@ -51,15 +51,27 @@ MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex)
     pSprite->attr4 = 0;
 
     const byte* p = (const byte*)data;
-    if ((*p & MYX_SPRITE_FLAG_256COLOR) == 0) // if set, 256 color
+    word size = NEXT_SPRITESIZE8;
+    if ((*p & MYX_SPRITE_FLAG_256COLOR) == 0) { // if set, 256 color
         pSprite->attr4 = 0x80 | (SpriteCount & 0x40);
+        size = NEXT_SPRITESIZE4;
+    }
     p++;
 
     NEXT_SpriteControl = SpriteCount;
-    for (int i = 0; i < 16*16; i++) /* FIXME */
+    for (word i = 0; i < size; i++)
        NEXT_SpritePattern = *p++;
 
     return SpriteCount++;
+}
+
+void MYXP_AdvanceSprite(const void** data)
+{
+    const byte* p = (const byte*)*data;
+    if ((*p & MYX_SPRITE_FLAG_256COLOR) == 0)
+        *data = p + (1 + NEXT_SPRITESIZE4);
+    else
+        *data = p + (1 + NEXT_SPRITESIZE8);
 }
 
 void MYX_DestroyAllSprites()

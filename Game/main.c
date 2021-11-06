@@ -27,8 +27,11 @@ static const byte SwordsmanIdleFrontData[] = {
 #include "Data/Sprites/SwordsmanIdleFront.h"
 };
 
-static const byte SwordsmanWalkFront1Data[] = {
+static const byte SwordsmanWalkFrontData[] = {
 #include "Data/Sprites/SwordsmanWalkFront1.h"
+#include "Data/Sprites/SwordsmanWalkFront2.h"
+#include "Data/Sprites/SwordsmanWalkFront3.h"
+#include "Data/Sprites/SwordsmanWalkFront4.h"
 };
 
 static const byte RedDemonIdleFrontData[] = {
@@ -48,7 +51,7 @@ static const byte MapInfo[] = {
 };
 
 static MYXSprite IdleFrontSprite;
-static MYXSprite WalkFront1Sprite;
+static MYXAnimSprite WalkFrontSprite;
 static MYXSprite RedDemonIdleFrontSprite;
 
 static bool collidesWithEnemy;
@@ -66,7 +69,8 @@ void GameMain()
 {
     MYX_SetSpritePalette(0, SpritePalette, 32);
     IdleFrontSprite = MYX_CreateSprite(SwordsmanIdleFrontData, 0);
-    WalkFront1Sprite = MYX_CreateSprite(SwordsmanWalkFront1Data, 0);
+    WalkFrontSprite = MYX_CreateAnimSprite(SwordsmanWalkFrontData, 4, 4, 0);
+
     RedDemonIdleFrontSprite = MYX_CreateSprite(RedDemonIdleFrontData, 1);
 
     MYX_LoadTileset(TilesetData);
@@ -119,7 +123,11 @@ void GameMain()
         MYX_PutSprite(demonX, demonY, RedDemonIdleFrontSprite);
         MYX_AddCollision(demonX, demonY, 16, 16, TAG_ENEMY);
 
-        MYX_PutSprite(x, y, (collidesWithEnemy ? WalkFront1Sprite : IdleFrontSprite));
+        if (collidesWithEnemy)
+            MYX_PutSprite(x, y, IdleFrontSprite);
+        else
+            MYX_PutAnimSprite(x, y, WalkFrontSprite);
+
         MYX_AddCollision(x, y, 16, 16, TAG_PLAYER);
 
         collidesWithEnemy = false;

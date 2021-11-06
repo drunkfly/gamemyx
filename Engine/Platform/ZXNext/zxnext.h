@@ -9,6 +9,9 @@
 
 #define NEXT_MAX_SPRITES                    64
 
+#define NEXT_SPRITESIZE4                    (16*16/2)
+#define NEXT_SPRITESIZE8                    (16*16)
+
 /*
  * Peripheral 1 setting
  */

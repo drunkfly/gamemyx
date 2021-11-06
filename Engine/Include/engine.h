@@ -28,6 +28,8 @@
 typedef unsigned char byte;
 typedef unsigned short word;
 
+void MYX_Cleanup();
+
 /**********************************************************************/
 /* Input */
 
@@ -75,6 +77,8 @@ void MYX_DestroyAllSprites();
 void MYX_SetSpritePalette(byte index, const void* data, byte count);
 
 void MYX_PutSprite(int x, byte y, MYXSprite sprite);
+
+#include "../AnimSprites/_public.h"
 
 /**********************************************************************/
 /* Collisions */
