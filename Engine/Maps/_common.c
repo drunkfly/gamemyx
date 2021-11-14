@@ -34,17 +34,19 @@ void MYX_LoadMap(const MapInfo* map)
 {
     byte bank = MYXP_CurrentBank;
 
-    MYXP_SetUpperMemoryBank(map->tilemapBank);
-    MYX_TilemapWidth = *map->tilemap;
-    MYX_LoadTilemap(map->tilemap);
-
-    MYXP_SetUpperMemoryBank(map->infoBank);
-    const byte* p = map->tilemap;
-    MYX_PlayerX = *p++;
-    MYX_PlayerY = *p++;
-
     MYX_CollisionMap = map->collision;
     MYX_CollisionBank = map->collisionBank;
+    MYX_TilemapWidth = *map->tilemap;
+    const byte* info = map->info;
+    const byte* tilemap = map->tilemap;
+    byte infoBank = map->infoBank;
+
+    MYXP_SetUpperMemoryBank(map->tilemapBank);
+    MYX_LoadTilemap(tilemap);
+
+    MYXP_SetUpperMemoryBank(infoBank);
+    MYX_PlayerX = *info++;
+    MYX_PlayerY = *info++;
 
     MYXP_SetUpperMemoryBank(bank);
 }

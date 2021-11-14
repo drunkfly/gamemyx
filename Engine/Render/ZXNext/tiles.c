@@ -27,7 +27,7 @@ void MYX_LoadTilemap(const byte* tilemap)
 
     byte* dst = (byte*)(0x6000 + 4 + 40 * 4);
     for (int y = 0; y < h; y++) {
-        memcpy(dst, tilemap, 40);
+        memcpy(dst, tilemap, 32);
         dst += 40;
         tilemap += w;
     }
