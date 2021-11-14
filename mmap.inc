@@ -1,5 +1,5 @@
 
-SECTION UNASSIGNED
+;SECTION UNASSIGNED
 
 ;-----------------------------------------------------------------------
 ; Shared
@@ -20,17 +20,36 @@ SECTION code_l_sdcc
 SECTION code_math
 SECTION data_threads
 SECTION data_stdio
-SECTION MYX_ANIMSPRITES
+SECTION MYX_CORE
 SECTION MYX_INTERRUPT
 SECTION MYX_INPUT
+SECTION MYX_MAPS
+SECTION MYX_PALETTE
+SECTION MYX_TILES
+SECTION MYX_SPRITES
+SECTION MYX_ANIMSPRITES
+SECTION MYX_COLLISIONS
 SECTION bss_compiler
 SECTION bss_stdio
 SECTION bss_stdlib
 
-;-----------------------------------------------------------------------
-; Banks
-
 SECTION MYX_STARTUP
 org 0xc000
 
+;-----------------------------------------------------------------------
+; Banks
+
+SECTION BANK_1
+org 0xc000
 SECTION code_compiler
+SECTION rodata_compiler
+SECTION BSS_UNINITIALIZED
+
+SECTION BANK_6
+org 0xc000
+
+SECTION BANK_10
+org 0xc000
+
+SECTION BANK_11
+org 0xc000

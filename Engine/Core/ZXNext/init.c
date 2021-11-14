@@ -2,7 +2,12 @@
  * Copyright (c) 2021 DrunkFly Team
  * Licensed under 3-clause BSD license
  */
-#include "zxnext.h"
+#include "engine_p.h"
+
+#ifdef __SDCC
+#pragma codeseg MYX_STARTUP
+#pragma constseg MYX_STARTUP
+#endif
 
 void MYXP_PlatformInit()
 {

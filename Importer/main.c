@@ -15,9 +15,17 @@ int main(int argc, char** argv)
     atexit(unloadImage);
     atexit(unloadTilesets);
     atexit(unloadTilemap);
+    atexit(unloadOutputs);
 
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-loadimage")) {
+        if (!strcmp(argv[i], "-outpath")) {
+            CHECK_ARG
+            strcpy(outputPath, argv[++i]);
+        } else if (!strcmp(argv[i], "-startbank")) {
+            CHECK_ARG
+            currentBank = atoi(argv[++i]);
+            currentBankSize = 0;
+        } else if (!strcmp(argv[i], "-loadimage")) {
             CHECK_ARG
             loadImage(argv[++i]);
         } else if (!strcmp(argv[i], "-area16x16")) {
@@ -48,12 +56,10 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-loadtmx")) {
             CHECK_ARG
             loadTilemap(argv[++i]);
-        } else if (!strcmp(argv[i], "-outmap")) {
+            outputTilemap();
+        } else if (!strcmp(argv[i], "-outmaps")) {
             CHECK_ARG
-            outputTilemap(argv[++i]);
-        } else if (!strcmp(argv[i], "-outmapinfo")) {
-            CHECK_ARG
-            outputTilemapInfo(argv[++i]);
+            outputTilemapList(argv[++i]);
         } else if (!strcmp(argv[i], "-outtiles4")) {
             CHECK_ARG
             outputTileset4Bit(argv[++i]);
@@ -63,5 +69,6 @@ int main(int argc, char** argv)
         }
     }
 
+    writeOutputFiles();
     return 0;
 }

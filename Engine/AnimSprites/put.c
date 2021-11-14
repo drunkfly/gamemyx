@@ -5,6 +5,11 @@
 #include "engine_p.h"
 #if ENABLE_ANIMATED_SPRITES
 
+#ifdef __SDCC
+#pragma codeseg MYX_ANIMSPRITES
+#pragma constseg MYX_ANIMSPRITES
+#endif
+
 void MYX_PutAnimSprite(int x, byte y, MYXAnimSprite sprite)
 {
     MYXPAnimSprite* p = &MYXP_AnimSprites[sprite];

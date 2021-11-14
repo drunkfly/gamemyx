@@ -98,7 +98,7 @@ add_definitions(
 
 file(GLOB_RECURSE engine_src
     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    CONFIGURE_DEPENDS
+    #CONFIGURE_DEPENDS
     ${ROOT_DIR}/Engine/*.c
     ${ROOT_DIR}/Engine/*.h
     ${ROOT_DIR}/Engine/*.asm
@@ -106,7 +106,7 @@ file(GLOB_RECURSE engine_src
 
 file(GLOB_RECURSE game_src
     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    CONFIGURE_DEPENDS
+    #CONFIGURE_DEPENDS
     ${ROOT_DIR}/Game/*.c
     ${ROOT_DIR}/Game/*.h
     ${ROOT_DIR}/Game/*.asm
@@ -120,11 +120,11 @@ add_library(Engine STATIC
     )
 
 set_target_properties(Engine PROPERTIES PREFIX "" SUFFIX ".lib")
-target_include_directories(Engine PRIVATE "${ROOT_DIR}/Engine")
-target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine/Include")
+target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 
 add_executable(Game
     ${game_src}
+    ${ROOT_DIR}/Build/CMake/Data/bank6.c # FIXME
     )
 
 add_dependencies(Game Assets)

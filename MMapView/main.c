@@ -237,16 +237,16 @@ int main(int argc, char** argv)
         Section* s = FindSection(section);
         s->exists = true;
 
-        if (!strcmp(vis, "local"))
-            continue;
-
         unsigned addr = strtol(hex, NULL, 16);
+        /*
         if (addr < 0x4000)
             continue;
         if (addr > 0xffff)
             continue;
+        */
 
         size_t len = strlen(name);
+        /*
         if (len > 4 && !memcmp(name, "__IO", 4))
             continue;
         if (len > 8 && !memcmp(name, "__SYSVAR", 8))
@@ -269,6 +269,8 @@ int main(int argc, char** argv)
             continue;
         if (len > 8 && !memcmp(name, "_BIFROST", 8))
             continue;
+        */
+
         if (len > 5 && name[len - 5] == '_') {
             if (!memcmp(&name[len - 4], "head", 4)) {
                 name[len - 5] = 0;
@@ -282,6 +284,9 @@ int main(int argc, char** argv)
                 continue;
             }
         }
+
+        if (!strcmp(access, "const"))
+            continue;
 
         Function* f = AddFunc(s, name, addr);
     }

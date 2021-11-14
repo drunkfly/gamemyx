@@ -1,6 +1,7 @@
 #include "importer.h"
 #include "ezxml/ezxml.h"
 
+#define MAX_TILEMAPS 256
 #define MAX_TILESET_REFS 8
 #define MAX_LAYERS 8
 
@@ -16,10 +17,22 @@ STRUCT(TilemapLayer)
     Tile** data;
 };
 
+STRUCT(TilemapListEntry)
+{
+    char name[256];
+    byte tilemapBank;
+    byte collisionBank;
+    byte infoBank;
+};
+
 static TilesetRef tilesetRefs[MAX_TILESET_REFS];
 static TilemapLayer tilemapLayers[MAX_LAYERS];
+static TilemapListEntry tilemapList[MAX_TILEMAPS];
 static int layerCount;
 static int tilesetRefCount;
+static int tilemapCount;
+static int currentTilemap;
+char tilemapName[256];
 int* tilemap;
 unsigned char* collision;
 int tilemapWidth;
@@ -56,11 +69,26 @@ void loadTilemap(const char* file)
 {
     unloadTilemap();
 
+    if (tilemapCount >= MAX_TILEMAPS) {
+        fprintf(stderr, "error: too many tilemaps.\n");
+        exit(1);
+    }
+
     ezxml_t xml = ezxml_parse_file(file);
     if (!xml) {
         fprintf(stderr, "error: unable to load \"%s\".\n", file);
         exit(1);
     }
+
+    char* slash = strrchr(file, '/');
+    strcpy(tilemapName, (slash ? slash + 1 : file));
+    for (char* p = tilemapName; *p; p++) {
+        if (*p == '.')
+            *p = '_';
+    }
+
+    currentTilemap = tilemapCount++;
+    strcpy(tilemapList[currentTilemap].name, tilemapName);
 
     playerStartX = 0;
     playerStartY = 0;
@@ -304,31 +332,31 @@ void loadTilemap(const char* file)
     ezxml_free(xml);
 }
 
-void outputTilemap(const char* file)
+static void outputTilemapData()
 {
-    createDirectories(file);
-    FILE* f = fopen(file, "w");
-    if (!f) {
-        fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
-        exit(1);
-    }
+    char buf[256];
+    snprintf(buf, sizeof(buf), "map_%s_data", tilemapName);
 
-    fprintf(f, "%d,%d,\n", tilemapWidth, tilemapHeight);
+    int size = 2 + tilemapWidth * tilemapHeight;
 
-    /*
-    for (int y = 0; y < tilemapHeight; y++) {
-        for (int x = 0; x < tilemapWidth; x++) {
-            for (int i = 0; i < layerCount; i++) {
-                Tile* tile = tilemapLayers[i].data[y * width + x];
-    */
+    byte* data = produceOutput(buf, size,
+        &tilemapList[currentTilemap].tilemapBank);
 
-    for (int y = 0; y < tilemapHeight; y++) {
+    *data++ = tilemapWidth;
+    *data++ = tilemapHeight;
+    for (int y = 0; y < tilemapHeight; y++)
         for (int x = 0; x < tilemapWidth; x++)
-            fprintf(f, "0x%02X,", tilemap[y * tilemapWidth + x]);
-        fprintf(f, "\n");
-    }
+            *data++ = (byte)tilemap[y * tilemapWidth + x];
+}
 
-    fprintf(f, "\n");
+static void outputTilemapCollisions()
+{
+    char buf[256];
+    snprintf(buf, sizeof(buf), "map_%s_collisions", tilemapName);
+
+    int size = ((tilemapWidth + 7) / 8) * tilemapHeight;
+    byte* data = produceOutput(buf, size,
+        &tilemapList[currentTilemap].collisionBank);
 
     for (int y = 0; y < tilemapHeight; y++) {
         unsigned char byte = 0;
@@ -338,23 +366,39 @@ void outputTilemap(const char* file)
                 byte |= 0x80;
 
             if ((x & 7) == 7) {
-                fprintf(f, "0x%02X,", byte);
+                *data++ = byte;
                 byte = 0;
             }
         }
 
         if ((tilemapWidth & 7) != 0) {
             byte >>= 8 - (tilemapWidth & 7);
-            fprintf(f, "0x%02X,", byte);
+            *data++ = byte;
         }
-
-        fprintf(f, "\n");
     }
-
-    fclose(f);
 }
 
-void outputTilemapInfo(const char* file)
+static void outputTilemapInfo()
+{
+    char buf[256];
+    snprintf(buf, sizeof(buf), "map_%s_info", tilemapName);
+
+    int size = 2;
+    byte* data = produceOutput(buf, size,
+        &tilemapList[currentTilemap].infoBank);
+
+    *data++ = playerStartX;
+    *data++ = playerStartY;
+}
+
+void outputTilemap()
+{
+    outputTilemapData();
+    outputTilemapCollisions();
+    outputTilemapInfo();
+}
+
+void outputTilemapList(const char* file)
 {
     createDirectories(file);
     FILE* f = fopen(file, "w");
@@ -363,7 +407,21 @@ void outputTilemapInfo(const char* file)
         exit(1);
     }
 
-    fprintf(f, "%d,%d, /* playerX, playerY */\n", playerStartX, playerStartY);
+    for (int i = 0; i < tilemapCount; i++) {
+        fprintf(f, "\n");
+        fprintf(f, "extern const byte map_%s_data[];\n", tilemapList[i].name);
+        fprintf(f, "extern const byte map_%s_collisions[];\n", tilemapList[i].name);
+        fprintf(f, "extern const byte map_%s_info[];\n", tilemapList[i].name);
+        fprintf(f, "\n");
+        fprintf(f, "const MapInfo map_%s = {\n", tilemapList[i].name);
+        fprintf(f, "    map_%s_data,\n", tilemapList[i].name);
+        fprintf(f, "    map_%s_collisions,\n", tilemapList[i].name);
+        fprintf(f, "    map_%s_info,\n", tilemapList[i].name);
+        fprintf(f, "    %d,\n", tilemapList[i].tilemapBank);
+        fprintf(f, "    %d,\n", tilemapList[i].collisionBank);
+        fprintf(f, "    %d,\n", tilemapList[i].infoBank);
+        fprintf(f, "};\n");
+    }
 
     fclose(f);
 }

@@ -73,6 +73,10 @@ extern int* tilemap;
 extern int tilemapWidth;
 extern int tilemapHeight;
 
+extern char outputPath[1024];
+extern int currentBank;
+extern int currentBankSize;
+
 void unloadImage();
 void loadImage(const char* file);
 void buildImageHistogram();
@@ -84,8 +88,8 @@ void setTransparentColor(int color);
 
 void unloadTilemap();
 void loadTilemap(const char* file);
-void outputTilemap(const char* file);
-void outputTilemapInfo(const char* file);
+void outputTilemap();
+void outputTilemapList(const char* file);
 
 void unloadTilesets();
 void loadTileset(const char* file);
@@ -95,6 +99,11 @@ void outputTileset4Bit(const char* file);
 void clearTileCache();
 int addTile(const unsigned char* pixels);
 
+void unloadOutputs();
+byte* produceOutput(const char* symbol, int size, byte* bank);
+void writeOutputFiles();
+
 void createDirectories(const char* file);
+void calculateNextBank(int size, const char* file);
 
 #endif

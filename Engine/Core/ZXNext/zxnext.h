@@ -2,10 +2,8 @@
  * Copyright (c) 2021 DrunkFly Team
  * Licensed under 3-clause BSD license
  */
-#ifndef ZXNEXT_H
-#define ZXNEXT_H
-
-#include "engine_p.h"
+#ifndef ENGINE_ZXNEXT_H
+#define ENGINE_ZXNEXT_H
 
 #define NEXT_MAX_SPRITES                    64
 
@@ -116,19 +114,31 @@
  * Palette index
  */
 
-#define NEXT_PALETTEINDEX       0x40
+#define NEXT_PALETTEINDEX                   0x40
 
 /*
  * Palette value (8-bit colour)
  */
 
-#define NEXT_PALETTEVALUE8      0x41
+#define NEXT_PALETTEVALUE8                  0x41
 
 /*
  * Transparency index for sprites
  */
 
-#define NEXT_SPRITETRANSPARENCY 0x4b
+#define NEXT_SPRITETRANSPARENCY             0x4b
+
+/*
+ * MMU slot 6
+ */
+
+#define NEXT_MMUSLOT6                       0x56
+
+/*
+ * MMU slot 7
+ */
+
+#define NEXT_MMUSLOT7                       0x57
 
 /*
  * Tilemap control
@@ -157,6 +167,7 @@
 #define NEXT_SPRITEY            0x36
 #define NEXT_SPRITEATTR2        0x37
 
+/*****************/
 
 #define NEXT_GETREG(reg) \
     (NEXT_RegisterNumber = (reg), NEXT_RegisterValue)
@@ -173,7 +184,5 @@ __sfr __banked __at 0x253b NEXT_RegisterValue;
 __sfr __banked __at 0x123b NEXT_Layer2AccessPort;
 
 __sfr __banked __at 0x303b NEXT_SpriteControl;
-
-void MYXP_ReadInput() __preserves_regs(a, iyl, iyh);
 
 #endif

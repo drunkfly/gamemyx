@@ -4,6 +4,11 @@
  */
 #include "engine_p.h"
 
+#ifdef __SDCC
+#pragma codeseg MYX_CORE
+#pragma constseg MYX_CORE
+#endif
+
 void MYX_BeginFrame()
 {
     MYXP_BeginSprites();
@@ -26,21 +31,4 @@ void MYX_EndFrame()
     MYXP_EndSprites();
 
     __asm halt __endasm;
-}
-
-void MYX_Cleanup()
-{
-    MYX_DestroyAllSprites();
-  #if ENABLE_ANIMATED_SPRITES
-    MYXP_DestroyAllAnimSprites();
-  #endif
-}
-
-void MYXP_EngineMain()
-{
-    MYXP_PlatformInit();
-
-    GameMain();
-
-    for (;;) {}
 }

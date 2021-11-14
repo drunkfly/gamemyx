@@ -12,6 +12,7 @@ add_executable(Importer
     image.c
     importer.h
     main.c
+    output.c
     stb_image.h
     tilecache.c
     tilemap.c

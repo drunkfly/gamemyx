@@ -4,6 +4,7 @@
  */
 #include "engine.h"
 #include "character.h"
+#include "Data/Maps.h"
 
 enum
 {
@@ -17,20 +18,12 @@ static const byte SpritePalette[] = {
 #include "Data/Palettes/RedDemonPalette.h"
 };
 
-#include "swordsman.h"
-#include "reddemon.h"
-
-static const byte TilemapData[] = {
-#include "Data/Map/Tilemap.h"
-};
-
 static const byte TilesetData[] = {
 #include "Data/Map/Tileset.h"
 };
 
-static const byte MapInfo[] = {
-#include "Data/Map/Info.h"
-};
+#include "Data/swordsman.h"
+#include "Data/reddemon.h"
 
 static MYXSprite RedDemonIdleFrontSprite;
 
@@ -51,11 +44,10 @@ void GameMain()
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
     MYX_LoadTileset(TilesetData);
-    MYX_LoadTilemap(TilemapData);
+    MYX_LoadMap(&map_park_tmx);
 
-    const unsigned char* map = MapInfo;
-    byte px = (*map++) * MYX_TILE_WIDTH;
-    byte py = (*map++) * MYX_TILE_HEIGHT;
+    byte px = MYX_PlayerX * MYX_TILE_WIDTH;
+    byte py = MYX_PlayerY * MYX_TILE_HEIGHT;
     Character_Init(&player, px, py, SwordsmanData);
 
     byte demonX = 10 * MYX_TILE_WIDTH;

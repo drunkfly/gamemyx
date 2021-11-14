@@ -9,19 +9,9 @@
 
 #include "AnimSprites/_private.h"
 #include "Collisions/_private.h"
-
-STRUCT(MYXPSprite)
-{
-    byte attr2;
-    byte attr3;
-    byte attr4;
-};
-
-void MYXP_BeginSprites();
-void MYXP_EndSprites();
-
-void MYXP_AdvanceSprite(const void** data, byte count);
-
-void MYXP_PlatformInit();
+#include "Core/_private.h"
+#include "Input/_private.h"
+#include "Maps/_private.h"
+#include "Render/_private.h"
 
 #endif

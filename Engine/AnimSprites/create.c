@@ -5,6 +5,11 @@
 #include "engine_p.h"
 #if ENABLE_ANIMATED_SPRITES
 
+#ifdef __SDCC
+#pragma codeseg MYX_ANIMSPRITES
+#pragma constseg MYX_ANIMSPRITES
+#endif
+
 MYXAnimSprite MYX_CreateAnimSprite(
     const void* data, byte count, byte delay, byte paletteIndex)
 {

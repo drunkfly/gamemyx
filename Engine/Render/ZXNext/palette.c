@@ -2,7 +2,12 @@
  * Copyright (c) 2021 DrunkFly Team
  * Licensed under 3-clause BSD license
  */
-#include "zxnext.h"
+#include "engine_p.h"
+
+#ifdef __SDCC
+#pragma codeseg MYX_PALETTE
+#pragma constseg MYX_PALETTE
+#endif
 
 void MYX_SetTilemapPalette(byte index, const void* data, byte count)
 {

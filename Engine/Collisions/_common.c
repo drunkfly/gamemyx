@@ -5,6 +5,11 @@
 #include "engine_p.h"
 #if ENABLE_COLLISION
 
+#ifdef __SDCC
+#pragma codeseg MYX_COLLISIONS
+#pragma constseg MYX_COLLISIONS
+#endif
+
 MYXCOLLISIONCALLBACK MYXP_Callbacks[MAX_COLLISION_CALLBACKS];
 MYXPCollisionRect MYXP_Rects[MAX_COLLISION_RECTANGLES];
 MYXPCollisionRect* MYXP_CurrentRect;

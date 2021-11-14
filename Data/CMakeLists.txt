@@ -124,10 +124,13 @@ IMPORTER(
     )
 
 IMPORTER(
-    -loadtsx "${src}/tiles.tsx"
+    -loadtsx "${src}/tiles_new.tsx"
     -loadtsx "${src}/control.tsx"
-    -loadtmx "${src}/map.tmx"
-    -outmapinfo Map/Info.h
-    -outmap Map/Tilemap.h
+
+    -startbank 6
+
+    -loadtmx "${src}/park.tmx"
+    #-loadtmx "${src}/stone.tmx"
+    -outmaps Maps.h
     -outtiles4 Map/Tileset.h
     )

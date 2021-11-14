@@ -5,6 +5,11 @@
 #include "engine_p.h"
 #if ENABLE_COLLISION
 
+#ifdef __SDCC
+#pragma codeseg MYX_COLLISIONS
+#pragma constseg MYX_COLLISIONS
+#endif
+
 bool MYX_CollidesWithMap16x16(word x, word y)
 {
     word tileX = x >> 3;

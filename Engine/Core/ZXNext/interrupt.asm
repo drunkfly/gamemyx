@@ -8,6 +8,12 @@
 
                 EXTERN  _MYXP_InterruptHandler
 
+                SECTION MYX_INTVECTORS
+
+_MYXP_IntVectors:
+                dw      _MYXP_IntEntry
+                defs    255, 0x81
+
                 SECTION MYX_INTENTRY
 
 _MYXP_IntEntry: jp      MYXP_Interrupt
@@ -41,9 +47,3 @@ MYXP_Interrupt: push    af
                 pop     af
                 ei
                 ret
-
-                SECTION MYX_INTVECTORS
-
-_MYXP_IntVectors:
-                dw      _MYXP_IntEntry
-                defs    255, 0x81

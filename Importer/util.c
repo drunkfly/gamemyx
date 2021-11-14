@@ -20,6 +20,9 @@ void createDirectories(const char* file)
     if (fileEnd2 && (!fileEnd || fileEnd < fileEnd2))
         fileEnd = fileEnd2;
 
+    if (!fileEnd)
+        return;
+
     char path[1024];
     memcpy(path, file, fileEnd - file);
     path[fileEnd - file] = 0;

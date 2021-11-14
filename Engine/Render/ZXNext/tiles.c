@@ -2,18 +2,12 @@
  * Copyright (c) 2021 DrunkFly Team
  * Licensed under 3-clause BSD license
  */
-#include "zxnext.h"
+#include "engine_p.h"
 
-static byte TilemapWidth;
-static const byte* CollisionMap;
-
-bool MYX_IsSmallTileBlocking(byte x, byte y)
-{
-    byte xOff = x >> 3;
-    byte xShift = x & 7;
-    byte mask = CollisionMap[y * ((TilemapWidth + 7) >> 3) + xOff];
-    return (mask & (1 << xShift)) != 0;
-}
+#ifdef __SDCC
+#pragma codeseg MYX_TILES
+#pragma constseg MYX_TILES
+#endif
 
 void MYX_LoadTileset(const byte* tileset)
 {
@@ -28,16 +22,13 @@ void MYX_LoadTileset(const byte* tileset)
 
 void MYX_LoadTilemap(const byte* tilemap)
 {
-    TilemapWidth = *tilemap++;
+    byte w = *tilemap++;
     byte h = *tilemap++;
 
     byte* dst = (byte*)(0x6000 + 4 + 40 * 4);
     for (int y = 0; y < h; y++) {
-        for (int x = 0; x < TilemapWidth; x++)
-            memcpy(dst, tilemap, TilemapWidth);
+        memcpy(dst, tilemap, 40);
         dst += 40;
-        tilemap += TilemapWidth;
+        tilemap += w;
     }
-
-    CollisionMap = tilemap;
 }
