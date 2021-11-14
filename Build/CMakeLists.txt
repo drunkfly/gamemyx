@@ -134,7 +134,7 @@ set_target_properties(Game PROPERTIES
     OUTPUT_NAME "${GAME_NAME}"
     PREFIX ""
     SUFFIX ".nex"
-    LINK_DEPENDS "${ROOT_DIR}/mmap.h;${ROOT_DIR}/mmap.inc"
+    LINK_DEPENDS "${ROOT_DIR}/mmap.h;${ROOT_DIR}/mmap.inc;${mmapview}"
     LINK_FLAGS "-pragma-include:${ROOT_DIR}/mmap.h -Cm -I${ROOT_DIR}"
     )
 

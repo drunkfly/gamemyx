@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <errno.h>
 
 #define STRUCT(X) \
@@ -22,7 +23,10 @@ STRUCT(Section)
     Function* firstFunc;
     Function* lastFunc;
     unsigned startAddr;
+    unsigned head;
+    unsigned tail;
     int funcCount;
+    bool exists;
 };
 
 Section* firstSection;
@@ -45,9 +49,12 @@ Section* FindSection(const char* name)
     strcpy(section->name, name);
     section->next = NULL;
     section->startAddr = 0;
+    section->head = 0;
+    section->tail = 0;
     section->firstFunc = NULL;
     section->lastFunc = NULL;
     section->funcCount = 0;
+    section->exists = false;
 
     if (!firstSection)
         firstSection = section;
@@ -90,9 +97,9 @@ int CompareSections(const void* p1, const void* p2)
     const Section* s1 = *(const Section**)p1;
     const Section* s2 = *(const Section**)p2;
 
-    if (s1->startAddr < s2->startAddr)
+    if (s1->head < s2->head)
         return -1;
-    else if (s1->startAddr > s2->startAddr)
+    else if (s1->head > s2->head)
         return 1;
     return 0;
 }
@@ -132,7 +139,7 @@ int main(int argc, char** argv)
         while (end > buf && *(end - 1) == ' ')
             *--end = 0;
 
-        const char* name = buf;
+        char* name = buf;
         ++p;
         ++p;
         if (*p != '$') {
@@ -228,11 +235,55 @@ int main(int argc, char** argv)
         }
 
         Section* s = FindSection(section);
+        s->exists = true;
 
         if (!strcmp(vis, "local"))
             continue;
 
-        Function* f = AddFunc(s, name, strtol(hex, NULL, 16));
+        unsigned addr = strtol(hex, NULL, 16);
+        if (addr < 0x4000)
+            continue;
+        if (addr > 0xffff)
+            continue;
+
+        size_t len = strlen(name);
+        if (len > 4 && !memcmp(name, "__IO", 4))
+            continue;
+        if (len > 8 && !memcmp(name, "__SYSVAR", 8))
+            continue;
+        if (!strcmp(name, "__SYS_IY"))
+            continue;
+        if (len > 6 && !memcmp(name, "IOCTL_", 6))
+            continue;
+        if (len > 5 && !memcmp(name, "SP1V_", 5))
+            continue;
+        if (len > 9 && !memcmp(name, "__NIRVANA", 9))
+            continue;
+        if (len > 9 && !memcmp(name, "__BIFROST", 9))
+            continue;
+        if (len > 10 && !memcmp(name, "__CLIB_OPT", 10))
+            continue;
+        if (len > 5 && !memcmp(name, "__CLK", 5))
+            continue;
+        if (len > 8 && !memcmp(name, "_NIRVANA", 8))
+            continue;
+        if (len > 8 && !memcmp(name, "_BIFROST", 8))
+            continue;
+        if (len > 5 && name[len - 5] == '_') {
+            if (!memcmp(&name[len - 4], "head", 4)) {
+                name[len - 5] = 0;
+                FindSection(&name[2])->head = addr;
+                continue;
+            }
+
+            if (!memcmp(&name[len - 4], "tail", 4)) {
+                name[len - 5] = 0;
+                FindSection(&name[2])->tail = addr;
+                continue;
+            }
+        }
+
+        Function* f = AddFunc(s, name, addr);
     }
 
     fclose(f);
@@ -254,10 +305,13 @@ int main(int argc, char** argv)
 
     for (i = 0; i < sectionCount; i++) {
         Section* s = sections[i];
-        printf("[%04X] %s\n", s->startAddr, s->name);
+        if (!s->exists)
+            continue;
 
         if (s->funcCount == 0)
             continue;
+
+        printf("[%04X..%04X] %s\n", s->head, s->tail, s->name);
 
         if (s->funcCount > funcsSize) {
             funcs = (Function**)realloc(funcs, sizeof(Function**) * s->funcCount);

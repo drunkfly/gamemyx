@@ -10,7 +10,11 @@
 
                 SECTION MYX_INTENTRY
 
-_MYXP_IntEntry: push    af
+_MYXP_IntEntry: jp      MYXP_Interrupt
+
+                SECTION MYX_INTERRUPT
+
+MYXP_Interrupt: push    af
                 push    bc
                 push    de
                 push    hl
