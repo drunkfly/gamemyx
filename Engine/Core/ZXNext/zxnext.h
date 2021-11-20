@@ -87,6 +87,42 @@
 #define NEXT_SPRITES_VISIBLE                0x01
 
 /*
+ * Layer2 Offset X
+ */
+
+#define NEXT_LAYER2_X_OFFSET                0x16
+
+/*
+ * Layer2 Offset Y
+ */
+
+#define NEXT_LAYER2_Y_OFFSET                0x17
+
+/*
+ * Tilemap Offset X MSB
+ */
+
+#define NEXT_TILEMAP_X_OFFSET_MSB           0x2F
+
+/*
+ * Tilemap Offset X LSB
+ */
+
+#define NEXT_TILEMAP_X_OFFSET_LSB           0x30
+
+/*
+ * Tilemap Offset Y
+ */
+
+#define NEXT_TILEMAP_Y_OFFSET               0x31
+
+/*
+ * Layer2 Offset Y
+ */
+
+#define NEXT_LAYER2_Y_OFFSET                0x17
+
+/*
  * Palette control
  */
 
@@ -172,8 +208,6 @@
 
 /*****************/
 
-#define NEXT_LAYER2_XOFFSET     0x16
-#define NEXT_LAYER2_YOFFSET     0x17
 #define NEXT_SPRITENUMBER       0x34
 #define NEXT_SPRITEX            0x35
 #define NEXT_SPRITEY            0x36

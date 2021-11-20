@@ -16,11 +16,13 @@ MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex);
 void MYX_DestroyAllSprites();
 
 void MYX_LoadTileset(const byte* tileset);
-void MYX_LoadTilemap(const byte* tilemap);
+void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w);
 
 void MYX_SetSpritePalette(byte index, const void* data, byte count);
 void MYX_SetTilemapPalette(byte index, const void* data, byte count);
 
 void MYX_PutSprite(int x, byte y, MYXSprite sprite);
+
+void MYX_SetTilemapOffset(byte x, byte y);
 
 #endif

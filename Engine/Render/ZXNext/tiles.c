@@ -20,26 +20,30 @@ void MYX_LoadTileset(const byte* tileset)
     memcpy((void*)0x4000, tileset, (tileCount << 5));
 }
 
-void MYX_LoadTilemap(const byte* tilemap)
+void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w)
 {
-    byte w = *tilemap++;
-    byte h = *tilemap++;
-
-    const byte OffsetX = 4;
-    const byte OffsetY = 4;
     const byte BytesPerTile = 2;
     const byte TilesPerScreenRow = 40;
-    const byte TilesPerMapRow = 32;
+    const byte OffsetX = 4;
+    const byte OffsetY = 4;
 
     byte* dst = (byte*)(0x6000
               + OffsetY * TilesPerScreenRow * BytesPerTile
               + OffsetX * BytesPerTile
               );
 
+    const byte* p = tilemap + (y * w + x) * BytesPerTile;
+
     w *= BytesPerTile;
-    for (int y = 0; y < h; y++) {
-        memcpy(dst, tilemap, TilesPerMapRow * BytesPerTile);
+    for (int y = 0; y < MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
+        memcpy(dst, tilemap, MYX_TILEMAP_VISIBLE_WIDTH * BytesPerTile);
         dst += TilesPerScreenRow * BytesPerTile;
         tilemap += w;
     }
+}
+
+void MYX_SetTilemapOffset(byte x, byte y)
+{
+    NEXT_SETREG(NEXT_TILEMAP_X_OFFSET_LSB, x);
+    NEXT_SETREG(NEXT_TILEMAP_Y_OFFSET, y);
 }

@@ -5,6 +5,12 @@
 #ifndef ENGINE_MAPS_PUBLIC_H
 #define ENGINE_MAPS_PUBLIC_H
 
+#define MYX_TILEMAP_VISIBLE_WIDTH 32
+#define MYX_TILEMAP_VISIBLE_HEIGHT 24
+
+#define MYX_TILEMAP_MAX_WIDTH 128
+#define MYX_TILEMAP_MAX_HEIGHT 128
+
 #define MYX_TILE_WIDTH 16
 #define MYX_TILE_HEIGHT 16
 #define MYX_TILE_SMALL_WIDTH 8
@@ -24,6 +30,8 @@ extern byte MYX_PlayerX;
 extern byte MYX_PlayerY;
 
 bool MYX_IsSmallTileBlocking(byte x, byte y);
+
+void MYX_SetMapVisibleCenter(int x, int y);
 
 void MYX_LoadMap(const MapInfo* map);
 

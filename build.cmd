@@ -21,3 +21,6 @@ if errorlevel 1 exit /B 1
 
 %~dp0Tools\make\mingw32-make -j 4
 if errorlevel 1 exit /B 1
+
+copy /y %~dp0Build\Sync\Build\GameMyx.nex Z:\
+if errorlevel 1 exit /B 1

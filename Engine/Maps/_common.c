@@ -9,25 +9,67 @@
 #pragma constseg MYX_MAPS
 #endif
 
+static const byte* MYX_TileMap;
 static const byte* MYX_CollisionMap;
 static byte MYX_CollisionBank;
+static byte MYX_TilemapBank;
 static byte MYX_TilemapWidth;
+static byte MYX_TilemapHeight;
+static byte MYX_TileScrollX;
+static byte MYX_TileScrollY;
+static int MYX_TilemapMaxScrollX;
+static int MYX_TilemapMaxScrollY;
 byte MYX_PlayerX;
 byte MYX_PlayerY;
 
 bool MYX_IsSmallTileBlocking(byte x, byte y)
 {
+    const byte* collisionMap = MYX_CollisionMap;
+
     byte bank = MYXP_CurrentBank;
     MYXP_SetUpperMemoryBank(MYX_CollisionBank);
 
     byte xOff = x >> 3;
     byte xShift = x & 7;
-    byte mask = MYX_CollisionMap[y * ((MYX_TilemapWidth + 7) >> 3) + xOff];
+    byte mask = collisionMap[y * ((MYX_TilemapWidth + 7) >> 3) + xOff];
     bool result = (mask & (1 << xShift)) != 0;
 
     MYXP_SetUpperMemoryBank(bank);
 
     return result;
+}
+
+void MYX_SetMapVisibleCenter(int x, int y)
+{
+    x -= (MYX_TILEMAP_VISIBLE_WIDTH  / 2) * MYX_TILE_WIDTH;
+    y -= (MYX_TILEMAP_VISIBLE_HEIGHT / 2) * MYX_TILE_HEIGHT;
+
+    if (x < 0)
+        x = 0;
+    if (y < 0)
+        y = 0;
+
+    if (x > MYX_TilemapMaxScrollX)
+        x = MYX_TilemapMaxScrollX;
+    if (y > MYX_TilemapMaxScrollY)
+        y = MYX_TilemapMaxScrollY;
+
+    MYX_SetTilemapOffset((byte)x & 7, (byte)y & 7);
+
+    byte scrollX = (byte)(x >> 3) & 0xff;
+    byte scrollY = (byte)(y >> 3) & 0xff;
+    if (scrollX != MYX_TileScrollX || scrollY != MYX_TileScrollY) {
+        MYX_TileScrollX = scrollX;
+        MYX_TileScrollY = scrollY;
+        byte w = MYX_TilemapWidth;
+
+        byte bank = MYXP_CurrentBank;
+        MYXP_SetUpperMemoryBank(MYX_TilemapBank);
+
+        MYX_UploadVisibleTilemap(MYX_TileMap, scrollX, scrollY, w);
+
+        MYXP_SetUpperMemoryBank(bank);
+    }
 }
 
 void MYX_LoadMap(const MapInfo* map)
@@ -36,17 +78,33 @@ void MYX_LoadMap(const MapInfo* map)
 
     MYX_CollisionMap = map->collision;
     MYX_CollisionBank = map->collisionBank;
-    MYX_TilemapWidth = *map->tilemap;
+    MYX_TileMap = map->tilemap;
+    MYX_TilemapBank = map->tilemapBank;
     const byte* info = map->info;
-    const byte* tilemap = map->tilemap;
     byte infoBank = map->infoBank;
 
-    MYXP_SetUpperMemoryBank(map->tilemapBank);
-    MYX_LoadTilemap(tilemap);
+    ASSERT(MYX_TilemapWidth >= MYX_TILEMAP_VISIBLE_WIDTH);
+    ASSERT(MYX_TilemapHeight >= MYX_TILEMAP_VISIBLE_HEIGHT);
+    ASSERT(MYX_TilemapWidth < MYX_TILEMAP_MAX_WIDTH);
+    ASSERT(MYX_TilemapHeight < MYX_TILEMAP_MAX_HEIGHT);
+
+    MYXP_SetUpperMemoryBank(MYX_TilemapBank);
+    byte w = *MYX_TileMap++;
+    byte h = *MYX_TileMap++;
+    MYX_UploadVisibleTilemap(MYX_TileMap, 0, 0, w);
 
     MYXP_SetUpperMemoryBank(infoBank);
-    MYX_PlayerX = *info++;
-    MYX_PlayerY = *info++;
+    byte playerX = *info++;
+    byte playerY = *info++;
 
     MYXP_SetUpperMemoryBank(bank);
+
+    MYX_PlayerX = playerX;
+    MYX_PlayerY = playerY;
+    MYX_TilemapWidth = w;
+    MYX_TilemapHeight = h;
+    MYX_TilemapMaxScrollX = (w - MYX_TILEMAP_VISIBLE_WIDTH) * MYX_TILE_WIDTH;
+    MYX_TilemapMaxScrollY = (h - MYX_TILEMAP_VISIBLE_WIDTH) * MYX_TILE_HEIGHT;
+    MYX_TileScrollX = 0;
+    MYX_TileScrollY = 0;
 }

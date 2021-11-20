@@ -70,6 +70,8 @@ void GameMain()
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
 
+        MYX_SetMapVisibleCenter(player.x, player.y);
+
         MYX_EndFrame();
     }
 }
