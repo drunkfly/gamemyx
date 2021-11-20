@@ -5,6 +5,7 @@
 #ifndef ENGINE_MAPS_PUBLIC_H
 #define ENGINE_MAPS_PUBLIC_H
 
+// In small tiles
 #define MYX_TILEMAP_VISIBLE_WIDTH 32
 #define MYX_TILEMAP_VISIBLE_HEIGHT 24
 

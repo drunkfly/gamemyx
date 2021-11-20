@@ -6,6 +6,18 @@ get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 
 ########################################################################
 
+if(NOT WIN32)
+    find_package(SDL2 REQUIRED)
+else()
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x86")
+    else()
+        set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x64")
+    endif()
+endif()
+
+########################################################################
+
 if(CMAKE_HOST_WIN32)
     set(EXE_SUFFIX ".exe")
 else()
@@ -137,22 +149,19 @@ set_target_properties(Engine PROPERTIES PREFIX "" SUFFIX ".lib")
 target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 
 if(TARGET_SDL2)
-    target_include_directories(Engine PRIVATE
-        "${ROOT_DIR}/Build/SDL2/include")
-
-    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        target_link_libraries(Engine
-            "${ROOT_DIR}/Build/SDL2/lib/x86/SDL2.lib")
+    if(NOT WIN32)
+        target_link_libraries(Engine SDL2)
     else()
-        target_link_libraries(Engine
-            "${ROOT_DIR}/Build/SDL2/lib/x64/SDL2.lib")
+        target_link_libraries(Engine "${sdl2_libpath}/SDL2.lib")
+        target_include_directories(Engine PRIVATE
+            "${ROOT_DIR}/Build/SDL2/include")
     endif()
 endif()
 
 set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank6.c"
     PROPERTIES GENERATED TRUE) # FIXME
 
-add_executable(Game
+add_executable(Game WIN32
     ${game_src}
     "${CMAKE_BINARY_DIR}/Data/bank6.c" # FIXME
     )
@@ -166,12 +175,17 @@ if(TARGET_SDL2)
         OUTPUT_NAME "${GAME_NAME}"
     )
 
-    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        target_link_libraries(Game
-            "${ROOT_DIR}/Build/SDL2/lib/x86/SDL2main.lib")
+    if(NOT WIN32)
+        target_link_libraries(Game SDL2::Main)
     else()
-        target_link_libraries(Game
-            "${ROOT_DIR}/Build/SDL2/lib/x64/SDL2main.lib")
+        target_link_libraries(Game "${sdl2_libpath}/SDL2main.lib")
+
+        add_custom_command(TARGET Game POST_BUILD
+            COMMAND
+                "${CMAKE_COMMAND}" -E copy
+                    "${sdl2_libpath}/SDL2.dll"
+                    "$<TARGET_FILE_DIR:Game>"
+            )
     endif()
 elseif(TARGET_ZXNEXT)
     add_dependencies(Game MMapView)

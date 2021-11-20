@@ -12,21 +12,18 @@ const int KEY_SPACE     = SDL_SCANCODE_SPACE;
 
 bool MYX_IsKeyPressed(byte key)
 {
-    // FIXME
-    ASSERT(false);
-    return false;
+    const Uint8* keys = SDL_GetKeyboardState(NULL);
+    return keys[key] != 0;
 }
 
 bool MYX_IsGamepad1Pressed(byte key)
 {
     // FIXME
-    ASSERT(false);
     return false;
 }
 
 bool MYX_IsGamepad2Pressed(byte key)
 {
     // FIXME
-    ASSERT(false);
     return false;
 }

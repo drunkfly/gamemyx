@@ -93,11 +93,6 @@ void MYX_LoadMap(const MapInfo* map)
     const byte* info = map->info;
     byte infoBank = map->infoBank;
 
-    ASSERT(MYX_TilemapWidth >= MYX_TILEMAP_VISIBLE_WIDTH);
-    ASSERT(MYX_TilemapHeight >= MYX_TILEMAP_VISIBLE_HEIGHT);
-    ASSERT(MYX_TilemapWidth < MYX_TILEMAP_MAX_WIDTH);
-    ASSERT(MYX_TilemapHeight < MYX_TILEMAP_MAX_HEIGHT);
-
   #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(MYX_TilemapBank);
   #endif
@@ -123,4 +118,9 @@ void MYX_LoadMap(const MapInfo* map)
     MYX_TilemapMaxScrollY = (h - MYX_TILEMAP_VISIBLE_WIDTH) * MYX_TILE_HEIGHT;
     MYX_TileScrollX = 0;
     MYX_TileScrollY = 0;
+
+    ASSERT(MYX_TilemapWidth >= MYX_TILEMAP_VISIBLE_WIDTH);
+    ASSERT(MYX_TilemapHeight >= MYX_TILEMAP_VISIBLE_HEIGHT);
+    ASSERT(MYX_TilemapWidth < MYX_TILEMAP_MAX_WIDTH);
+    ASSERT(MYX_TilemapHeight < MYX_TILEMAP_MAX_HEIGHT);
 }

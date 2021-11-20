@@ -5,15 +5,12 @@
 #include "engine_p.h"
 
 static bool MYXP_SDLInitialized = false;
-static SDL_Window* MYXP_SDLWindow;
-static SDL_Renderer* MYXP_SDLRenderer;
+SDL_Window* MYXP_SDLWindow;
+Uint32 MYXP_PrevTicks;
 
 static void MYXP_Cleanup(void)
 {
-    if (MYXP_SDLRenderer) {
-        SDL_DestroyRenderer(MYXP_SDLRenderer);
-        MYXP_SDLRenderer = NULL;
-    }
+    MYXP_TerminateRenderer();
 
     if (MYXP_SDLWindow) {
         SDL_DestroyWindow(MYXP_SDLWindow);
@@ -58,12 +55,29 @@ void MYXP_PlatformInit()
         0);
     if (!MYXP_SDLWindow)
         MYXP_ErrorExit("Unable to initialize video mode: %s", SDL_GetError());
-        
-    MYXP_SDLRenderer = SDL_CreateRenderer(MYXP_SDLWindow, -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!MYXP_SDLRenderer)
-        MYXP_ErrorExit("Unable to initialize renderer: %s", SDL_GetError());
-   
+
+    MYXP_InitRenderer();
+    MYXP_PrevTicks = SDL_GetTicks();
+}
+
+void MYXP_HandleEvents()
+{
+    const int DesiredFPS = 50;
+    const int FrameLength = 1000 / DesiredFPS;
+
+    for (;;) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT)
+                exit(0);
+        }
+
+        Uint32 ticks = SDL_GetTicks();
+        if (SDL_TICKS_PASSED(ticks, MYXP_PrevTicks + FrameLength)) {
+            MYXP_PrevTicks += FrameLength;
+            break;
+        }
+    }
 }
 
 int main(int argc, char** argv)
