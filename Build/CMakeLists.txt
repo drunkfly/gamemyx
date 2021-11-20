@@ -6,13 +6,15 @@ get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 
 ########################################################################
 
-if(NOT WIN32)
-    find_package(SDL2 REQUIRED)
-else()
-    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x86")
+if(TARGET_SDL2)
+    if(NOT WIN32)
+        find_package(SDL2 REQUIRED)
     else()
-        set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x64")
+        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+            set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x86")
+        else()
+            set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x64")
+        endif()
     endif()
 endif()
 
@@ -106,8 +108,7 @@ add_subdirectory("${ROOT_DIR}/Data" Data)
 
 if(TARGET_ZXNEXT)
     add_definitions(-DTARGET_ZXNEXT)
-endif()
-if(TARGET_SDL2)
+elseif(TARGET_SDL2)
     add_definitions(-DTARGET_SDL2)
 endif()
 

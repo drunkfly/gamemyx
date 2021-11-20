@@ -35,10 +35,10 @@ void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w)
     const byte* p = tilemap + (y * w + x) * BytesPerTile;
 
     w *= BytesPerTile;
-    for (int y = 0; y < MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
-        memcpy(dst, tilemap, MYX_TILEMAP_VISIBLE_WIDTH * BytesPerTile);
+    for (int y = 0; y <= MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
+        memcpy(dst, p, (MYX_TILEMAP_VISIBLE_WIDTH + 1) * BytesPerTile);
         dst += TilesPerScreenRow * BytesPerTile;
-        tilemap += w;
+        p += w;
     }
 }
 

@@ -45,8 +45,8 @@ bool MYX_IsSmallTileBlocking(byte x, byte y)
 
 void MYX_SetMapVisibleCenter(int x, int y)
 {
-    x -= (MYX_TILEMAP_VISIBLE_WIDTH  / 2) * MYX_TILE_WIDTH;
-    y -= (MYX_TILEMAP_VISIBLE_HEIGHT / 2) * MYX_TILE_HEIGHT;
+    x -= MYX_TILEMAP_VISIBLE_WIDTH  * MYX_TILE_SMALL_WIDTH  / 2;
+    y -= MYX_TILEMAP_VISIBLE_HEIGHT * MYX_TILE_SMALL_HEIGHT / 2;
 
     if (x < 0)
         x = 0;

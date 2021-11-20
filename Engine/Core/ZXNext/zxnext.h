@@ -99,6 +99,23 @@
 #define NEXT_LAYER2_Y_OFFSET                0x17
 
 /*
+ * Clip Window Tilemap
+ */
+
+#define NEXT_CLIP_WINDOW_TILEMAP            0x1B
+
+/*
+ * Clip Window Control
+ */
+
+#define NEXT_CLIP_WINDOW_CONTROL            0x1C
+
+#define NEXT_RESET_TILEMAP_CLIP_INDEX       0x80
+#define NEXT_RESET_ULA_CLIP_INDEX           0x40
+#define NEXT_RESET_SPRITE_CLIP_INDEX        0x20
+#define NEXT_RESET_LAYER2_CLIP_INDEX        0x10
+
+/*
  * Tilemap Offset X MSB
  */
 

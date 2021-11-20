@@ -14,7 +14,7 @@ STRUCT(Tile)
 };
 
 static byte MYXP_Tileset[MYX_MAX_TILES * MYX_TILE_BYTES];
-static Tile MYXP_Tilemap[MYX_TILEMAP_VISIBLE_WIDTH * MYX_TILEMAP_VISIBLE_HEIGHT];
+static Tile MYXP_Tilemap[(MYX_TILEMAP_VISIBLE_WIDTH + 1) * (MYX_TILEMAP_VISIBLE_HEIGHT + 1)];
 static byte MYXP_TilemapOffsetX;
 static byte MYXP_TilemapOffsetY;
 
@@ -36,8 +36,8 @@ void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w)
     Tile* dst = MYXP_Tilemap;
     const byte* p = tilemap + (y * w + x) * BytesPerTile;
 
-    for (int y = 0; y < MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
-        for (int x = 0; x < MYX_TILEMAP_VISIBLE_WIDTH; x++) {
+    for (int y = 0; y <= MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
+        for (int x = 0; x <= MYX_TILEMAP_VISIBLE_WIDTH; x++) {
             byte indexLow = *p++;
             byte attrib = *p++;
 
@@ -46,7 +46,7 @@ void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w)
             dst++;
         }
 
-        p += (w - MYX_TILEMAP_VISIBLE_WIDTH) * BytesPerTile;
+        p += (w - MYX_TILEMAP_VISIBLE_WIDTH - 1) * BytesPerTile;
     }
 }
 
@@ -60,17 +60,20 @@ void MYXP_RenderTilemap()
 {
     const Tile* tile = MYXP_Tilemap;
 
-    for (int y = 0; y < MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
-        for (int x = 0; x < MYX_TILEMAP_VISIBLE_WIDTH; x++) {
+    for (int y = 0; y <= MYX_TILEMAP_VISIBLE_HEIGHT; y++) {
+        for (int x = 0; x <= MYX_TILEMAP_VISIBLE_WIDTH; x++) {
             const byte* s = &MYXP_Tileset[tile->index * MYX_TILE_BYTES];
             bool first = true;
 
             for (int yy = 0; yy < MYX_TILE_SMALL_HEIGHT; yy++) {
-                int dstX = (x * MYX_TILE_SMALL_WIDTH + MYXP_TilemapOffsetX) % MYX_SDL2_CONTENT_WIDTH;
-                int dstY = (y * MYX_TILE_SMALL_HEIGHT + MYXP_TilemapOffsetY + yy) % MYX_SDL2_CONTENT_HEIGHT;
-                Uint32* p = &MYXP_ScreenBuffer[dstY * MYX_SDL2_CONTENT_WIDTH + dstX];
+                int dstX = x * MYX_TILE_SMALL_WIDTH - MYXP_TilemapOffsetX;
+                int dstY = y * MYX_TILE_SMALL_HEIGHT - MYXP_TilemapOffsetY + yy;
 
-                for (int xx = 0; xx < MYX_TILE_SMALL_WIDTH; xx++) {
+                if (dstY >= MYX_SDL2_CONTENT_HEIGHT)
+                    break;
+
+                Uint32* p = &MYXP_ScreenBuffer[dstY * MYX_SDL2_CONTENT_WIDTH + dstX];
+                for (int xx = 0; xx < MYX_TILE_SMALL_WIDTH; xx++, dstX++) {
                     byte index;
                     if (first)
                         index = (*s >> 4) & 0xF;
@@ -78,8 +81,13 @@ void MYXP_RenderTilemap()
                         index = ((*s++) & 0xF);
 
                     first = !first;
-                    index += tile->paletteIndex * 16;
 
+                    if (dstY < 0 || dstX < 0 || dstX >= MYX_SDL2_CONTENT_WIDTH) {
+                        p++;
+                        continue;
+                    }
+
+                    index += tile->paletteIndex * 16;
                     *p++ = MYXP_TilemapPalette[index];
                 }
             }
