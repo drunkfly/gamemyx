@@ -10,7 +10,7 @@
 #pragma constseg MYX_ANIMSPRITES
 #endif
 
-void MYX_PutAnimSprite(int x, byte y, MYXAnimSprite sprite)
+void MYX_PutAnimSprite(int x, int y, MYXAnimSprite sprite)
 {
     MYXPAnimSprite* p = &MYXP_AnimSprites[sprite];
     MYX_PutSprite(x, y, p->first + p->index);

@@ -343,42 +343,42 @@
  </tile>
  <tile id="218">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="219">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="220">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="221">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="222">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="223">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="224">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="225">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="230">
@@ -407,6 +407,46 @@
   </properties>
  </tile>
  <tile id="235">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="237">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="238">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="239">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="240">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="241">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="242">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="243">
+  <properties>
+   <property name="blocking" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="244">
   <properties>
    <property name="blocking" type="bool" value="true"/>
   </properties>
@@ -543,52 +583,52 @@
  </tile>
  <tile id="275">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="276">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="277">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="278">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="279">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="280">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="281">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="282">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="283">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="284">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="285">
@@ -828,52 +868,52 @@
  </tile>
  <tile id="332">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="333">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="334">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="335">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="336">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="337">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="338">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="339">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="340">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="341">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="342">
@@ -1088,52 +1128,52 @@
  </tile>
  <tile id="389">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="390">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="391">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="392">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="393">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="394">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="395">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="396">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="397">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="398">
   <properties>
-   <property name="blocking" type="bool" value="true"/>
+   <property name="blocking" type="bool" value="false"/>
   </properties>
  </tile>
 </tileset>

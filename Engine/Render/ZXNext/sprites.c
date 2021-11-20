@@ -33,11 +33,17 @@ void MYXP_EndSprites()
     LastDrawnSpriteCount = DrawnSpriteCount;
 }
 
-void MYX_PutSprite(int x, byte y, MYXSprite sprite)
+void MYX_PutSprite(int x, int y, MYXSprite sprite)
 {
-    const MYXPSprite* pSprite = &Sprites[sprite];
     x += 32; /* border size */
     y += 32;
+    x -= MYXP_MapVisibleCenterX;
+    y -= MYXP_MapVisibleCenterY;
+
+    if (x < 16 || y < 16 || x >= 256+32 || y >= 192+32)
+        return;
+
+    const MYXPSprite* pSprite = &Sprites[sprite];
     NEXT_SpriteAttribute = (byte)(x & 0xff);
     NEXT_SpriteAttribute = y;
     NEXT_SpriteAttribute = pSprite->attr2 | (byte)((byte)(x >> 8) & 1);

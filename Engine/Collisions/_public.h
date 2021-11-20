@@ -8,10 +8,10 @@
 
 typedef void (*MYXCOLLISIONCALLBACK)(byte tag);
 
-bool MYX_CollidesWithMap16x16(word x, word y);
+bool MYX_CollidesWithMap16x16(int x, int y);
 
 void MYX_SetCollisionCallback(byte tag, MYXCOLLISIONCALLBACK callback);
-void MYX_AddCollision(byte x, byte y, byte w, byte h, byte tag);
+void MYX_AddCollision(int x, int y, byte w, byte h, byte tag);
 
 #endif
 #endif

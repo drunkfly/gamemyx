@@ -21,16 +21,16 @@ void MYXP_EndSprites()
     LastDrawnSpriteCount = DrawnSpriteCount;
 }
 
-void MYX_PutSprite(int x, byte y, MYXSprite sprite)
+void MYX_PutSprite(int x, int y, MYXSprite sprite)
 {
     const MYXPSprite* pSprite = &Sprites[sprite];
+    x -= MYXP_MapVisibleCenterX;
+    y -= MYXP_MapVisibleCenterY;
 
     const byte* s = pSprite->data;
     bool first = true;
 
     for (int yy = 0; yy < pSprite->h; yy++) {
-        if (y + yy < 0)
-            continue;
         if (y + yy >= MYX_SDL2_CONTENT_HEIGHT)
             continue;
 
@@ -38,10 +38,6 @@ void MYX_PutSprite(int x, byte y, MYXSprite sprite)
         for (int xx = 0; xx < pSprite->w; xx++) {
             if (x + xx >= MYX_SDL2_CONTENT_WIDTH)
                 break;
-            if (x + xx < 0) {
-                ++p;
-                continue;
-            }
 
             byte index;
             if (pSprite->is256Color) {
@@ -61,6 +57,11 @@ void MYX_PutSprite(int x, byte y, MYXSprite sprite)
                     continue;
                 }
                 index += pSprite->paletteIndex * 16;
+            }
+
+            if (x + xx < 0 || y + yy < 0) {
+                ++p;
+                continue;
             }
 
             *p++ = MYXP_SpritePalette[index];

@@ -10,8 +10,11 @@
 #pragma constseg MYX_COLLISIONS
 #endif
 
-bool MYX_CollidesWithMap16x16(word x, word y)
+bool MYX_CollidesWithMap16x16(int x, int y)
 {
+    if (x < 0 || y < 0)
+        return true;
+
     word tileX = x >> 3;
     word tileY = y >> 3;
 

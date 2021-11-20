@@ -5,5 +5,7 @@
 #ifndef ENGINE_MAP_PRIVATE_H
 #define ENGINE_MAP_PRIVATE_H
 
+extern int MYXP_MapVisibleCenterX;
+extern int MYXP_MapVisibleCenterY;
 
 #endif

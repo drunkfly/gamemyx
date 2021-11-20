@@ -30,6 +30,9 @@ STRUCT(MapInfo)
 extern byte MYX_PlayerX;
 extern byte MYX_PlayerY;
 
+extern int MYX_MapWidth;
+extern int MYX_MapHeight;
+
 bool MYX_IsSmallTileBlocking(byte x, byte y);
 
 void MYX_SetMapVisibleCenter(int x, int y);

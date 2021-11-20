@@ -8,10 +8,17 @@
 
 STRUCT(MYXPCollisionRect)
 {
+  #if ENABLE_COLLISION_OUTSIDE_SCREEN
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+  #else
     byte x1;
     byte y1;
     byte x2;
     byte y2;
+  #endif
     byte tag;
 };
 

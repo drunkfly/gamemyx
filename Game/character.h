@@ -27,14 +27,14 @@ STRUCT(Character)
     MYXAnimSprite idle[4];
     MYXAnimSprite walk[4];
     MYXAnimSprite death;
-    byte x;
-    byte y;
+    int x;
+    int y;
     byte direction;
     byte state;
     byte timer;
 };
 
-void Character_Init(Character* c, byte x, byte y, const void* sprites);
+void Character_Init(Character* c, int x, int y, const void* sprites);
 
 void Character_Draw(Character* c);
 

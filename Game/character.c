@@ -4,7 +4,7 @@
  */
 #include "character.h"
 
-void Character_Init(Character* c, byte x, byte y, const void* sprites)
+void Character_Init(Character* c, int x, int y, const void* sprites)
 {
     c->state = CHAR_IDLE;
     c->direction = DIR_DOWN;
@@ -75,7 +75,7 @@ bool Character_MoveRight(Character* c)
     c->state = CHAR_WALK;
     c->direction = DIR_RIGHT;
 
-    if (c->x < 255-16) {
+    if (c->x < MYX_MapWidth-16) {
         ++(c->x);
         if (!MYX_CollidesWithMap16x16(c->x, c->y))
             return true;
@@ -111,7 +111,7 @@ bool Character_MoveDown(Character* c)
     c->state = CHAR_WALK;
     c->direction = DIR_DOWN;
 
-    if (c->y < 192-16) {
+    if (c->y < MYX_MapHeight-16) {
         ++(c->y);
         if (!MYX_CollidesWithMap16x16(c->x, c->y))
             return true;

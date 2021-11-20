@@ -50,7 +50,7 @@ void GameMain()
     byte py = MYX_PlayerY * MYX_TILE_HEIGHT;
     Character_Init(&player, px, py, SwordsmanData);
 
-    byte demonX = 10 * MYX_TILE_WIDTH;
+    byte demonX = 11 * MYX_TILE_WIDTH;
     byte demonY = 1 * MYX_TILE_HEIGHT;
     Character_Init(&demon, demonX, demonY, RedDemonData);
     demon.direction = DIR_LEFT;

@@ -19,8 +19,14 @@ static byte MYX_TileScrollX;
 static byte MYX_TileScrollY;
 static int MYX_TilemapMaxScrollX;
 static int MYX_TilemapMaxScrollY;
+
 byte MYX_PlayerX;
 byte MYX_PlayerY;
+
+int MYXP_MapVisibleCenterX;
+int MYXP_MapVisibleCenterY;
+int MYX_MapWidth;
+int MYX_MapHeight;
 
 bool MYX_IsSmallTileBlocking(byte x, byte y)
 {
@@ -57,6 +63,9 @@ void MYX_SetMapVisibleCenter(int x, int y)
         x = MYX_TilemapMaxScrollX;
     if (y > MYX_TilemapMaxScrollY)
         y = MYX_TilemapMaxScrollY;
+
+    MYXP_MapVisibleCenterX = x;
+    MYXP_MapVisibleCenterY = y;
 
     MYX_SetTilemapOffset((byte)x & 7, (byte)y & 7);
 
@@ -114,10 +123,12 @@ void MYX_LoadMap(const MapInfo* map)
     MYX_PlayerY = playerY;
     MYX_TilemapWidth = w;
     MYX_TilemapHeight = h;
-    MYX_TilemapMaxScrollX = (w - MYX_TILEMAP_VISIBLE_WIDTH) * MYX_TILE_WIDTH;
-    MYX_TilemapMaxScrollY = (h - MYX_TILEMAP_VISIBLE_WIDTH) * MYX_TILE_HEIGHT;
+    MYX_TilemapMaxScrollX = (w - MYX_TILEMAP_VISIBLE_WIDTH) * MYX_TILE_SMALL_WIDTH;
+    MYX_TilemapMaxScrollY = (h - MYX_TILEMAP_VISIBLE_HEIGHT) * MYX_TILE_SMALL_HEIGHT;
     MYX_TileScrollX = 0;
     MYX_TileScrollY = 0;
+    MYX_MapWidth = MYX_TilemapWidth * MYX_TILE_SMALL_WIDTH;
+    MYX_MapHeight = MYX_TilemapHeight * MYX_TILE_SMALL_HEIGHT;
 
     ASSERT(MYX_TilemapWidth >= MYX_TILEMAP_VISIBLE_WIDTH);
     ASSERT(MYX_TilemapHeight >= MYX_TILEMAP_VISIBLE_HEIGHT);

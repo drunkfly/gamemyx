@@ -27,6 +27,7 @@
 
     extern SDL_Renderer* MYXP_SDLRenderer;
     extern SDL_PixelFormat* MYXP_SDLPixelFormat;
+
     extern Uint32 MYXP_ScreenBuffer[];
     extern Uint32 MYXP_TilemapPalette[];
     extern Uint32 MYXP_SpritePalette[];

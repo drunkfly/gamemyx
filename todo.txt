@@ -1,0 +1,3 @@
+* Wrong palette on stone tiles
+* Implement half-tile collisions
+* Player spawn position is incorrect
