@@ -14,16 +14,21 @@
     typedef struct X X; \
     struct X
 
-#ifndef DEBUG
- #define ASSERT(X) ((void)0)
- #define ASSERT_BANK(NUM) ((void)0)
-#else
- #define ASSERT(X) \
+#ifdef TARGET_ZXNEXT
+ #if 1//def NDEBUG
+  #define ASSERT(X) ((void)0)
+  #define ASSERT_BANK(NUM) ((void)0)
+ #else
+  #define ASSERT(X) \
     ((X) ? (void)0 : MYX_AssertFailed(__FILE__, __LINE__, #X))
- #define ASSERT_BANK(NUM)
+  #define ASSERT_BANK(NUM)
+ #endif
+#else
+ #include <assert.h>
+ #define ASSERT(X) assert(X)
 #endif
 
-#ifdef ZXNEXT
+#ifdef TARGET_ZXNEXT
  #define Z88DK_FASTCALL __z88dk_fastcall
  #define Z88DK_PRESERVES(REGS) __preserves_regs REGS
 #else

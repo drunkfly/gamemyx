@@ -52,6 +52,7 @@ own licenses instead:
 * Files under the *Data/MiniWorldSprites* directory.
 * Files under the *Data/SereneVillage* directory.
 * Files under the *Tools* directory.
+* Files under the *Build/SDL2* directory.
 
 ```
 Copyright (c) 2021 DrunkFly Team

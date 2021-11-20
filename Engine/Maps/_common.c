@@ -26,15 +26,19 @@ bool MYX_IsSmallTileBlocking(byte x, byte y)
 {
     const byte* collisionMap = MYX_CollisionMap;
 
+  #ifdef TARGET_ZXNEXT
     byte bank = MYXP_CurrentBank;
     MYXP_SetUpperMemoryBank(MYX_CollisionBank);
+  #endif
 
     byte xOff = x >> 3;
     byte xShift = x & 7;
     byte mask = collisionMap[y * ((MYX_TilemapWidth + 7) >> 3) + xOff];
     bool result = (mask & (1 << xShift)) != 0;
 
+  #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(bank);
+  #endif
 
     return result;
 }
@@ -63,18 +67,24 @@ void MYX_SetMapVisibleCenter(int x, int y)
         MYX_TileScrollY = scrollY;
         byte w = MYX_TilemapWidth;
 
+      #ifdef TARGET_ZXNEXT
         byte bank = MYXP_CurrentBank;
         MYXP_SetUpperMemoryBank(MYX_TilemapBank);
+      #endif
 
         MYX_UploadVisibleTilemap(MYX_TileMap, scrollX, scrollY, w);
 
+      #ifdef TARGET_ZXNEXT
         MYXP_SetUpperMemoryBank(bank);
+      #endif
     }
 }
 
 void MYX_LoadMap(const MapInfo* map)
 {
+  #ifdef TARGET_ZXNEXT
     byte bank = MYXP_CurrentBank;
+  #endif
 
     MYX_CollisionMap = map->collision;
     MYX_CollisionBank = map->collisionBank;
@@ -88,16 +98,22 @@ void MYX_LoadMap(const MapInfo* map)
     ASSERT(MYX_TilemapWidth < MYX_TILEMAP_MAX_WIDTH);
     ASSERT(MYX_TilemapHeight < MYX_TILEMAP_MAX_HEIGHT);
 
+  #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(MYX_TilemapBank);
+  #endif
     byte w = *MYX_TileMap++;
     byte h = *MYX_TileMap++;
     MYX_UploadVisibleTilemap(MYX_TileMap, 0, 0, w);
 
+  #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(infoBank);
+  #endif
     byte playerX = *info++;
     byte playerY = *info++;
 
+  #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(bank);
+  #endif
 
     MYX_PlayerX = playerX;
     MYX_PlayerY = playerY;

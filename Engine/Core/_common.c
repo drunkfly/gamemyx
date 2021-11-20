@@ -30,5 +30,5 @@ void MYX_EndFrame()
 
     MYXP_EndSprites();
 
-    __asm halt __endasm;
+    MYXP_WaitVSync();
 }

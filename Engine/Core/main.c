@@ -13,7 +13,7 @@ void MYXP_EngineMain()
 {
     MYXP_PlatformInit();
 
-  #ifdef ZXNEXT
+  #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(1);
   #endif
 

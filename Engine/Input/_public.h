@@ -5,7 +5,9 @@
 #ifndef ENGINE_INPUT_PUBLIC_H
 #define ENGINE_INPUT_PUBLIC_H
 
-#ifdef ZXNEXT
+#ifdef TARGET_SDL2
+#include "SDL2/keys.h"
+#elif defined(TARGET_ZXNEXT)
 #include "ZXNext/keys.h"
 #endif
 

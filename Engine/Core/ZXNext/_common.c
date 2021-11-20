@@ -19,3 +19,8 @@ void MYXP_SetUpperMemoryBank(byte bank)
     NEXT_SETREG(NEXT_MMUSLOT7, page);
     MYXP_CurrentBank = bank;
 }
+
+void MYXP_WaitVSync()
+{
+    __asm halt __endasm;
+}

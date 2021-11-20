@@ -2,8 +2,8 @@
  * Copyright (c) 2021 DrunkFly Team
  * Licensed under 3-clause BSD license
  */
-#ifndef ZXNEXT_KEYS_H
-#define ZXNEXT_KEYS_H
+#ifndef MYX_ZXNEXT_KEYS_H
+#define MYX_ZXNEXT_KEYS_H
 
 enum
 {

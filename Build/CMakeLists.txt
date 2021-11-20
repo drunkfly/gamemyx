@@ -92,9 +92,12 @@ add_subdirectory("${ROOT_DIR}/Data" Data)
 ########################################################################
 ## Code
 
-add_definitions(
-    -DZXNEXT
-    )
+if(TARGET_ZXNEXT)
+    add_definitions(-DTARGET_ZXNEXT)
+endif()
+if(TARGET_SDL2)
+    add_definitions(-DTARGET_SDL2)
+endif()
 
 file(GLOB_RECURSE engine_src
     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -115,6 +118,17 @@ file(GLOB_RECURSE game_src
     ${ROOT_DIR}/mmap.inc
     )
 
+foreach(file ${engine_src} ${game_src})
+    if(NOT TARGET_ZXNEXT AND "${file}" MATCHES "\\/ZXNext\\/")
+        set_source_files_properties("${file}"
+            PROPERTIES HEADER_FILE_ONLY TRUE)
+    endif()
+    if(NOT TARGET_SDL2 AND "${file}" MATCHES "\\/SDL2\\/")
+        set_source_files_properties("${file}"
+            PROPERTIES HEADER_FILE_ONLY TRUE)
+    endif()
+endforeach()
+
 add_library(Engine STATIC
     ${engine_src}
     )
@@ -122,34 +136,62 @@ add_library(Engine STATIC
 set_target_properties(Engine PROPERTIES PREFIX "" SUFFIX ".lib")
 target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 
-set_source_files_properties("${ROOT_DIR}/Build/CMake/Data/bank6.c"
+if(TARGET_SDL2)
+    target_include_directories(Engine PRIVATE
+        "${ROOT_DIR}/Build/SDL2/include")
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        target_link_libraries(Engine
+            "${ROOT_DIR}/Build/SDL2/lib/x86/SDL2.lib")
+    else()
+        target_link_libraries(Engine
+            "${ROOT_DIR}/Build/SDL2/lib/x64/SDL2.lib")
+    endif()
+endif()
+
+set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank6.c"
     PROPERTIES GENERATED TRUE) # FIXME
 
 add_executable(Game
     ${game_src}
-    ${ROOT_DIR}/Build/CMake/Data/bank6.c # FIXME
+    "${CMAKE_BINARY_DIR}/Data/bank6.c" # FIXME
     )
 
 add_dependencies(Game Assets)
 target_include_directories(Game PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_link_libraries(Game Engine)
-set_target_properties(Game PROPERTIES
-    OUTPUT_NAME "${GAME_NAME}"
-    PREFIX ""
-    SUFFIX ".nex"
-    LINK_DEPENDS "${ROOT_DIR}/mmap.h;${ROOT_DIR}/mmap.inc;${mmapview}"
-    LINK_FLAGS "-pragma-include:${ROOT_DIR}/mmap.h -Cm -I${ROOT_DIR}"
+
+if(TARGET_SDL2)
+    set_target_properties(Game PROPERTIES
+        OUTPUT_NAME "${GAME_NAME}"
     )
 
-add_dependencies(Game MMapView)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        target_link_libraries(Game
+            "${ROOT_DIR}/Build/SDL2/lib/x86/SDL2main.lib")
+    else()
+        target_link_libraries(Game
+            "${ROOT_DIR}/Build/SDL2/lib/x64/SDL2main.lib")
+    endif()
+elseif(TARGET_ZXNEXT)
+    add_dependencies(Game MMapView)
 
-add_custom_command(TARGET Game POST_BUILD
-    COMMAND
-        "${CMAKE_COMMAND}" -E copy
-            "$<TARGET_FILE:Game>"
-            "${ROOT_DIR}/Build/Sync/Build/${GAME_NAME}.nex"
-    COMMAND
-        "${mmapview}"
-            "${ROOT_DIR}/Build/CMake/${GAME_NAME}.map"
-            > "${ROOT_DIR}/Build/MemoryMap.txt"
-    )
+    set_target_properties(Game PROPERTIES
+        OUTPUT_NAME "${GAME_NAME}"
+        PREFIX ""
+        SUFFIX ".nex"
+        LINK_DEPENDS "${ROOT_DIR}/mmap.h;${ROOT_DIR}/mmap.inc;${mmapview}"
+        LINK_FLAGS "-pragma-include:${ROOT_DIR}/mmap.h -Cm -I${ROOT_DIR}"
+        )
+
+    add_custom_command(TARGET Game POST_BUILD
+        COMMAND
+            "${CMAKE_COMMAND}" -E copy
+                "$<TARGET_FILE:Game>"
+                "${ROOT_DIR}/Build/Sync/Build/${GAME_NAME}.nex"
+        COMMAND
+            "${mmapview}"
+                "${CMAKE_BINARY_DIR}/${GAME_NAME}.map"
+                > "${ROOT_DIR}/Build/MemoryMap.txt"
+        )
+endif()

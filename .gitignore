@@ -1,4 +1,5 @@
-/Build/CMake
+/Build/CMake.Next
+/Build/CMake.Win32
 /Build/Importer
 /Build/MMapView
 /Build/Sync
