@@ -146,6 +146,18 @@
 
 #define NEXT_TILEMAPCONTROL                 0x6b
 
+#define NEXT_TILEMAP_ENABLED                0x80
+#define NEXT_TILEMAP_80X32                  0x40
+#define NEXT_TILEMAP_40X32                  0x00
+#define NEXT_TILEMAP_NO_ATTRIBUTES          0x20
+#define NEXT_TILEMAP_HAS_ATTRIBUTES         0x00
+#define NEXT_TILEMAP_USE_SECONDARY_PALETTE  0x10
+#define NEXT_TILEMAP_USE_PRIMARY_PALETTE    0x00
+#define NEXT_TILEMAP_TEXT_MODE              0x04
+#define NEXT_TILEMAP_256_TILES              0x00
+#define NEXT_TILEMAP_512_TILES              0x02
+#define NEXT_TILEMAP_OVER_ULA               0x01
+
 /*
  * Tilemap base address
  */

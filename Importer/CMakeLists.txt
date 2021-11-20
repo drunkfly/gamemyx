@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(Importer C)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Engine/Include")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Engine")
 add_definitions(-DEZXML_NOMMAP)
 
 add_executable(Importer

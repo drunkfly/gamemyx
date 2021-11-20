@@ -25,10 +25,21 @@ void MYX_LoadTilemap(const byte* tilemap)
     byte w = *tilemap++;
     byte h = *tilemap++;
 
-    byte* dst = (byte*)(0x6000 + 4 + 40 * 4);
+    const byte OffsetX = 4;
+    const byte OffsetY = 4;
+    const byte BytesPerTile = 2;
+    const byte TilesPerScreenRow = 40;
+    const byte TilesPerMapRow = 32;
+
+    byte* dst = (byte*)(0x6000
+              + OffsetY * TilesPerScreenRow * BytesPerTile
+              + OffsetX * BytesPerTile
+              );
+
+    w *= BytesPerTile;
     for (int y = 0; y < h; y++) {
-        memcpy(dst, tilemap, 32);
-        dst += 40;
+        memcpy(dst, tilemap, TilesPerMapRow * BytesPerTile);
+        dst += TilesPerScreenRow * BytesPerTile;
         tilemap += w;
     }
 }

@@ -337,16 +337,21 @@ static void outputTilemapData()
     char buf[256];
     snprintf(buf, sizeof(buf), "map_%s_data", tilemapName);
 
-    int size = 2 + tilemapWidth * tilemapHeight;
+    int size = 2 + tilemapWidth * tilemapHeight * 2;
 
     byte* data = produceOutput(buf, size,
         &tilemapList[currentTilemap].tilemapBank);
 
     *data++ = tilemapWidth;
     *data++ = tilemapHeight;
-    for (int y = 0; y < tilemapHeight; y++)
-        for (int x = 0; x < tilemapWidth; x++)
-            *data++ = (byte)tilemap[y * tilemapWidth + x];
+    for (int y = 0; y < tilemapHeight; y++) {
+        for (int x = 0; x < tilemapWidth; x++) {
+            byte tileIndex = (byte)tilemap[y * tilemapWidth + x];
+            byte paletteIndex = cachedTiles[tileIndex].paletteIndex;
+            *data++ = tileIndex;
+            *data++ = (paletteIndex << 4) | ((tileIndex >> 8) & 1);
+        }
+    }
 }
 
 static void outputTilemapCollisions()

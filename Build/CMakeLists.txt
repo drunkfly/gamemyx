@@ -122,6 +122,9 @@ add_library(Engine STATIC
 set_target_properties(Engine PROPERTIES PREFIX "" SUFFIX ".lib")
 target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 
+set_source_files_properties("${ROOT_DIR}/Build/CMake/Data/bank6.c"
+    PROPERTIES GENERATED TRUE) # FIXME
+
 add_executable(Game
     ${game_src}
     ${ROOT_DIR}/Build/CMake/Data/bank6.c # FIXME

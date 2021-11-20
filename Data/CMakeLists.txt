@@ -131,6 +131,6 @@ IMPORTER(
 
     -loadtmx "${src}/park.tmx"
     #-loadtmx "${src}/stone.tmx"
-    -outmaps Maps.h
     -outtiles4 Map/Tileset.h
+    -outmaps Maps.h
     )

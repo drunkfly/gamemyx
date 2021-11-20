@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 #include <string.h>
-#include "../../config.h"
+#include "../config.h"
 
 #define STRUCT(X) \
     struct X; \
