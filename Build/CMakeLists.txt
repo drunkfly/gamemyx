@@ -37,9 +37,11 @@ else()
 endif()
 
 macro(build_for_host dir)
-    file(MAKE_DIRECTORY "${ROOT_DIR}/Build/${dir}")
     if(CMAKE_HOST_WIN32)
         add_custom_target(${dir}
+            COMMAND
+                "${CMAKE_COMMAND}" -E
+                    make_directory "${ROOT_DIR}/Build/${dir}"
             COMMAND
                 "${CMAKE_COMMAND}"
                     -G "MinGW Makefiles"
@@ -54,6 +56,9 @@ macro(build_for_host dir)
             )
     else()
         add_custom_target(${dir}
+            COMMAND
+                "${CMAKE_COMMAND}" -E
+                    make_directory "${ROOT_DIR}/Build/${dir}"
             COMMAND
                 "${CMAKE_COMMAND}"
                     -DCMAKE_BUILD_TYPE=Release
@@ -175,10 +180,13 @@ endif()
 
 set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank6.c"
     PROPERTIES GENERATED TRUE) # FIXME
+set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank7.c"
+    PROPERTIES GENERATED TRUE) # FIXME
 
 add_executable(Game WIN32
     ${game_src}
     "${CMAKE_BINARY_DIR}/Data/bank6.c" # FIXME
+    "${CMAKE_BINARY_DIR}/Data/bank7.c" # FIXME
     )
 
 add_dependencies(Game Assets)

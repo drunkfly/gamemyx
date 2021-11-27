@@ -35,8 +35,8 @@ void MYXP_EndSprites()
 
 void MYX_PutSprite(int x, int y, MYXSprite sprite)
 {
-    x += 32; /* border size */
-    y += 32;
+    x += MYX_NEXT_BORDER_SIZE;
+    y += MYX_NEXT_BORDER_SIZE;
     x -= MYXP_MapVisibleCenterX;
     y -= MYXP_MapVisibleCenterY;
 

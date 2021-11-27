@@ -9,6 +9,7 @@
 #include "SDL2/common.h"
 #elif defined(TARGET_ZXNEXT)
 #include "ZXNext/zxnext.h"
+#include "ZXNext/zxmem.h"
 #endif
 
 extern byte MYXP_CurrentBank;

@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+set PATH=%~dp0Tools\tcc;%PATH%
+
 if not exist %~dp0Build\CMake.MSVC2019 mkdir %~dp0Build\CMake.MSVC2019
 if errorlevel 1 exit /B 1
 

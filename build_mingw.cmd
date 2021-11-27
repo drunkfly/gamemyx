@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+set PATH=%~dp0Tools\tcc;%PATH%
+
 if not exist %~dp0Build\CMake.MinGW mkdir %~dp0Build\CMake.MinGW
 if errorlevel 1 exit /B 1
 

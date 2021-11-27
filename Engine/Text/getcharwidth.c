@@ -11,5 +11,5 @@
 
 byte MYX_GetCharWidth(char c)
 {
-    return MYXP_CurrentFont->chars[(byte)c].xadv;
+    return MYXP_CurrentFont.chars[(byte)c].xadv;
 }

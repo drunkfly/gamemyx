@@ -9,8 +9,12 @@ byte MYX_DrawChar(int x, int y, char ch, byte color)
     x += MYX_SDL2_BORDER_SIZE;
     y += MYX_SDL2_BORDER_SIZE;
 
-    const FontChar* p = &MYXP_CurrentFont->chars[(byte)ch];
-    const byte* img = &MYXP_CurrentFontBytes[p->offset];
+    byte firstChar = MYXP_CurrentFont.firstChar;
+    if ((byte)ch < firstChar)
+        return 0;
+
+    const FontChar* p = &MYXP_CurrentFont.chars[(byte)ch - firstChar];
+    const byte* img = p->pixels;
 
     byte w = p->w;
     byte yy = p->yoff;

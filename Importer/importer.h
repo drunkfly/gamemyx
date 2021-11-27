@@ -77,7 +77,7 @@ extern char outputPath[1024];
 extern int currentBank;
 extern int currentBankSize;
 
-void unloadImage();
+void unloadImage(void);
 void loadImage(const char* file);
 void buildImageHistogram();
 void makeImagePalette4();
@@ -88,15 +88,14 @@ void setTransparentColor(int color);
 
 void unloadFont();
 void loadFnt(const char* file);
-void writeFontBytes(const char* file);
-void writeFontDef(const char* file);
+void outputFontList(const char* file);
 
-void unloadTilemap();
+void unloadTilemap(void);
 void loadTilemap(const char* file);
 void outputTilemap();
 void outputTilemapList(const char* file);
 
-void unloadTilesets();
+void unloadTilesets(void);
 void loadTileset(const char* file);
 Tileset* findTileset(const char* file);
 void outputTileset4Bit(const char* file);
@@ -104,7 +103,8 @@ void outputTileset4Bit(const char* file);
 void clearTileCache();
 int addTile(const unsigned char* pixels);
 
-void unloadOutputs();
+void unloadOutputs(void);
+byte requestBank(const char* symbol, int size, char* outPath, size_t max);
 byte* produceOutput(const char* symbol, int size, byte* bank);
 void writeOutputFiles();
 

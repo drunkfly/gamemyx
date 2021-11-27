@@ -346,7 +346,7 @@ static void outputTilemapData()
     *data++ = tilemapHeight;
     for (int y = 0; y < tilemapHeight; y++) {
         for (int x = 0; x < tilemapWidth; x++) {
-            byte tileIndex = (byte)tilemap[y * tilemapWidth + x];
+            unsigned tileIndex = tilemap[y * tilemapWidth + x];
             byte paletteIndex = cachedTiles[tileIndex].paletteIndex;
             *data++ = tileIndex;
             *data++ = (paletteIndex << 4) | ((tileIndex >> 8) & 1);

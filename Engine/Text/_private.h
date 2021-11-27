@@ -5,7 +5,6 @@
 #ifndef ENGINE_TEXT_PRIVATE_H
 #define ENGINE_TEXT_PRIVATE_H
 
-extern const Font* MYXP_CurrentFont;
-extern const byte* MYXP_CurrentFontBytes;
+extern Font MYXP_CurrentFont;
 
 #endif

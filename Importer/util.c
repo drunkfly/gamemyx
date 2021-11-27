@@ -5,7 +5,9 @@
 #include "importer.h"
 #include <errno.h>
 
-#ifdef _WIN32
+#ifdef _MSC_VER
+#include <direct.h>
+#elif defined(_WIN32)
 #include <dirent.h>
 #else
 #include <unistd.h>

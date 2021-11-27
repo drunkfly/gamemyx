@@ -9,7 +9,7 @@
 
 STRUCT(FontChar)
 {
-    word offset;
+    const byte* pixels;
     byte w; /* in chars */
     byte h;
     byte yoff;
@@ -20,10 +20,12 @@ STRUCT(Font)
 {
     byte lineH;
     byte baseline;
-    FontChar chars[MAX_FONT_CHARS];
+    byte firstChar;
+    byte bank;
+    const FontChar* chars;
 };
 
-void MYX_SetFont(const Font* def, const void* bytes);
+void MYX_SetFont(const Font* font);
 
 byte MYX_GetCharWidth(char c);
 byte MYX_CalcStringWidth(const char* str);

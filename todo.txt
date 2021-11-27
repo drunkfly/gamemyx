@@ -1,3 +1,5 @@
 * Wrong palette on stone tiles
 * Implement half-tile collisions
 * Player spawn position is incorrect
+* Deleting Importer directory doesn't rebuilt: path to TCC not found
+* bank#.c files are not properly added to the build system

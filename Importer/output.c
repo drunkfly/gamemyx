@@ -5,6 +5,7 @@
 #include "importer.h"
 
 #define MAX_OUTPUT_FILES 256
+#define MAX_INCLUDE_FILES 256
 
 STRUCT(OutputFile)
 {
@@ -14,9 +15,17 @@ STRUCT(OutputFile)
     int bank;
 };
 
+STRUCT(IncludeFile)
+{
+    char path[1024];
+    int bank;
+};
+
 char outputPath[1024];
 OutputFile outputFiles[MAX_OUTPUT_FILES];
+IncludeFile includeFiles[MAX_INCLUDE_FILES];
 int numOutputFiles;
+int numIncludeFiles;
 int currentBank;
 int currentBankSize;
 
@@ -26,13 +35,8 @@ void unloadOutputs()
         free(outputFiles[i].data);
 }
 
-byte* produceOutput(const char* symbol, int size, byte* outBank)
+static void allocBank(const char* symbol, int size, byte* data)
 {
-    if (numOutputFiles >= MAX_OUTPUT_FILES) {
-        fprintf(stderr, "error: too many output files.\n");
-        exit(1);
-    }
-
     if (size > 16384) {
         fprintf(stderr, "error: symbol too large \"%s\".\n", symbol);
         exit(1);
@@ -45,22 +49,52 @@ byte* produceOutput(const char* symbol, int size, byte* outBank)
         currentBankSize = size;
     }
 
-    if (outBank)
-        *outBank = (byte)currentBank;
+    if (numOutputFiles >= MAX_OUTPUT_FILES) {
+        fprintf(stderr, "error: too many output files.\n");
+        exit(1);
+    }
 
     int idx = numOutputFiles;
-    outputFiles[idx].data = (byte*)malloc(size);
-    if (!outputFiles[idx].data) {
+    strcpy(outputFiles[idx].symbol, symbol);
+    outputFiles[idx].data = data;
+    outputFiles[idx].size = size;
+    outputFiles[idx].bank = currentBank;
+    numOutputFiles++;
+}
+
+byte requestBank(const char* symbol, int size, char* outPath, size_t max)
+{
+    allocBank(symbol, size, NULL);
+
+    snprintf(outPath, max,
+        "%sbank%d_%s.h", outputPath, currentBank, symbol);
+
+    if (numIncludeFiles >= MAX_INCLUDE_FILES) {
+        fprintf(stderr, "error: too many output files.\n");
+        exit(1);
+    }
+
+    strcpy(includeFiles[numIncludeFiles].path, outPath);
+    includeFiles[numIncludeFiles].bank = currentBank;
+    ++numIncludeFiles;
+
+    return currentBank;
+}
+
+byte* produceOutput(const char* symbol, int size, byte* outBank)
+{
+    byte* data = (byte*)malloc(size);
+    if (!data) {
         fprintf(stderr, "error: out of memory.\n");
         exit(1);
     }
 
-    strcpy(outputFiles[idx].symbol, symbol);
-    outputFiles[idx].size = size;
-    outputFiles[idx].bank = currentBank;
-    numOutputFiles++;
+    allocBank(symbol, size, data);
 
-    return outputFiles[idx].data;
+    if (outBank)
+        *outBank = (byte)currentBank;
+
+    return data;
 }
 
 void writeOutputFiles()
@@ -88,16 +122,23 @@ void writeOutputFiles()
             fprintf(f, "#endif\n");
 
             bank = outputFiles[i].bank;
+
+            for (int i = 0; i < numIncludeFiles; i++) {
+                if (includeFiles[i].bank == bank)
+                    fprintf(f, "#include \"%s\"\n", includeFiles[i].path);
+            }
         }
 
-        fprintf(f, "\nconst unsigned char %s[] = {", outputFiles[i].symbol);
-        const byte* p = outputFiles[i].data;
-        for (int j = 0; j < outputFiles[i].size; j++) {
-            if (j % 30 == 0)
-                fprintf(f, "\n");
-            fprintf(f, "0x%02X,", *p++);
+        if (outputFiles[i].data) {
+            fprintf(f, "\nconst unsigned char %s[] = {", outputFiles[i].symbol);
+            const byte* p = outputFiles[i].data;
+            for (int j = 0; j < outputFiles[i].size; j++) {
+                if (j % 30 == 0)
+                    fprintf(f, "\n");
+                fprintf(f, "0x%02X,", *p++);
+            }
+            fprintf(f, "\n};\n");
         }
-        fprintf(f, "\n};\n");
     }
 
     if (f)

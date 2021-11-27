@@ -5,10 +5,14 @@
 #ifndef ENGINE_ZXNEXT_H
 #define ENGINE_ZXNEXT_H
 
+#define MYX_NEXT_BORDER_SIZE                32
+
 #define NEXT_MAX_SPRITES                    64
 
 #define NEXT_SPRITESIZE4                    (16*16/2)
 #define NEXT_SPRITESIZE8                    (16*16)
+
+/**********************************************************************/
 
 /*
  * Peripheral 1 setting
@@ -64,6 +68,24 @@
 #define NEXT_7MHZ                           0x01
 #define NEXT_14MHZ                          0x02
 #define NEXT_28MHZ                          0x03
+
+/*
+ * Layer 2 RAM Bank
+ */
+
+#define NEXT_LAYER2BANK                     0x12
+
+/*
+ * Layer 2 RAM Shadow Bank
+ */
+
+#define NEXT_LAYER2SHADOWBANK               0x13
+
+/*
+ * Global transparency color
+ */
+
+#define NEXT_GLOBALTRANSPARENCYCOLOR        0x14
 
 /*
  * Sprite and Layers system
@@ -134,12 +156,6 @@
 #define NEXT_TILEMAP_Y_OFFSET               0x31
 
 /*
- * Layer2 Offset Y
- */
-
-#define NEXT_LAYER2_Y_OFFSET                0x17
-
-/*
  * Palette control
  */
 
@@ -180,6 +196,42 @@
  */
 
 #define NEXT_SPRITETRANSPARENCY             0x4b
+
+/*
+ * MMU slot 0
+ */
+
+#define NEXT_MMUSLOT0                       0x50
+
+/*
+ * MMU slot 1
+ */
+
+#define NEXT_MMUSLOT1                       0x51
+
+/*
+ * MMU slot 2
+ */
+
+#define NEXT_MMUSLOT2                       0x52
+
+/*
+ * MMU slot 3
+ */
+
+#define NEXT_MMUSLOT3                       0x53
+
+/*
+ * MMU slot 4
+ */
+
+#define NEXT_MMUSLOT4                       0x54
+
+/*
+ * MMU slot 5
+ */
+
+#define NEXT_MMUSLOT5                       0x55
 
 /*
  * MMU slot 6
@@ -223,14 +275,30 @@
 
 #define NEXT_TILEDEFINITIONSBASE            0x6f
 
-/*****************/
+/*
+ * Layer 2 Control Register
+ */
 
-#define NEXT_SPRITENUMBER       0x34
-#define NEXT_SPRITEX            0x35
-#define NEXT_SPRITEY            0x36
-#define NEXT_SPRITEATTR2        0x37
+#define NEXT_LAYER2CONTROLREGISTER          0x70
 
-/*****************/
+#define NEXT_LAYER2_256X192_8BPP            0x00
+#define NEXT_LAYER2_320X256_8BPP            0x10
+#define NEXT_LAYER2_640X256_4BPP            0x20
+
+/**********************************************************************/
+
+// NEXT_Layer2AccessPort
+
+#define NEXT_LAYER2_BANK0                   0x00
+#define NEXT_LAYER2_BANK1                   0x40
+#define NEXT_LAYER2_BANK2                   0x80
+#define NEXT_LAYER2_BANK3                   0xC0
+#define NEXT_USE_SHADOW_LAYER2              0x08
+#define NEXT_ENABLE_LAYER2_READONLY         0x04
+#define NEXT_LAYER2_VISIBLE                 0x02
+#define NEXT_ENABLE_LAYER2_WRITEONLY        0x01
+
+/**********************************************************************/
 
 #define NEXT_GETREG(reg) \
     (NEXT_RegisterNumber = (reg), NEXT_RegisterValue)

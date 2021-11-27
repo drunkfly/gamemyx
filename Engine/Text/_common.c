@@ -9,11 +9,9 @@
 #pragma constseg MYX_TEXT
 #endif
 
-const Font* MYXP_CurrentFont;
-const byte* MYXP_CurrentFontBytes;
+Font MYXP_CurrentFont;
 
-void MYX_SetFont(const Font* def, const void* bytes)
+void MYX_SetFont(const Font* font)
 {
-    MYXP_CurrentFont = def;
-    MYXP_CurrentFontBytes = (const byte*)bytes;
+    MYXP_CurrentFont = *font;
 }

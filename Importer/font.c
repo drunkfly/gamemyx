@@ -5,11 +5,13 @@
 #include "importer.h"
 #include "stb_image.h"
 
+#define MAX_FONTS 256
 #define MAX_CHARS 256
 
 STRUCT(Char)
 {
     FontChar fontChar;
+    int offset;
     byte* image;
 };
 
@@ -20,12 +22,23 @@ STRUCT(Image)
     int height;
 };
 
+STRUCT(FontListEntry)
+{
+    char name[256];
+    byte bank;
+    int firstChar;
+    int lineH;
+    int baseline;
+    int size;
+};
+
+static FontListEntry fontList[MAX_FONTS];
+static int fontCount;
+
 static Image* images;
 static int imageCount;
 
 static Char chars[MAX_CHARS];
-static int lineH;
-static int baseline;
 
 void unloadFont()
 {
@@ -78,13 +91,16 @@ void loadFnt(const char* file)
     int greenChnl;
     int blueChnl;
 
+    FontListEntry* fontEntry = &fontList[fontCount];
+    fontCount++;
+
     fscanf(f, "info face=%s size=%d bold=%d italic=%d charset=%s unicode=%d stretchH=%d smooth=%d aa=%d padding=%d,%d,%d,%d spacing=%d,%d outline=%d\n",
         face, &size, &bold, &italic, charset, &unicode, &stretchH,
         &smooth, &aa, &paddingX, &paddingY, &paddingW, &paddingH,
         &spacingX, &spacingY, &outline);
 
     fscanf(f, "common lineHeight=%d base=%d scaleW=%d scaleH=%d pages=%d packed=%d alphaChnl=%d redChnl=%d greenChnl=%d blueChnl=%d\n",
-        &lineH, &baseline, &scaleW, &scaleH, &pages, &packed,
+        &fontEntry->lineH, &fontEntry->baseline, &scaleW, &scaleH, &pages, &packed,
         &alphaChnl, &redChnl, &greenChnl, &blueChnl);
 
     images = (Image*)calloc(pages, sizeof(Image));
@@ -92,6 +108,16 @@ void loadFnt(const char* file)
         fclose(f);
         fprintf(stderr, "out of memory!\n");
         exit(1);
+    }
+
+    char* slash = strrchr(file, '/');
+    strcpy(fontEntry->name, (slash ? slash + 1 : file));
+    char* ext = strrchr(fontEntry->name, '.');
+    if (ext)
+        *ext = 0;
+    for (char* p = fontEntry->name; *p; p++) {
+        if (*p == '.')
+            *p = '_';
     }
 
     for (int i = 0; i < pages; i++) {
@@ -122,7 +148,7 @@ void loadFnt(const char* file)
         int width, height;
         stbi_uc* image = stbi_load(path, &width, &height, NULL, 4);
         if (!image) {
-            fprintf(stderr, "error: can't load \"%s\": %s\n", file, stbi_failure_reason());
+            fprintf(stderr, "error: can't load \"%s\": %s\n", path, stbi_failure_reason());
             fclose(f);
             exit(1);
         }
@@ -136,6 +162,8 @@ void loadFnt(const char* file)
     fscanf(f, "chars count=%d\n", &numChars);
 
     int offset = 0;
+    int count = 0;
+    fontEntry->firstChar = -1;
 
     for (int i = 0; i < numChars; i++) {
         int id, imgX, imgY, width, height, xoff, yoff, xadv, page, chnl;
@@ -144,6 +172,9 @@ void loadFnt(const char* file)
 
         if (id > 255)
             continue;
+
+        if (fontEntry->firstChar < 0 || id < fontEntry->firstChar)
+            fontEntry->firstChar = id;
 
         width += xoff;
         int w = (width + 7) / 8; /* in bytes */
@@ -177,35 +208,47 @@ void loadFnt(const char* file)
             chars[id].image[off++] = b;
         }
 
-        chars[id].fontChar.offset = (word)offset;
         chars[id].fontChar.w = (byte)w;
         chars[id].fontChar.h = (byte)height;
         chars[id].fontChar.yoff = (byte)yoff;
         chars[id].fontChar.xadv = (byte)xadv;
+        chars[id].offset = (word)offset;
 
         offset += w * height;
+        ++count;
     }
 
-    fclose(f);
-}
+    fontEntry->size = offset + sizeof(Font)
+                    + sizeof(FontChar) * count;
+                    + sizeof(Font);
 
-void writeFontBytes(const char* file)
-{
-    FILE* f = fopen(file, "w");
+    fclose(f);
+
+    char bankFile[256];
+    fontEntry->bank = requestBank(fontEntry->name, fontEntry->size, bankFile, sizeof(bankFile));
+
+    createDirectories(bankFile);
+    f = fopen(bankFile, "w");
     if (!f) {
         fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
         exit(1);
     }
 
+    fprintf(f, "#include \"engine.h\"\n");
+    fprintf(f, "\n");
+    fprintf(f, "static const unsigned char font_%s_pixels[] = {\n", fontEntry->name);
+
     for (int i = 0; i < MAX_CHARS; i++) {
         if (chars[i].image != NULL) {
             int off = 0;
             if ((unsigned)i >= 32 && i != 127)
-                fprintf(f, "// %d \"%c\"\n", i, (char)i);
+                fprintf(f, "    // %d \"%c\"\n", i, (char)i);
             else
-                fprintf(f, "// %d\n", i);
+                fprintf(f, "    // %d\n", i);
 
             for (int y = 0; y < chars[i].fontChar.yoff; y++) {
+                fprintf(f, "    ");
+
                 for (int x = 0; x < chars[i].fontChar.w; x++)
                     fprintf(f, "     ");
 
@@ -217,8 +260,12 @@ void writeFontBytes(const char* file)
             }
 
             for (int y = 0; y < chars[i].fontChar.h; y++) {
-                for (int x = 0; x < chars[i].fontChar.w; x++)
+                fprintf(f, "    ");
+
+                for (int x = 0; x < chars[i].fontChar.w; x++) {
                     fprintf(f, "0x%02X,", chars[i].image[off + x]);
+                    ++size;
+                }
 
                 fprintf(f, " // ");
                 for (int x = 0; x < chars[i].fontChar.w; x++) {
@@ -233,7 +280,9 @@ void writeFontBytes(const char* file)
                 fprintf(f, "\n");
             }
 
-            for (int y = chars[i].fontChar.yoff + chars[i].fontChar.h; y < lineH; y++) {
+            for (int y = chars[i].fontChar.yoff + chars[i].fontChar.h; y < fontEntry->lineH; y++) {
+                fprintf(f, "    ");
+
                 for (int x = 0; x < chars[i].fontChar.w; x++)
                     fprintf(f, "     ");
 
@@ -246,34 +295,27 @@ void writeFontBytes(const char* file)
         }
     }
 
-    fclose(f);
-}
+    fprintf(f, "};\n");
+    fprintf(f, "\n");
+    fprintf(f, "const FontChar font_%s_chars[] = {\n", fontEntry->name);
 
-void writeFontDef(const char* file)
-{
-    FILE* f = fopen(file, "w");
-    if (!f) {
-        fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
-        exit(1);
-    }
-
-    fprintf(f, "%d, /* lineH */\n", lineH);
-    fprintf(f, "%d, /* baseline */\n", baseline);
-    fprintf(f, "{\n");
     for (int i = 0; i < MAX_CHARS; i++) {
+        if (i < fontEntry->firstChar)
+            continue;
+
         if ((unsigned)i >= 32 && i != 127)
             fprintf(f, "    { // %d \"%c\"\n", i, (char)i);
         else
             fprintf(f, "    { // %d\n", i);
 
         if (chars[i].image == NULL) {
-            fprintf(f, "        0, /* offset */\n");
+            fprintf(f, "        NULL, /* pixels */\n");
             fprintf(f, "        0, /* w */\n");
             fprintf(f, "        0, /* h */\n");
             fprintf(f, "        0, /* yoff */\n");
             fprintf(f, "        0, /* xadv */\n");
         } else {
-            fprintf(f, "        %d, /* offset */\n", chars[i].fontChar.offset);
+            fprintf(f, "        &font_%s_pixels[%d], /* pixels */\n", fontEntry->name, chars[i].offset);
             fprintf(f, "        %d, /* w */\n", chars[i].fontChar.w);
             fprintf(f, "        %d, /* h */\n", chars[i].fontChar.h);
             fprintf(f, "        %d, /* yoff */\n", chars[i].fontChar.yoff);
@@ -282,7 +324,32 @@ void writeFontDef(const char* file)
 
         fprintf(f, "    },\n");
     }
-    fprintf(f, "}\n");
+
+    fprintf(f, "};\n");
+    fclose(f);
+}
+
+void outputFontList(const char* file)
+{
+    createDirectories(file);
+    FILE* f = fopen(file, "w");
+    if (!f) {
+        fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
+        exit(1);
+    }
+
+    for (int i = 0; i < fontCount; i++) {
+        fprintf(f, "\n");
+        fprintf(f, "extern const FontChar font_%s_chars[];\n", fontList[i].name);
+        fprintf(f, "\n");
+        fprintf(f, "const Font font_%s = {\n", fontList[i].name);
+        fprintf(f, "    %d, /* lineH */\n", fontList[i].lineH);
+        fprintf(f, "    %d, /* baseline */\n", fontList[i].baseline);
+        fprintf(f, "    %d, /* firstChar */\n", fontList[i].firstChar);
+        fprintf(f, "    %d, /* bank */\n", fontList[i].bank);
+        fprintf(f, "    font_%s_chars, /* chars */\n", fontList[i].name);
+        fprintf(f, "};\n");
+    }
 
     fclose(f);
 }

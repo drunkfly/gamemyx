@@ -4,6 +4,7 @@
  */
 #include "engine.h"
 #include "character.h"
+#include "Data/Fonts.h"
 #include "Data/Maps.h"
 
 enum
@@ -11,9 +12,6 @@ enum
     TAG_PLAYER,
     TAG_ENEMY,
 };
-
-#include "Data/Fonts/BitPotion.h"
-#include "Data/Fonts/BitPotionBlack.h"
 
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
@@ -44,7 +42,7 @@ static void OnPlayerCollision(byte tag)
 
 void GameMain()
 {
-    MYX_SetFont(&BitPotion, BitPotionBytes);
+    MYX_SetFont(&font_BitPotionExt);
     MYX_DrawString(0, -30, "Hello, world!", 0xff);
 
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
