@@ -32,6 +32,9 @@ Check out the following videos (sorry, **Russian language only**):
 * #5 https://www.youtube.com/watch?v=e84-sXw-ons
 * #6 https://www.youtube.com/watch?v=PzuuakeYKXk
 * #7 https://www.youtube.com/watch?v=ZLjuLUwWff8
+* #8 https://www.youtube.com/watch?v=8iSI-2zZ3rk
+* #9 https://www.youtube.com/watch?v=gRMhSIcadl8
+* #10 https://www.youtube.com/watch?v=-VFygiBmtek
 
 Legal
 -----
