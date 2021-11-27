@@ -44,6 +44,9 @@ static void OnPlayerCollision(byte tag)
 
 void GameMain()
 {
+    MYX_SetFont(&BitPotion, BitPotionBytes);
+    MYX_DrawString(0, -30, "Hello, world!", 0xff);
+
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
     MYX_LoadTileset(TilesetData);

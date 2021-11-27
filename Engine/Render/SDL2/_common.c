@@ -5,9 +5,11 @@
 #include "engine_p.h"
 
 SDL_Renderer* MYXP_SDLRenderer;
-SDL_Texture* MYXP_SDLTexture;
+SDL_Texture* MYXP_SDLScreenTexture;
+SDL_Texture* MYXP_SDLLayer2Texture;
 SDL_PixelFormat* MYXP_SDLPixelFormat;
 Uint32 MYXP_ScreenBuffer[MYX_SDL2_CONTENT_WIDTH * MYX_SDL2_CONTENT_HEIGHT];
+Uint32 MYXP_Layer2Buffer[MYX_SDL2_SCREEN_WIDTH * MYX_SDL2_SCREEN_HEIGHT];
 
 void MYXP_InitRenderer()
 {
@@ -22,18 +24,33 @@ void MYXP_InitRenderer()
     if (!MYXP_SDLPixelFormat)
         MYXP_ErrorExit("Unable to allocate pixel format: %s", SDL_GetError());
 
-    MYXP_SDLTexture = SDL_CreateTexture(MYXP_SDLRenderer,
+    MYXP_SDLScreenTexture = SDL_CreateTexture(MYXP_SDLRenderer,
         format, SDL_TEXTUREACCESS_STREAMING,
         MYX_SDL2_CONTENT_WIDTH, MYX_SDL2_CONTENT_HEIGHT);
-    if (!MYXP_SDLTexture)
+    if (!MYXP_SDLScreenTexture)
         MYXP_ErrorExit("Unable to create texture: %s", SDL_GetError());
+
+    SDL_SetTextureBlendMode(MYXP_SDLScreenTexture, SDL_BLENDMODE_NONE);
+
+    MYXP_SDLLayer2Texture = SDL_CreateTexture(MYXP_SDLRenderer,
+        format, SDL_TEXTUREACCESS_STREAMING,
+        MYX_SDL2_SCREEN_WIDTH, MYX_SDL2_SCREEN_HEIGHT);
+    if (!MYXP_SDLLayer2Texture)
+        MYXP_ErrorExit("Unable to create texture: %s", SDL_GetError());
+
+    SDL_SetTextureBlendMode(MYXP_SDLLayer2Texture, SDL_BLENDMODE_BLEND);
 }
 
 void MYXP_TerminateRenderer()
 {
-    if (MYXP_SDLTexture) {
-        SDL_DestroyTexture(MYXP_SDLTexture);
-        MYXP_SDLTexture = NULL;
+    if (MYXP_SDLLayer2Texture) {
+        SDL_DestroyTexture(MYXP_SDLLayer2Texture);
+        MYXP_SDLLayer2Texture = NULL;
+    }
+
+    if (MYXP_SDLScreenTexture) {
+        SDL_DestroyTexture(MYXP_SDLScreenTexture);
+        MYXP_SDLScreenTexture = NULL;
     }
 
     if (MYXP_SDLPixelFormat) {
@@ -49,8 +66,10 @@ void MYXP_TerminateRenderer()
 
 void MYXP_WaitVSync()
 {
-    SDL_UpdateTexture(MYXP_SDLTexture, NULL,
+    SDL_UpdateTexture(MYXP_SDLScreenTexture, NULL,
         MYXP_ScreenBuffer, MYX_SDL2_CONTENT_WIDTH * sizeof(Uint32));
+    SDL_UpdateTexture(MYXP_SDLLayer2Texture, NULL,
+        MYXP_Layer2Buffer, MYX_SDL2_SCREEN_WIDTH * sizeof(Uint32));
 
     SDL_Rect dstRect;
     dstRect.x = MYX_SDL2_BORDER_SIZE * MYX_SDL2_SCALE;
@@ -60,7 +79,8 @@ void MYXP_WaitVSync()
 
     SDL_SetRenderDrawColor(MYXP_SDLRenderer, 0, 0, 0, 0);
     SDL_RenderClear(MYXP_SDLRenderer);
-    SDL_RenderCopy(MYXP_SDLRenderer, MYXP_SDLTexture, NULL, &dstRect);
+    SDL_RenderCopy(MYXP_SDLRenderer, MYXP_SDLScreenTexture, NULL, &dstRect);
+    SDL_RenderCopy(MYXP_SDLRenderer, MYXP_SDLLayer2Texture, NULL, NULL);
     SDL_RenderPresent(MYXP_SDLRenderer);
 
     MYXP_HandleEvents();

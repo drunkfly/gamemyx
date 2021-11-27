@@ -7,7 +7,7 @@
 Uint32 MYXP_TilemapPalette[256];
 Uint32 MYXP_SpritePalette[256];
 
-static Uint32 MYXP_MapColor(byte c)
+Uint32 MYXP_MapColor(byte c)
 {
     byte r = c >> 5;
     byte g = (c >> 2) & 7;

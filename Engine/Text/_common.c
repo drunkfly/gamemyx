@@ -8,3 +8,12 @@
 #pragma codeseg MYX_TEXT
 #pragma constseg MYX_TEXT
 #endif
+
+const Font* MYXP_CurrentFont;
+const byte* MYXP_CurrentFontBytes;
+
+void MYX_SetFont(const Font* def, const void* bytes)
+{
+    MYXP_CurrentFont = def;
+    MYXP_CurrentFontBytes = (const byte*)bytes;
+}

@@ -29,6 +29,7 @@
     extern SDL_PixelFormat* MYXP_SDLPixelFormat;
 
     extern Uint32 MYXP_ScreenBuffer[];
+    extern Uint32 MYXP_Layer2Buffer[];
     extern Uint32 MYXP_TilemapPalette[];
     extern Uint32 MYXP_SpritePalette[];
 
@@ -36,6 +37,8 @@
     void MYXP_TerminateRenderer();
 
     void MYXP_RenderTilemap();
+
+    Uint32 MYXP_MapColor(byte c);
 
 #endif
 
