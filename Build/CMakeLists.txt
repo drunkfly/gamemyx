@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(GameMYX C ASM)
 
+set(CMAKE_C_STANDARD 99)
+
 get_filename_component(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
 get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 
@@ -9,6 +11,14 @@ get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 if(TARGET_SDL2)
     if(NOT WIN32)
         find_package(SDL2 REQUIRED)
+    elseif(MINGW)
+        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+            set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/i686-w64-mingw32/lib")
+            set(sdl2_incpath "${ROOT_DIR}/Build/SDL2/i686-w64-mingw32/include/SDL2")
+        else()
+            set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/x86_64-w64-mingw32/lib")
+            set(sdl2_incpath "${ROOT_DIR}/Build/SDL2/x86_64-w64-mingw32/include/SDL2")
+        endif()
     else()
         if(CMAKE_SIZEOF_VOID_P EQUAL 4)
             set(sdl2_libpath "${ROOT_DIR}/Build/SDL2/lib/x86")
@@ -152,6 +162,10 @@ target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 if(TARGET_SDL2)
     if(NOT WIN32)
         target_link_libraries(Engine SDL2)
+    elseif(MINGW)
+        target_link_libraries(Engine
+            "${sdl2_libpath}/libSDL2.a" setupapi imm32 winmm version)
+        target_include_directories(Engine PRIVATE "${sdl2_incpath}")
     else()
         target_link_libraries(Engine "${sdl2_libpath}/SDL2.lib")
         target_include_directories(Engine PRIVATE
@@ -178,6 +192,8 @@ if(TARGET_SDL2)
 
     if(NOT WIN32)
         target_link_libraries(Game SDL2::Main)
+    elseif(MINGW)
+        target_link_libraries(Game mingw32 "${sdl2_libpath}/libSDL2main.a" mingw32)
     else()
         target_link_libraries(Game "${sdl2_libpath}/SDL2main.lib")
 

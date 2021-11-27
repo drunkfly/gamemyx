@@ -1,5 +1,6 @@
+/Build/CMake.MinGW
+/Build/CMake.MSVC2019
 /Build/CMake.Next
-/Build/CMake.Win32
 /Build/Importer
 /Build/MMapView
 /Build/Sync
