@@ -134,3 +134,15 @@ IMPORTER(
     -outtiles4 Map/Tileset.h
     -outmaps Maps.h
     )
+
+IMPORTER(
+    -loadfnt "${src}/BitPotion/BitPotionExt.fnt"
+    -outfontdef BitPotionDef.h
+    -outfontbytes BitPotionBytes.h
+    )
+
+IMPORTER(
+    -loadfnt "${src}/BitPotion/BitPotionExt_Black.fnt"
+    -outfontdef BitPotionBlackDef.h
+    -outfontbytes BitPotionBlackBytes.h
+    )

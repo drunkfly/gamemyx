@@ -9,6 +9,7 @@ add_executable(Importer
     ezxml/ezxml.h
     md5/md5.c
     md5/md5.h
+    font.c
     image.c
     importer.h
     main.c

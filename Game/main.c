@@ -12,6 +12,9 @@ enum
     TAG_ENEMY,
 };
 
+#include "Data/Fonts/BitPotion.h"
+#include "Data/Fonts/BitPotionBlack.h"
+
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
 #include "Data/Palettes/SwordsmanDeathPalette.h"

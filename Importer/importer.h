@@ -86,6 +86,11 @@ void output4BitImage(const char* file);
 int histogramSort(const void* p1, const void* p2);
 void setTransparentColor(int color);
 
+void unloadFont();
+void loadFnt(const char* file);
+void writeFontBytes(const char* file);
+void writeFontDef(const char* file);
+
 void unloadTilemap();
 void loadTilemap(const char* file);
 void outputTilemap();

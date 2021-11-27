@@ -63,6 +63,15 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-outtiles4")) {
             CHECK_ARG
             outputTileset4Bit(argv[++i]);
+        } else if (!strcmp(argv[i], "-loadfnt")) {
+            CHECK_ARG
+            loadFnt(argv[++i]);
+        } else if (!strcmp(argv[i], "-outfontdef")) {
+            CHECK_ARG
+            writeFontDef(argv[++i]);
+        } else if (!strcmp(argv[i], "-outfontbytes")) {
+            CHECK_ARG
+            writeFontBytes(argv[++i]);
         } else {
             fprintf(stderr, "error: unknown command line argument \"%s\".\n", argv[i]);
             return 1;

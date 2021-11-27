@@ -48,5 +48,6 @@ void GameMain();
 #include "Input/_public.h"
 #include "Maps/_public.h"
 #include "Render/_public.h"
+#include "Text/_public.h"
 
 #endif
