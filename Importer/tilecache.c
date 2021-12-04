@@ -51,7 +51,7 @@ static bool paletteCanFitColors(Palette* palette, unsigned char* pixels)
             unsigned char r = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 0];
             unsigned char g = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 1];
             unsigned char b = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 2];
-            unsigned char a = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
+            //unsigned char a = pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
 
             unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
 
@@ -90,7 +90,7 @@ void outputTileset4Bit(const char* file)
                 unsigned char r = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 0];
                 unsigned char g = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 1];
                 unsigned char b = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 2];
-                unsigned char a = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
+                //unsigned char a = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
                 unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
                 histogram[c].count++;
             }
@@ -150,25 +150,25 @@ void outputTileset4Bit(const char* file)
                 unsigned char r = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 0];
                 unsigned char g = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 1];
                 unsigned char b = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 2];
-                unsigned char a = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
+                //unsigned char a = cachedTiles[i].pixels[(y * MYX_TILE_SMALL_WIDTH + x) * 4 + 3];
 
                 unsigned char c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
 
-                signed char paletteIndex = -1;
+                signed char colorIndex = -1;
                 for (int j = 0; j < 16; j++) {
                     if (tilesetPalette[cachedTiles[i].paletteIndex].colors[j] == c) {
-                        paletteIndex = j;
+                        colorIndex = j;
                         break;
                     }
                 }
 
-                if (paletteIndex < 0) {
+                if (colorIndex < 0) {
                     r >>= 5;
                     g >>= 5;
                     b >>= 6;
 
                     int nearestDistance;
-                    for (int i = 0; i < 16; i++) {
+                    for (int j = 0; j < 16; j++) {
                         unsigned char pR = c >> 5;
                         unsigned char pG = (c >> 2) & 7;
                         unsigned char pB = c & 3;
@@ -178,17 +178,17 @@ void outputTileset4Bit(const char* file)
                         int z = b - pB;
                         int distance = x * x + y * y + z * z;
 
-                        if (paletteIndex < 0 || distance < nearestDistance) {
+                        if (colorIndex < 0 || distance < nearestDistance) {
                             nearestDistance = distance;
-                            paletteIndex = i;
+                            colorIndex = j;
                         }
                     }
                 }
 
                 if (x % 2 == 0)
-                    pixel = (paletteIndex << 4);
+                    pixel = (colorIndex << 4);
                 else {
-                    pixel |= paletteIndex;
+                    pixel |= colorIndex;
                     fprintf(f, "0x%02X,", pixel);
                 }
             }

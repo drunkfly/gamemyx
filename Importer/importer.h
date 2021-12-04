@@ -69,10 +69,6 @@ extern int tilesetCount;
 extern TileCacheEntry cachedTiles[];
 extern int cachedCount;
 
-extern int* tilemap;
-extern int tilemapWidth;
-extern int tilemapHeight;
-
 extern char outputPath[1024];
 extern int currentBank;
 extern int currentBankSize;
@@ -92,7 +88,6 @@ void outputFontList(const char* file);
 
 void unloadTilemap(void);
 void loadTilemap(const char* file);
-void outputTilemap();
 void outputTilemapList(const char* file);
 
 void unloadTilesets(void);

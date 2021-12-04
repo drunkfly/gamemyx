@@ -56,7 +56,6 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-loadtmx")) {
             CHECK_ARG
             loadTilemap(argv[++i]);
-            outputTilemap();
         } else if (!strcmp(argv[i], "-outmaps")) {
             CHECK_ARG
             outputTilemapList(argv[++i]);

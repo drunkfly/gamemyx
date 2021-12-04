@@ -1,4 +1,3 @@
-* Wrong palette on stone tiles
 * Implement half-tile collisions
 * Player spawn position is incorrect
 * Deleting Importer directory doesn't rebuilt: path to TCC not found

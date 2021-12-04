@@ -23,25 +23,25 @@ STRUCT(TilemapListEntry)
     byte tilemapBank;
     byte collisionBank;
     byte infoBank;
+    int layerCount;
+    int tilesetRefCount;
+    char tilemapName[256];
+    int* tilemap;
+    unsigned char* collision;
+    int tilemapWidth;
+    int tilemapHeight;
+    int playerStartX;
+    int playerStartY;
+    TilesetRef tilesetRefs[MAX_TILESET_REFS];
+    TilemapLayer tilemapLayers[MAX_LAYERS];
 };
 
-static TilesetRef tilesetRefs[MAX_TILESET_REFS];
-static TilemapLayer tilemapLayers[MAX_LAYERS];
 static TilemapListEntry tilemapList[MAX_TILEMAPS];
-static int layerCount;
-static int tilesetRefCount;
-static int tilemapCount;
-static int currentTilemap;
-char tilemapName[256];
-int* tilemap;
-unsigned char* collision;
-int tilemapWidth;
-int tilemapHeight;
-int playerStartX;
-int playerStartY;
+int tilemapCount;
 
 void unloadTilemap()
 {
+    /*
     for (int i = 0; i < layerCount; i++)
         free(tilemapLayers[i].data);
     layerCount = 0;
@@ -50,6 +50,7 @@ void unloadTilemap()
     free(collision);
     tilemap = NULL;
     collision = NULL;
+    */
 }
 
 static int compareTilesetRefs(const void* a, const void* b)
@@ -80,18 +81,19 @@ void loadTilemap(const char* file)
         exit(1);
     }
 
+    TilemapListEntry* tle = &tilemapList[tilemapCount++];
+
     char* slash = strrchr(file, '/');
-    strcpy(tilemapName, (slash ? slash + 1 : file));
-    for (char* p = tilemapName; *p; p++) {
+    strcpy(tle->tilemapName, (slash ? slash + 1 : file));
+    for (char* p = tle->tilemapName; *p; p++) {
         if (*p == '.')
             *p = '_';
     }
 
-    currentTilemap = tilemapCount++;
-    strcpy(tilemapList[currentTilemap].name, tilemapName);
+    strcpy(tle->name, tle->tilemapName);
 
-    playerStartX = 0;
-    playerStartY = 0;
+    tle->playerStartX = 0;
+    tle->playerStartY = 0;
 
     int width = atoi(ezxml_attr(xml, "width"));
     int height = atoi(ezxml_attr(xml, "height"));
@@ -121,31 +123,31 @@ void loadTilemap(const char* file)
             exit(1);
         }
 
-        if (tilesetRefCount >= MAX_TILESET_REFS) {
+        if (tle->tilesetRefCount >= MAX_TILESET_REFS) {
             fprintf(stderr, "error: too many tilesets in \"%s\".\n", file);
             ezxml_free(xml);
             exit(1);
         }
 
-        tilesetRefs[tilesetRefCount].tileset = tileset;
-        tilesetRefs[tilesetRefCount].first = firstgid;
-        ++tilesetRefCount;
+        tle->tilesetRefs[tle->tilesetRefCount].tileset = tileset;
+        tle->tilesetRefs[tle->tilesetRefCount].first = firstgid;
+        ++tle->tilesetRefCount;
     }
 
-    if (tilesetRefCount == 0) {
+    if (tle->tilesetRefCount == 0) {
         fprintf(stderr, "error: no tilesets in \"%s\".\n", file);
         ezxml_free(xml);
         exit(1);
     }
 
-    qsort(tilesetRefs, tilesetRefCount, sizeof(TilesetRef), compareTilesetRefs);
+    qsort(tle->tilesetRefs, tle->tilesetRefCount, sizeof(TilesetRef), compareTilesetRefs);
 
-    for (int i = 1; i < tilesetRefCount; i++) {
-        int last1 = tilesetRefs[i].first - 1;
-        int last2 = tilesetRefs[i].first + tilesetRefs[i].tileset->tileCount - 1;
-        tilesetRefs[i - 1].last = (last1 < last2 ? last1 : last2);
+    for (int i = 1; i < tle->tilesetRefCount; i++) {
+        int last1 = tle->tilesetRefs[i].first - 1;
+        int last2 = tle->tilesetRefs[i].first + tle->tilesetRefs[i].tileset->tileCount - 1;
+        tle->tilesetRefs[i - 1].last = (last1 < last2 ? last1 : last2);
     }
-    tilesetRefs[tilesetRefCount - 1].last = INT_MAX;
+    tle->tilesetRefs[tle->tilesetRefCount - 1].last = INT_MAX;
 
     for (ezxml_t layer = ezxml_child(xml, "layer"); layer; layer = layer->next) {
         int layerWidth = atoi(ezxml_attr(layer, "width"));
@@ -170,7 +172,7 @@ void loadTilemap(const char* file)
             exit(1);
         }
 
-        if (layerCount >= MAX_LAYERS) {
+        if (tle->layerCount >= MAX_LAYERS) {
             fprintf(stderr, "error: too many layers in \"%s\".\n", file);
             ezxml_free(xml);
             exit(1);
@@ -206,9 +208,9 @@ void loadTilemap(const char* file)
                 tiles[off++] = NULL;
             else {
                 bool found = false;
-                for (int i = 0; i < tilesetRefCount; i++) {
-                    if (value >= tilesetRefs[i].first && value <= tilesetRefs[i].last) {
-                        tiles[off++] = &tilesetRefs[i].tileset->tiles[value - tilesetRefs[i].first];
+                for (int i = 0; i < tle->tilesetRefCount; i++) {
+                    if (value >= tle->tilesetRefs[i].first && value <= tle->tilesetRefs[i].last) {
+                        tiles[off++] = &tle->tilesetRefs[i].tileset->tiles[value - tle->tilesetRefs[i].first];
                         found = true;
                         break;
                     }
@@ -228,32 +230,32 @@ void loadTilemap(const char* file)
             p = end + 1;
         }
 
-        tilemapLayers[layerCount].data = tiles;
-        ++layerCount;
+        tle->tilemapLayers[tle->layerCount].data = tiles;
+        ++tle->layerCount;
     }
 
-    if (layerCount == 0) {
+    if (tle->layerCount == 0) {
         fprintf(stderr, "error: no layers in \"%s\".\n", file);
         ezxml_free(xml);
         exit(1);
     }
 
-    tilemap = (int*)malloc(width * 2 * height * 2 * sizeof(int));
-    if (!tilemap) {
+    tle->tilemap = (int*)malloc(width * 2 * height * 2 * sizeof(int));
+    if (!tle->tilemap) {
         fprintf(stderr, "error: out of memory parsing \"%s\".\n", file);
         ezxml_free(xml);
         exit(1);
     }
 
-    collision = (unsigned char*)calloc(width * 2 * height * 2, sizeof(unsigned char));
-    if (!collision) {
+    tle->collision = (unsigned char*)calloc(width * 2 * height * 2, sizeof(unsigned char));
+    if (!tle->collision) {
         fprintf(stderr, "error: out of memory parsing \"%s\".\n", file);
         ezxml_free(xml);
         exit(1);
     }
 
-    tilemapWidth = width * 2;
-    tilemapHeight = height * 2;
+    tle->tilemapWidth = width * 2;
+    tle->tilemapHeight = height * 2;
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -261,23 +263,23 @@ void loadTilemap(const char* file)
                 for (int xx = 0; xx < 2; xx++) {
                     unsigned char pixels[MYX_TILE_SMALL_WIDTH * MYX_TILE_SMALL_HEIGHT * 4];
                     memset(pixels, 0, sizeof(pixels));
-                    for (int i = 0; i < layerCount; i++) {
-                        Tile* tile = tilemapLayers[i].data[y * width + x];
+                    for (int i = 0; i < tle->layerCount; i++) {
+                        Tile* tile = tle->tilemapLayers[i].data[y * width + x];
                         if (!tile)
                             continue;
 
                         if (tile->blocking) {
-                            collision[(y * 2 + 0) * tilemapWidth + x * 2 + 0] = 1;
-                            collision[(y * 2 + 0) * tilemapWidth + x * 2 + 1] = 1;
-                            collision[(y * 2 + 1) * tilemapWidth + x * 2 + 0] = 1;
-                            collision[(y * 2 + 1) * tilemapWidth + x * 2 + 1] = 1;
+                            tle->collision[(y * 2 + 0) * tle->tilemapWidth + x * 2 + 0] = 1;
+                            tle->collision[(y * 2 + 0) * tle->tilemapWidth + x * 2 + 1] = 1;
+                            tle->collision[(y * 2 + 1) * tle->tilemapWidth + x * 2 + 0] = 1;
+                            tle->collision[(y * 2 + 1) * tle->tilemapWidth + x * 2 + 1] = 1;
                         }
 
                         if (tile->func != FUNC_NONE) {
                             switch (tile->func) {
                                 case FUNC_PLAYERSTART:
-                                    playerStartX = x;
-                                    playerStartY = y;
+                                    tle->playerStartX = x;
+                                    tle->playerStartY = y;
                                     break;
                             }
                             continue;
@@ -306,7 +308,7 @@ void loadTilemap(const char* file)
                                     *r2 = r1;
                                     *g2 = g1;
                                     *b2 = b1;
-                                } else {
+                                } else if (a1 != 0) {
                                     *r2 = ((r1 * a1) + (*r2 * (255 - a1))) / 255;
                                     *g2 = ((g1 * a1) + (*g2 * (255 - a1))) / 255;
                                     *b2 = ((b1 * a1) + (*b2 * (255 - a1))) / 255;
@@ -323,7 +325,7 @@ void loadTilemap(const char* file)
                         exit(1);
                     }
 
-                    tilemap[(y * 2 + yy) * width * 2 + (x * 2 + xx)] = tileIndex;
+                    tle->tilemap[(y * 2 + yy) * width * 2 + (x * 2 + xx)] = tileIndex;
                 }
             }
         }
@@ -332,21 +334,20 @@ void loadTilemap(const char* file)
     ezxml_free(xml);
 }
 
-static void outputTilemapData()
+static void outputTilemapData(TilemapListEntry* tle)
 {
     char buf[256];
-    snprintf(buf, sizeof(buf), "map_%s_data", tilemapName);
+    snprintf(buf, sizeof(buf), "map_%s_data", tle->tilemapName);
 
-    int size = 2 + tilemapWidth * tilemapHeight * 2;
+    int size = 2 + tle->tilemapWidth * tle->tilemapHeight * 2;
 
-    byte* data = produceOutput(buf, size,
-        &tilemapList[currentTilemap].tilemapBank);
+    byte* data = produceOutput(buf, size, &tle->tilemapBank);
 
-    *data++ = tilemapWidth;
-    *data++ = tilemapHeight;
-    for (int y = 0; y < tilemapHeight; y++) {
-        for (int x = 0; x < tilemapWidth; x++) {
-            unsigned tileIndex = tilemap[y * tilemapWidth + x];
+    *data++ = tle->tilemapWidth;
+    *data++ = tle->tilemapHeight;
+    for (int y = 0; y < tle->tilemapHeight; y++) {
+        for (int x = 0; x < tle->tilemapWidth; x++) {
+            unsigned tileIndex = tle->tilemap[y * tle->tilemapWidth + x];
             byte paletteIndex = cachedTiles[tileIndex].paletteIndex;
             *data++ = tileIndex;
             *data++ = (paletteIndex << 4) | ((tileIndex >> 8) & 1);
@@ -354,20 +355,19 @@ static void outputTilemapData()
     }
 }
 
-static void outputTilemapCollisions()
+static void outputTilemapCollisions(TilemapListEntry* tle)
 {
     char buf[256];
-    snprintf(buf, sizeof(buf), "map_%s_collisions", tilemapName);
+    snprintf(buf, sizeof(buf), "map_%s_collisions", tle->tilemapName);
 
-    int size = ((tilemapWidth + 7) / 8) * tilemapHeight;
-    byte* data = produceOutput(buf, size,
-        &tilemapList[currentTilemap].collisionBank);
+    int size = ((tle->tilemapWidth + 7) / 8) * tle->tilemapHeight;
+    byte* data = produceOutput(buf, size, &tle->collisionBank);
 
-    for (int y = 0; y < tilemapHeight; y++) {
+    for (int y = 0; y < tle->tilemapHeight; y++) {
         unsigned char byte = 0;
-        for (int x = 0; x < tilemapWidth; x++) {
+        for (int x = 0; x < tle->tilemapWidth; x++) {
             byte >>= 1;
-            if (collision[y * tilemapWidth + x])
+            if (tle->collision[y * tle->tilemapWidth + x])
                 byte |= 0x80;
 
             if ((x & 7) == 7) {
@@ -376,31 +376,23 @@ static void outputTilemapCollisions()
             }
         }
 
-        if ((tilemapWidth & 7) != 0) {
-            byte >>= 8 - (tilemapWidth & 7);
+        if ((tle->tilemapWidth & 7) != 0) {
+            byte >>= 8 - (tle->tilemapWidth & 7);
             *data++ = byte;
         }
     }
 }
 
-static void outputTilemapInfo()
+static void outputTilemapInfo(TilemapListEntry* tle)
 {
     char buf[256];
-    snprintf(buf, sizeof(buf), "map_%s_info", tilemapName);
+    snprintf(buf, sizeof(buf), "map_%s_info", tle->tilemapName);
 
     int size = 2;
-    byte* data = produceOutput(buf, size,
-        &tilemapList[currentTilemap].infoBank);
+    byte* data = produceOutput(buf, size, &tle->infoBank);
 
-    *data++ = playerStartX;
-    *data++ = playerStartY;
-}
-
-void outputTilemap()
-{
-    outputTilemapData();
-    outputTilemapCollisions();
-    outputTilemapInfo();
+    *data++ = tle->playerStartX;
+    *data++ = tle->playerStartY;
 }
 
 void outputTilemapList(const char* file)
@@ -413,6 +405,10 @@ void outputTilemapList(const char* file)
     }
 
     for (int i = 0; i < tilemapCount; i++) {
+        outputTilemapData(&tilemapList[i]);
+        outputTilemapCollisions(&tilemapList[i]);
+        outputTilemapInfo(&tilemapList[i]);
+
         fprintf(f, "\n");
         fprintf(f, "extern const byte map_%s_data[];\n", tilemapList[i].name);
         fprintf(f, "extern const byte map_%s_collisions[];\n", tilemapList[i].name);
