@@ -7,6 +7,7 @@
 
 #include "engine.h"
 
+#include "Asserts/_private.h"
 #include "AnimSprites/_private.h"
 #include "Collisions/_private.h"
 #include "Core/_private.h"

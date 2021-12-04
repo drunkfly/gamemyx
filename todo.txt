@@ -3,3 +3,6 @@
 * Player spawn position is incorrect
 * Deleting Importer directory doesn't rebuilt: path to TCC not found
 * bank#.c files are not properly added to the build system
+* separate some .c files into multiple
+* assert screen should be vertical colored lines ("matras")
+* assert screen should have its own font in case game doesn't set one

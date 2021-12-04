@@ -45,6 +45,8 @@ void GameMain()
     MYX_SetFont(&font_BitPotionExt);
     MYX_DrawString(0, -30, "Hello, world!", 0xff);
 
+    ASSERT_NEXT_BANK(19);
+
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
     MYX_LoadTileset(TilesetData);

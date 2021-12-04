@@ -26,4 +26,6 @@ void MYX_PutSprite(int x, int y, MYXSprite sprite);
 
 void MYX_SetTilemapOffset(byte x, byte y);
 
+void MYX_ClearLayer2(byte color);
+
 #endif

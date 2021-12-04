@@ -37,6 +37,7 @@ else()
 endif()
 
 macro(build_for_host dir)
+    file(MAKE_DIRECTORY "${ROOT_DIR}/Build/${dir}")
     if(CMAKE_HOST_WIN32)
         add_custom_target(${dir}
             COMMAND

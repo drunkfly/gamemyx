@@ -9,7 +9,7 @@
 #pragma constseg MYX_TEXT
 #endif
 
-byte MYX_GetCharWidth(char c)
+byte MYX_GetFontHeight()
 {
-    return MYXP_CurrentFont.chars[(byte)c].xadv;
+    return MYXP_CurrentFont.lineH;
 }

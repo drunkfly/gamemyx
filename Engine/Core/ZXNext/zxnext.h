@@ -121,6 +121,12 @@
 #define NEXT_LAYER2_Y_OFFSET                0x17
 
 /*
+ * Clip Window Layer 2
+ */
+
+#define NEXT_CLIP_WINDOW_LAYER2             0x18
+
+/*
  * Clip Window Tilemap
  */
 

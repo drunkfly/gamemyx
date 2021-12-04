@@ -29,6 +29,7 @@ void MYX_SetFont(const Font* font);
 
 byte MYX_GetCharWidth(char c);
 byte MYX_CalcStringWidth(const char* str);
+byte MYX_GetFontHeight();
 
 byte MYX_DrawChar(int x, int y, char ch, byte color);
 void MYX_DrawString(int x, int y, const char* str, byte color);
