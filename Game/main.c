@@ -50,8 +50,8 @@ void GameMain()
     MYX_LoadTileset(TilesetData);
     MYX_LoadMap(&map_park_tmx);
 
-    byte px = MYX_PlayerX * MYX_TILE_WIDTH;
-    byte py = MYX_PlayerY * MYX_TILE_HEIGHT;
+    int px = MYX_PlayerX * MYX_TILE_WIDTH;
+    int py = MYX_PlayerY * MYX_TILE_HEIGHT;
     Character_Init(&player, px, py, SwordsmanData);
 
     byte demonX = 11 * MYX_TILE_WIDTH;
