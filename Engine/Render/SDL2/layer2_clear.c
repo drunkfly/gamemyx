@@ -6,7 +6,7 @@
 
 void MYX_ClearLayer2(byte color)
 {
-    Uint32 pixel = MYXP_MapColor(color);
+    Uint32 pixel = (color == MYX_TRANSPARENT_COLOR_INDEX8 ? 0 : MYXP_MapColor(color));
 
     Uint32* dst = MYXP_Layer2Buffer;
     Uint32* end = dst + MYX_SDL2_SCREEN_WIDTH * MYX_SDL2_SCREEN_HEIGHT;

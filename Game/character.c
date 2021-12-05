@@ -121,22 +121,26 @@ bool Character_MoveDown(Character* c)
     return false;
 }
 
-void Character_HandleInput(Character* c)
+bool Character_HandleInput(Character* c)
 {
     if (c->state == CHAR_DEAD)
-        return;
+        return false;
+
+    bool result = false;
 
     if (MYX_IsKeyPressed(KEY_O) || MYX_IsGamepad1Pressed(GAMEPAD_LEFT))
-        Character_MoveLeft(c);
+        result = Character_MoveLeft(c) || result;
 
     if (MYX_IsKeyPressed(KEY_P) || MYX_IsGamepad1Pressed(GAMEPAD_RIGHT))
-        Character_MoveRight(c);
+        result = Character_MoveRight(c) || result;
 
     if (MYX_IsKeyPressed(KEY_Q) || MYX_IsGamepad1Pressed(GAMEPAD_UP))
-        Character_MoveUp(c);
+        result = Character_MoveUp(c) || result;
 
     if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN))
-        Character_MoveDown(c);
+        result = Character_MoveDown(c) || result;
+
+    return result;
 }
 
 void Character_ForwardBackwardMove(Character* c)

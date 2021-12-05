@@ -24,7 +24,13 @@ void MYX_DrawLayer2Bitmap(int x, int y, const void* data, byte bank)
     Uint32* dst = &MYXP_Layer2Buffer[y * MYX_SDL2_SCREEN_WIDTH + x];
 
     for (byte yy = 0; yy < h; yy++) {
+        ASSERT((y + yy) >= 0);
+        ASSERT((y + yy) < MYX_SDL2_SCREEN_HEIGHT);
+
         for (byte xx = 0; xx < w; xx++) {
+            ASSERT((x + xx) >= 0);
+            ASSERT((x + xx) < MYX_SDL2_SCREEN_WIDTH);
+
             if (*p != MYX_TRANSPARENT_COLOR_INDEX8)
                 *dst++ = MYXP_MapColor(*p++);
             else {

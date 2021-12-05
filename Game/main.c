@@ -47,8 +47,6 @@ void GameMain()
 
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
-    MYX_DrawBubble(10, 10, 200, 40);
-
     MYX_LoadTileset(TilesetData);
     MYX_LoadMap(&map_park_tmx);
 
@@ -72,7 +70,10 @@ void GameMain()
         MYX_AddCollision(demon.x, demon.y, 16, 16, TAG_ENEMY);
 
         Character_Draw(&player);
-        Character_HandleInput(&player);
+        if (Character_HandleInput(&player)) {
+            MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+            MYX_DrawSpeakerBubble(player.x, player.y, 16, 200, 40);
+        }
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
 

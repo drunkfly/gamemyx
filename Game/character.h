@@ -47,6 +47,6 @@ bool Character_MoveDown(Character* c);
 
 void Character_ForwardBackwardMove(Character* c);
 
-void Character_HandleInput(Character* c);
+bool Character_HandleInput(Character* c);
 
 #endif
