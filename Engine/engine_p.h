@@ -11,6 +11,7 @@
 #include "AnimSprites/_private.h"
 #include "Collisions/_private.h"
 #include "Core/_private.h"
+#include "Dialogs/_private.h"
 #include "Input/_private.h"
 #include "Maps/_private.h"
 #include "Render/_private.h"

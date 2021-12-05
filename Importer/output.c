@@ -3,9 +3,11 @@
  * Licensed under 3-clause BSD license
  */
 #include "importer.h"
+#include <ctype.h>
 
-#define MAX_OUTPUT_FILES 256
-#define MAX_INCLUDE_FILES 256
+#define MAX_OUTPUT_FILES 1024
+#define MAX_INCLUDE_FILES 1024
+#define MAX_SYMBOLS_IN_BANKS 1024
 
 STRUCT(OutputFile)
 {
@@ -21,11 +23,19 @@ STRUCT(IncludeFile)
     int bank;
 };
 
+STRUCT(SymbolInBank)
+{
+    byte bank;
+    char name[1024];
+};
+
 char outputPath[1024];
 OutputFile outputFiles[MAX_OUTPUT_FILES];
 IncludeFile includeFiles[MAX_INCLUDE_FILES];
+SymbolInBank symbolsInBanks[MAX_SYMBOLS_IN_BANKS];
 int numOutputFiles;
 int numIncludeFiles;
+int numSymbolsInBanks;
 int currentBank;
 int currentBankSize;
 
@@ -97,6 +107,18 @@ byte* produceOutput(const char* symbol, int size, byte* outBank)
     return data;
 }
 
+void addSymbolInBank(const char* symbol, byte bank)
+{
+    if (numSymbolsInBanks >= MAX_SYMBOLS_IN_BANKS) {
+        fprintf(stderr, "error: too many symbols in banks.\n");
+        exit(1);
+    }
+
+    strcpy(symbolsInBanks[numSymbolsInBanks].name, symbol);
+    symbolsInBanks[numSymbolsInBanks].bank = bank;
+    ++numSymbolsInBanks;
+}
+
 void writeOutputFiles()
 {
     FILE* f = NULL;
@@ -143,4 +165,25 @@ void writeOutputFiles()
 
     if (f)
         fclose(f);
+}
+
+void writeSymbolList(const char* file)
+{
+    FILE* f = fopen(file, "w");
+    if (!f) {
+        fprintf(stderr, "can't write file %s: %s\n", file, strerror(errno));
+        exit(1);
+    }
+
+    for (int i = 0; i < numSymbolsInBanks; i++) {
+        char* name = symbolsInBanks[i].name;
+        fprintf(f, "\nextern const unsigned char %s[];\n", name);
+
+        for (char* p = name; *p; ++p)
+            *p = toupper(*p);
+
+        fprintf(f, "#define %s_BANK %d\n", name, symbolsInBanks[i].bank);
+    }
+
+    fclose(f);
 }

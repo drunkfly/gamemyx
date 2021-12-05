@@ -10,5 +10,6 @@
 #define ENABLE_COLLISION_OUTSIDE_SCREEN     1
 #define ENABLE_ANIMATED_SPRITES             1
 #define ENABLE_ASSERTIONS                   1
+#define ENABLE_DIALOGS                      1
 
 #endif

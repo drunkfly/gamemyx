@@ -47,6 +47,8 @@ void GameMain()
 
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
+    MYX_DrawBubble(10, 10, 200, 40);
+
     MYX_LoadTileset(TilesetData);
     MYX_LoadMap(&map_park_tmx);
 

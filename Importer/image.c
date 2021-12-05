@@ -125,7 +125,7 @@ void outputImagePalette4(const char* file)
     fclose(f);
 }
 
-void output4BitImage(const char* file)
+void output4BitSprite(const char* file)
 {
     createDirectories(file);
     FILE* f = fopen(file, "w");
@@ -203,4 +203,68 @@ void output4BitImage(const char* file)
     }
 
     fclose(f);
+}
+
+void output8BitSprite(const char* file)
+{
+    createDirectories(file);
+    FILE* f = fopen(file, "w");
+    if (!f) {
+        fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
+        exit(1);
+    }
+
+    fprintf(f, "MYX_SPRITE_FLAG_256COLOR,\n");
+
+    for (int y = 0; y < imageAreaH; y++) {
+        for (int x = 0; x < imageAreaW; x++) {
+            unsigned char r = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 0];
+            unsigned char g = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 1];
+            unsigned char b = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 2];
+            unsigned char a = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 3];
+
+            unsigned char c;
+            if (a < 128)
+                c = MYX_TRANSPARENT_COLOR_INDEX8;
+            else
+                c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
+
+            fprintf(f, "0x%02X,", c);
+        }
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
+}
+
+void output8BitBitmap(const char* symbol)
+{
+    int size = 2 + imageAreaW * imageAreaH;
+    byte bank;
+    byte* data = produceOutput(symbol, size, &bank);
+
+    addSymbolInBank(symbol, bank);
+
+    *data++ = (unsigned char)imageAreaW;
+    *data++ = (unsigned char)imageAreaH;
+
+    for (int y = 0; y < imageAreaH; y++) {
+        for (int x = 0; x < imageAreaW; x++) {
+            unsigned char r = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 0];
+            unsigned char g = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 1];
+            unsigned char b = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 2];
+            unsigned char a = image[((imageAreaY + y) * imageWidth + (imageAreaX + x)) * 4 + 3];
+
+            unsigned char c;
+            if (a < 128)
+                c = MYX_TRANSPARENT_COLOR_INDEX8;
+            else {
+                c = (b >> 6) | ((g >> 3) & 0x1c) | (r & 0xe0);
+                if (c == MYX_TRANSPARENT_COLOR_INDEX8)
+                    c = 0x20;
+            }
+
+            *data++ = c;
+        }
+    }
 }

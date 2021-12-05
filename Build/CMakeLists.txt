@@ -3,6 +3,8 @@ project(GameMYX C ASM)
 
 set(CMAKE_C_STANDARD 99)
 
+cmake_policy(SET CMP0076 NEW)
+
 get_filename_component(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
 get_filename_component(GAME_NAME "${ROOT_DIR}" NAME)
 
@@ -85,7 +87,7 @@ build_for_host(MMapView)
 ########################################################################
 ## Assets
 
-macro(IMPORTER)
+macro(IMPORTER_TARGET target)
 
     set(inputs)
     set(outputs)
@@ -109,15 +111,20 @@ macro(IMPORTER)
             "${CMAKE_CURRENT_BINARY_DIR}"
         )
 
-    if(NOT TARGET Assets)
-        add_custom_target(Assets)
+    if(NOT TARGET "${target}")
+        add_custom_target("${target}")
     endif()
 
-    target_sources(Assets PRIVATE ${outputs})
+    target_sources("${target}" PRIVATE ${outputs})
 
 endmacro()
 
+macro(IMPORTER)
+    IMPORTER_TARGET(Assets ${ARGN})
+endmacro()
+
 add_subdirectory("${ROOT_DIR}/Data" Data)
+add_subdirectory("${ROOT_DIR}/Engine/Dialogs/_Assets" DialogAssets)
 
 ########################################################################
 ## Code
@@ -163,6 +170,9 @@ add_library(Engine STATIC
     )
 
 set_target_properties(Engine PROPERTIES PREFIX "" SUFFIX ".lib")
+
+add_dependencies(Engine DialogsAssets)
+target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 
 if(TARGET_SDL2)
@@ -179,15 +189,18 @@ if(TARGET_SDL2)
     endif()
 endif()
 
-set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank6.c"
+set_source_files_properties("${CMAKE_BINARY_DIR}/DialogAssets/bank6.c"
     PROPERTIES GENERATED TRUE) # FIXME
 set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank7.c"
+    PROPERTIES GENERATED TRUE) # FIXME
+set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank8.c"
     PROPERTIES GENERATED TRUE) # FIXME
 
 add_executable(Game WIN32
     ${game_src}
-    "${CMAKE_BINARY_DIR}/Data/bank6.c" # FIXME
-    "${CMAKE_BINARY_DIR}/Data/bank7.c" # FIXME
+    "${CMAKE_BINARY_DIR}/DialogAssets/bank6.c"  # FIXME
+    "${CMAKE_BINARY_DIR}/Data/bank7.c"          # FIXME
+    "${CMAKE_BINARY_DIR}/Data/bank8.c"          # FIXME
     )
 
 add_dependencies(Game Assets)

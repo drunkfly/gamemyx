@@ -28,6 +28,15 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-loadimage")) {
             CHECK_ARG
             loadImage(argv[++i]);
+        } else if (!strcmp(argv[i], "-area8x8")) {
+            CHECK_ARG
+            int x = atoi(argv[++i]);
+            CHECK_ARG
+            int y = atoi(argv[++i]);
+            imageAreaX = x * 8;
+            imageAreaY = y * 8;
+            imageAreaW = 8;
+            imageAreaH = 8;
         } else if (!strcmp(argv[i], "-area16x16")) {
             CHECK_ARG
             int x = atoi(argv[++i]);
@@ -49,7 +58,13 @@ int main(int argc, char** argv)
             outputImagePalette4(argv[++i]);
         } else if (!strcmp(argv[i], "-outsprite4")) {
             CHECK_ARG
-            output4BitImage(argv[++i]);
+            output4BitSprite(argv[++i]);
+        } else if (!strcmp(argv[i], "-outsprite8")) {
+            CHECK_ARG
+            output8BitSprite(argv[++i]);
+        } else if (!strcmp(argv[i], "-outbitmap")) {
+            CHECK_ARG
+            output8BitBitmap(argv[++i]);
         } else if (!strcmp(argv[i], "-loadtsx")) {
             CHECK_ARG
             loadTileset(argv[++i]);
@@ -68,6 +83,9 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-outfontlist")) {
             CHECK_ARG
             outputFontList(argv[++i]);
+        } else if (!strcmp(argv[i], "-outsymlist")) {
+            CHECK_ARG
+            writeSymbolList(argv[++i]);
         } else {
             fprintf(stderr, "error: unknown command line argument \"%s\".\n", argv[i]);
             return 1;
