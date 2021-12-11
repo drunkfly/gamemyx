@@ -23,12 +23,14 @@ void MYX_DrawDialogBubble(int speakerX, int speakerY, byte speakerH, const char*
     size.h += 2 * 8;
 
     int w = (size.w + 7) & ~7;
+    int h = (size.h + 7) & ~7;
     int x = 8 + (w - size.w) / 2;
+    int y = 8 + (h - size.h) / 2;
 
     BubbleCoord coord;
     MYX_DrawSpeakerBubble(&coord, speakerX, speakerY, speakerH, size.w, size.h);
 
-    MYX_DrawParagraph(coord.x + x, coord.y + 8, text, maxW, 1); // black
+    MYX_DrawParagraph(coord.x + x, coord.y + y, text, maxW, 1); // black
 }
 
 #endif

@@ -21,7 +21,7 @@ void MYX_CalcParagraphSize(ParagraphSize* outSize, const char* str, int maxW)
 
     const char* p = str;
     for (;;) {
-        char* end = p;
+        const char* end = p;
         while (*end != 0 && *end != ' ' && *end != '\n')
             ++end;
 

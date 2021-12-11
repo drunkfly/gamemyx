@@ -11,6 +11,9 @@
 #include "ZXNext/keys.h"
 #endif
 
+bool MYX_IsAnyKeyPressed()
+    Z88DK_PRESERVES((c, d, e, iyl, iyh));
+
 bool MYX_IsKeyPressed(byte key)
     Z88DK_FASTCALL Z88DK_PRESERVES((d, e, iyl, iyh));
 

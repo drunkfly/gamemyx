@@ -72,10 +72,28 @@ _MYX_IsGamepad1Pressed:
 CheckGamepadPress:
                 and     l
                 ld      l, 1
-                ret     nz                  ; not pressed
+                ret     nz                  ; return if pressed
                 dec     l
                 ret
 
 _MYX_IsGamepad2Pressed:
                 ld      a, (_MYXP_RawKempston+1)
                 jr      CheckGamepadPress
+
+_MYX_IsAnyKeyPressed:
+                ld      hl, _MYXP_RawKeys
+                ld      b, 8
+_MYX_IsAnyKeyPressed_1:
+                ld      a, (hl)
+                inc     hl
+                and     0x1f
+                cp      0x1f
+                jr      nz, _MYX_IsAnyKeyPressed_2
+                djnz    _MYX_IsAnyKeyPressed_1
+                ld      a, (_MYXP_RawKempston)
+                or      a
+                ld      l, a
+                ret     z
+_MYX_IsAnyKeyPressed_2:
+                ld      l, 1
+                ret                

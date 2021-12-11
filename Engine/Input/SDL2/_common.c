@@ -10,6 +10,17 @@ const int KEY_P         = SDL_SCANCODE_P;
 const int KEY_Q         = SDL_SCANCODE_Q;
 const int KEY_SPACE     = SDL_SCANCODE_SPACE;
 
+bool MYX_IsAnyKeyPressed()
+{
+    // FIXME
+    const Uint8* keys = SDL_GetKeyboardState(NULL);
+    return keys[KEY_A] ||
+           keys[KEY_O] ||
+           keys[KEY_P] ||
+           keys[KEY_Q] ||
+           keys[KEY_SPACE];
+}
+
 bool MYX_IsKeyPressed(byte key)
 {
     const Uint8* keys = SDL_GetKeyboardState(NULL);

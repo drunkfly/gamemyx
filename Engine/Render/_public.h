@@ -35,5 +35,6 @@ void MYX_SetTilemapOffset(byte x, byte y);
 
 void MYX_ClearLayer2(byte color);
 void MYX_DrawLayer2Bitmap(int x, int y, const void* data, byte bank);
+void MYX_FillLayer2Rect(int x, int y, int w, byte h, byte color);
 
 #endif

@@ -54,8 +54,8 @@ void GameMain()
     int py = MYX_PlayerY * MYX_TILE_HEIGHT;
     Character_Init(&player, px, py, SwordsmanData);
 
-    byte demonX = 11 * MYX_TILE_WIDTH;
-    byte demonY = 1 * MYX_TILE_HEIGHT;
+    int demonX = 14 * MYX_TILE_WIDTH;
+    int demonY = 2 * MYX_TILE_HEIGHT;
     Character_Init(&demon, demonX, demonY, RedDemonData);
     demon.direction = DIR_LEFT;
 
@@ -72,15 +72,19 @@ void GameMain()
         Character_Draw(&player);
         if (Character_HandleInput(&player)) {
             MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
-            MYX_DrawDialogBubble(player.x, player.y, 16,
+
+            MYX_DrawDialogBubble(demon.x, demon.y, 16,
                 "Lorem Ipsum is simply dummy text of the printing "
-                "and typesetting industry. Lorem Ipsum has been the "
-                "industry's standard dummy text ever since the 1500s, "
-                "when an unknown printer took a galley of type and "
-                "scrambled it to make a type specimen book. It has "
-                "survived not only five centuries, but also the leap "
-                "into electronic typesetting, remaining essentially "
-                "unchanged.");
+                "and typesetting industry.");
+
+            static const DialogChoice choices[] = {
+                    { "Choice 1", NULL, 1 },
+                    { "Another choice", NULL, 1 },
+                    { "Bad choice", NULL, 0xe0 },
+                    { NULL, NULL, 0 },
+                };
+
+            MYX_DialogChoice(player.x, player.y, 16, choices);
         }
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
