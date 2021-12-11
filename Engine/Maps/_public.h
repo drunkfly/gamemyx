@@ -17,6 +17,20 @@
 #define MYX_TILE_SMALL_WIDTH 8
 #define MYX_TILE_SMALL_HEIGHT 8
 
+typedef enum Func {
+    FUNC_NONE = 0,
+    FUNC_PLAYERSTART,
+    FUNC_ENEMY1,
+    FUNC_ENEMY2,
+    FUNC_ENEMY3,
+    FUNC_ENEMY4,
+    FUNC_ENEMY5,
+    FUNC_ENEMY6,
+    FUNC_ENEMY7,
+    FUNC_ENEMY8,
+    FUNC_ENEMY9,
+} Func;
+
 STRUCT(MapInfo)
 {
     const byte* tilemap;
@@ -27,16 +41,30 @@ STRUCT(MapInfo)
     byte infoBank;
 };
 
+#pragma pack(push, 1)
+
+STRUCT(MapObject)
+{
+    word x;
+    word y;
+    byte func;
+    byte dir;
+};
+
+#pragma pack(pop)
+
 extern byte MYX_PlayerX;
 extern byte MYX_PlayerY;
 
 extern int MYX_MapWidth;
 extern int MYX_MapHeight;
 
+typedef void (*PFNMAPOBJECTHANDLERPROC)(const MapObject* obj);
+
 bool MYX_IsSmallTileBlocking(byte x, byte y);
 
 void MYX_SetMapVisibleCenter(int x, int y);
 
-void MYX_LoadMap(const MapInfo* map);
+void MYX_LoadMap(const MapInfo* map, PFNMAPOBJECTHANDLERPROC handler);
 
 #endif

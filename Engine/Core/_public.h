@@ -5,6 +5,17 @@
 #ifndef ENGINE_CORE_PUBLIC_H
 #define ENGINE_CORE_PUBLIC_H
 
+typedef enum Direction {
+    DIR_LEFT = 0,
+    DIR_RIGHT,
+    DIR_UP,
+    DIR_DOWN,
+    DIR_UP_LEFT,
+    DIR_UP_RIGHT,
+    DIR_DOWN_LEFT,
+    DIR_DOWN_RIGHT,
+} Direction;
+
 #if defined(ENABLE_ASSERTIONS) \
     && defined(TARGET_ZXNEXT) \
     && !defined(NDEBUG)

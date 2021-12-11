@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="35" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="1">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="35" height="45" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="9">
  <tileset firstgid="1" source="tiles_new.tsx"/>
  <tileset firstgid="856" source="control.tsx"/>
  <layer id="4" name="Слой тайлов 4" width="35" height="45">
@@ -198,4 +198,34 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="9" name="Objects">
+  <object id="2" x="230.667" y="57.3333">
+   <properties>
+    <property name="dir" value="down"/>
+    <property name="func" value="enemy1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="6" x="394" y="88.6667">
+   <properties>
+    <property name="dir" value="left"/>
+    <property name="func" value="enemy1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="7" x="379.333" y="185.333">
+   <properties>
+    <property name="dir" value="right"/>
+    <property name="func" value="enemy1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="8" x="218.667" y="138.667">
+   <properties>
+    <property name="dir" value="up"/>
+    <property name="func" value="enemy1"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
 </map>

@@ -39,3 +39,65 @@ void createDirectories(const char* file)
         exit(1);
     }
 }
+
+bool decodeFunc(Func *func, const char* value)
+{
+    if (!strcmp(value, "none"))
+        return *func = FUNC_NONE, true;
+    else if (!strcmp(value, "player_start"))
+        return *func = FUNC_PLAYERSTART, true;
+    else if (!strcmp(value, "enemy1"))
+        return *func = FUNC_ENEMY1, true;
+    else if (!strcmp(value, "enemy2"))
+        return *func = FUNC_ENEMY2, true;
+    else if (!strcmp(value, "enemy3"))
+        return *func = FUNC_ENEMY3, true;
+    else if (!strcmp(value, "enemy4"))
+        return *func = FUNC_ENEMY4, true;
+    else if (!strcmp(value, "enemy5"))
+        return *func = FUNC_ENEMY5, true;
+    else if (!strcmp(value, "enemy6"))
+        return *func = FUNC_ENEMY6, true;
+    else if (!strcmp(value, "enemy7"))
+        return *func = FUNC_ENEMY7, true;
+    else if (!strcmp(value, "enemy8"))
+        return *func = FUNC_ENEMY8, true;
+    else if (!strcmp(value, "enemy9"))
+        return *func = FUNC_ENEMY9, true;
+    else
+        return false;
+}
+
+bool decodeDir(Direction *dir, const char* value)
+{
+    if (!strcmp(value, "left"))
+        return *dir = DIR_LEFT, true;
+    else if (!strcmp(value, "right"))
+        return *dir = DIR_RIGHT, true;
+    else if (!strcmp(value, "up"))
+        return *dir = DIR_UP, true;
+    else if (!strcmp(value, "down"))
+        return *dir = DIR_DOWN, true;
+    else if (!strcmp(value, "up-left"))
+        return *dir = DIR_UP_LEFT, true;
+    else if (!strcmp(value, "up-right"))
+        return *dir = DIR_UP_RIGHT, true;
+    else if (!strcmp(value, "down-left"))
+        return *dir = DIR_DOWN_LEFT, true;
+    else if (!strcmp(value, "down-right"))
+        return *dir = DIR_DOWN_RIGHT, true;
+    else
+        return false;
+}
+
+void decodeProperty(const char* file, Properties* props, const char* name, const char* value)
+{
+    if (!strcmp(name, "func")) {
+        if (!decodeFunc(&props->func, value))
+            fprintf(stderr, "warning: unknown func \"%s\" in \"%s\".\n", value, file);
+    } else if (!strcmp(name, "dir")) {
+        if (!decodeDir(&props->dir, value))
+            fprintf(stderr, "warning: unknown dir \"%s\" in \"%s\".\n", value, file);
+    } else
+        fprintf(stderr, "warning: unknown propery \"%s\" in \"%s\".\n", name, file);
+}

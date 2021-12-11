@@ -74,6 +74,7 @@ IMPORTER(
 
 IMPORTER(
     -loadimage "${src}/MiniWorldSprites/RedDemon.png"
+    -transparent 0xff00ff
     -histogram
     -palette4
 

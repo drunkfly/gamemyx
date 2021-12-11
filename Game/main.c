@@ -13,6 +13,8 @@ enum
     TAG_ENEMY,
 };
 
+#define MAX_ENEMIES 16
+
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
 #include "Data/Palettes/SwordsmanDeathPalette.h"
@@ -29,7 +31,9 @@ static const byte TilesetData[] = {
 static MYXSprite RedDemonIdleFrontSprite;
 
 static Character player;
-static Character demon;
+static Character enemies[MAX_ENEMIES];
+static const Character* firstRedDemon;
+static byte enemyCount;
 
 static void OnPlayerCollision(byte tag)
 {
@@ -40,6 +44,27 @@ static void OnPlayerCollision(byte tag)
     }
 }
 
+void MapObjectHandler(const MapObject* obj)
+{
+    ASSERT(enemyCount < MAX_ENEMIES);
+
+    switch (obj->func) {
+        case FUNC_ENEMY1:
+            if (firstRedDemon)
+                Character_Copy(&enemies[enemyCount], firstRedDemon, obj->x, obj->y);
+            else {
+                Character_Init(&enemies[enemyCount], obj->x, obj->y, RedDemonData);
+                firstRedDemon = &enemies[enemyCount];
+            }
+            enemies[enemyCount].direction = obj->dir;
+            ++enemyCount;
+            break;        
+
+        default:
+            ASSERT(false);
+    }
+}
+
 void GameMain()
 {
     MYX_SetFont(&font_BitPotionExt);
@@ -47,30 +72,36 @@ void GameMain()
 
     MYX_SetSpritePalette(0, SpritePalette, 3*16);
 
+    firstRedDemon = NULL;
+    enemyCount = 0;
     MYX_LoadTileset(TilesetData);
-    MYX_LoadMap(&map_park_tmx);
+    MYX_LoadMap(&map_park_tmx, &MapObjectHandler);
 
     int px = MYX_PlayerX * MYX_TILE_WIDTH;
     int py = MYX_PlayerY * MYX_TILE_HEIGHT;
     Character_Init(&player, px, py, SwordsmanData);
 
+    /*
     int demonX = 14 * MYX_TILE_WIDTH;
     int demonY = 2 * MYX_TILE_HEIGHT;
     Character_Init(&demon, demonX, demonY, RedDemonData);
     demon.direction = DIR_LEFT;
+    */
 
     MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
 
     for (;;) {
         MYX_BeginFrame();
 
-        Character_Draw(&demon);
-        Character_ForwardBackwardMove(&demon);
-
-        MYX_AddCollision(demon.x, demon.y, 16, 16, TAG_ENEMY);
+        for (byte i = 0; i < enemyCount; i++) {
+            Character_Draw(&enemies[i]);
+            Character_ForwardBackwardMove(&enemies[i]);
+            MYX_AddCollision(enemies[i].x, enemies[i].y, 16, 16, TAG_ENEMY);
+        }
 
         Character_Draw(&player);
         if (Character_HandleInput(&player)) {
+            /*
             MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
 
             MYX_DrawDialogBubble(demon.x, demon.y, 16,
@@ -85,6 +116,7 @@ void GameMain()
                 };
 
             MYX_DialogChoice(player.x, player.y, 16, choices);
+            */
         }
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);

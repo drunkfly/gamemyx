@@ -13,20 +13,20 @@
 
 #define MAX_TILESET_NAME 64
 
-enum Func
-{
-    FUNC_NONE = 0,
-    FUNC_PLAYERSTART,
-};
-
 STRUCT(Tileset);
+
+STRUCT(Properties)
+{
+    enum Func func;
+    Direction dir;
+};
 
 STRUCT(Tile)
 {
     int id;
     Tileset* tileset;
     bool blocking;
-    enum Func func;
+    Properties props;
 };
 
 struct Tileset
@@ -109,5 +109,8 @@ void writeSymbolList(const char* file);
 
 void createDirectories(const char* file);
 void calculateNextBank(int size, const char* file);
+
+bool decodeFunc(Func *func, const char* value);
+void decodeProperty(const char* file, Properties* props, const char* name, const char* value);
 
 #endif

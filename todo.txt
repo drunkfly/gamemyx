@@ -5,3 +5,5 @@
 * assert screen should be vertical colored lines ("matras")
 * assert screen should have its own font in case game doesn't set one
 * add support for coloring words in dialog bubbles
+* SDL2 sprite at right side of screen glitches
+* On real Next scrolling sometimes shows visual artifacts

@@ -7,14 +7,6 @@
 
 #include "engine.h"
 
-enum Direction
-{
-    DIR_LEFT = 0,
-    DIR_RIGHT,
-    DIR_UP,
-    DIR_DOWN,
-};
-
 enum State
 {
     CHAR_IDLE,
@@ -35,6 +27,7 @@ STRUCT(Character)
 };
 
 void Character_Init(Character* c, int x, int y, const void* sprites);
+void Character_Copy(Character* c, const Character* src, int x, int y);
 
 void Character_Draw(Character* c);
 

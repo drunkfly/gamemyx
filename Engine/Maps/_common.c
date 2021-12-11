@@ -89,7 +89,7 @@ void MYX_SetMapVisibleCenter(int x, int y)
     }
 }
 
-void MYX_LoadMap(const MapInfo* map)
+void MYX_LoadMap(const MapInfo* map, PFNMAPOBJECTHANDLERPROC handler)
 {
   #ifdef TARGET_ZXNEXT
     byte bank = MYXP_CurrentBank;
@@ -112,8 +112,28 @@ void MYX_LoadMap(const MapInfo* map)
   #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(infoBank);
   #endif
+
     byte playerX = *info++;
     byte playerY = *info++;
+    byte objectCount = *info++;
+
+    if (handler != NULL) {
+        for (byte i = 0; i < objectCount; i++) {
+            MapObject obj;
+            memcpy(&obj, info, sizeof(MapObject));
+            info += sizeof(MapObject);
+
+          #ifdef TARGET_ZXNEXT
+            MYXP_SetUpperMemoryBank(bank);
+          #endif
+
+            handler(&obj);
+
+          #ifdef TARGET_ZXNEXT
+            MYXP_SetUpperMemoryBank(infoBank);
+          #endif
+        }
+    }
 
   #ifdef TARGET_ZXNEXT
     MYXP_SetUpperMemoryBank(bank);

@@ -89,15 +89,8 @@ void loadTileset(const char* file)
 
                 if (!strcmp(name, "blocking"))
                     tiles[id].blocking = !strcmp(value, "true");
-                else if (!strcmp(name, "func")) {
-                    if (!strcmp(value, "none"))
-                        tiles[id].func = FUNC_NONE;
-                    else if (!strcmp(value, "player_start"))
-                        tiles[id].func = FUNC_PLAYERSTART;
-                    else
-                        fprintf(stderr, "warning: unknown func \"%s\" in \"%s\".\n", name, value);
-                } else
-                    fprintf(stderr, "warning: unknown propery \"%s\" in \"%s\".\n", name, file);
+                else
+                    decodeProperty(file, &tiles[id].props, name, value);
             }
         }
     }

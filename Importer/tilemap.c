@@ -3,6 +3,7 @@
 
 #define MAX_TILEMAPS 256
 #define MAX_TILESET_REFS 8
+#define MAX_OBJECTS 256
 #define MAX_LAYERS 8
 
 STRUCT(TilesetRef)
@@ -15,6 +16,14 @@ STRUCT(TilesetRef)
 STRUCT(TilemapLayer)
 {
     Tile** data;
+};
+
+STRUCT(TilemapObject)
+{
+    int id;
+    int x;
+    int y;
+    Properties props;
 };
 
 STRUCT(TilemapListEntry)
@@ -32,8 +41,10 @@ STRUCT(TilemapListEntry)
     int tilemapHeight;
     int playerStartX;
     int playerStartY;
+    int objectCount;
     TilesetRef tilesetRefs[MAX_TILESET_REFS];
     TilemapLayer tilemapLayers[MAX_LAYERS];
+    TilemapObject tilemapObjects[MAX_OBJECTS];
 };
 
 static TilemapListEntry tilemapList[MAX_TILEMAPS];
@@ -275,8 +286,8 @@ void loadTilemap(const char* file)
                             tle->collision[(y * 2 + 1) * tle->tilemapWidth + x * 2 + 1] = 1;
                         }
 
-                        if (tile->func != FUNC_NONE) {
-                            switch (tile->func) {
+                        if (tile->props.func != FUNC_NONE) {
+                            switch (tile->props.func) {
                                 case FUNC_PLAYERSTART:
                                     tle->playerStartX = x;
                                     tle->playerStartY = y;
@@ -326,6 +337,26 @@ void loadTilemap(const char* file)
                     }
 
                     tle->tilemap[(y * 2 + yy) * width * 2 + (x * 2 + xx)] = tileIndex;
+                }
+            }
+        }
+    }
+
+    for (ezxml_t grp = ezxml_child(xml, "objectgroup"); grp; grp = grp->next) {
+        for (ezxml_t obj = ezxml_child(grp, "object"); obj; obj = obj->next) {
+            TilemapObject* object = &tle->tilemapObjects[tle->objectCount];
+            tle->objectCount++;
+
+            object->id = atoi(ezxml_attr(obj, "id"));
+            object->x = atoi(ezxml_attr(obj, "x"));
+            object->y = atoi(ezxml_attr(obj, "y"));
+
+            ezxml_t properties = ezxml_child(obj, "properties");
+            if (properties) {
+                for (ezxml_t prop = ezxml_child(properties, "property"); prop; prop = prop->next) {
+                    const char* name = ezxml_attr(prop, "name");
+                    const char* value = ezxml_attr(prop, "value");
+                    decodeProperty(file, &object->props, name, value);
                 }
             }
         }
@@ -388,11 +419,22 @@ static void outputTilemapInfo(TilemapListEntry* tle)
     char buf[256];
     snprintf(buf, sizeof(buf), "map_%s_info", tle->tilemapName);
 
-    int size = 2;
+    int size = 3 + tle->objectCount * sizeof(MapObject);
     byte* data = produceOutput(buf, size, &tle->infoBank);
 
     *data++ = tle->playerStartX;
     *data++ = tle->playerStartY;
+    *data++ = (byte)tle->objectCount;
+
+    for (int i = 0; i < tle->objectCount; i++) {
+        MapObject* obj = (MapObject*)data;
+        data += sizeof(MapObject);
+
+        obj->x = tle->tilemapObjects[i].x;
+        obj->y = tle->tilemapObjects[i].y;
+        obj->func = tle->tilemapObjects[i].props.func;
+        obj->dir = tle->tilemapObjects[i].props.dir;
+    }
 }
 
 void outputTilemapList(const char* file)

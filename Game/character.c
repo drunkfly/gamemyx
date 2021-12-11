@@ -21,6 +21,22 @@ void Character_Init(Character* c, int x, int y, const void* sprites)
     MYX_SetAnimSpritePlayOnce(c->death);
 }
 
+void Character_Copy(Character* c, const Character* src, int x, int y)
+{
+    c->state = CHAR_IDLE;
+    c->direction = DIR_DOWN;
+    c->x = x;
+    c->y = y;
+    c->timer = 0;
+
+    for (byte dir = 0; dir < 4; dir++) {
+        c->idle[dir] = src->idle[dir];
+        c->walk[dir] = src->walk[dir];
+    }
+
+    c->death = src->death;
+}
+
 void Character_Draw(Character* c)
 {
     switch (c->state) {
