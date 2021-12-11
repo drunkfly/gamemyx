@@ -9,7 +9,7 @@
 #pragma constseg MYX_LAYER2
 #endif
 
-void MYX_FillLayer2Rect(int x, int y, byte w, byte h, byte color)
+void MYX_FillLayer2Rect(int x, int y, int w, byte h, byte color)
 {
     x += MYX_NEXT_BORDER_SIZE;
     y += MYX_NEXT_BORDER_SIZE;

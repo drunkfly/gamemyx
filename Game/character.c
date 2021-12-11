@@ -129,16 +129,16 @@ bool Character_HandleInput(Character* c)
     bool result = false;
 
     if (MYX_IsKeyPressed(KEY_O) || MYX_IsGamepad1Pressed(GAMEPAD_LEFT))
-        result = Character_MoveLeft(c) || result;
+        result |= Character_MoveLeft(c);
 
     if (MYX_IsKeyPressed(KEY_P) || MYX_IsGamepad1Pressed(GAMEPAD_RIGHT))
-        result = Character_MoveRight(c) || result;
+        result |= Character_MoveRight(c);
 
     if (MYX_IsKeyPressed(KEY_Q) || MYX_IsGamepad1Pressed(GAMEPAD_UP))
-        result = Character_MoveUp(c) || result;
+        result |= Character_MoveUp(c);
 
     if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN))
-        result = Character_MoveDown(c) || result;
+        result |= Character_MoveDown(c);
 
     return result;
 }

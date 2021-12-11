@@ -6,6 +6,7 @@
                 PUBLIC  _MYX_IsKeyPressed
                 PUBLIC  _MYX_IsGamepad1Pressed
                 PUBLIC  _MYX_IsGamepad2Pressed
+                PUBLIC  _MYX_IsAnyKeyPressed
 
                 PUBLIC  _MYXP_ReadInput
                 PUBLIC  _MYXP_RawKeys
