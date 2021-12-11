@@ -173,6 +173,13 @@ void loadFnt(const char* file)
         if (id > 255)
             continue;
 
+        // FIXME: hack!
+        if (xoff < 0) {
+            xadv += -xoff;
+            width += -xoff;
+            xoff = 0;
+        }
+
         if (fontEntry->firstChar < 0 || id < fontEntry->firstChar)
             fontEntry->firstChar = id;
 

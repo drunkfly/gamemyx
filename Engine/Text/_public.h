@@ -25,11 +25,20 @@ STRUCT(Font)
     const FontChar* chars;
 };
 
+STRUCT(ParagraphSize)
+{
+    int w;
+    byte h;
+};
+
 void MYX_SetFont(const Font* font);
 
 byte MYX_GetCharWidth(char c);
 byte MYX_CalcStringWidth(const char* str);
 byte MYX_GetFontHeight();
+
+void MYX_CalcParagraphSize(ParagraphSize* outSize, const char* str, int maxW);
+void MYX_DrawParagraph(int x, int y, const char* str, int maxW, int color);
 
 byte MYX_DrawChar(int x, int y, char ch, byte color);
 void MYX_DrawString(int x, int y, const char* str, byte color);

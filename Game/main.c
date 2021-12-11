@@ -72,7 +72,15 @@ void GameMain()
         Character_Draw(&player);
         if (Character_HandleInput(&player)) {
             MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
-            MYX_DrawSpeakerBubble(player.x, player.y, 16, 200, 40);
+            MYX_DrawDialogBubble(player.x, player.y, 16,
+                "Lorem Ipsum is simply dummy text of the printing "
+                "and typesetting industry. Lorem Ipsum has been the "
+                "industry's standard dummy text ever since the 1500s, "
+                "when an unknown printer took a galley of type and "
+                "scrambled it to make a type specimen book. It has "
+                "survived not only five centuries, but also the leap "
+                "into electronic typesetting, remaining essentially "
+                "unchanged.");
         }
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);

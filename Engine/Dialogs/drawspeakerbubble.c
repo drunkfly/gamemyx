@@ -11,7 +11,7 @@
 #pragma constseg MYX_DIALOGS
 #endif
 
-void MYX_DrawSpeakerBubble(int speakerX, int speakerY, byte speakerH, word w, word h)
+void MYX_DrawSpeakerBubble(BubbleCoord* outCoord, int speakerX, int speakerY, byte speakerH, word w, word h)
 {
     // Transform speaker position to screen position
     speakerX -= MYXP_MapVisibleCenterX;
@@ -57,6 +57,9 @@ void MYX_DrawSpeakerBubble(int speakerX, int speakerY, byte speakerH, word w, wo
         MYX_DrawLayer2Bitmap(arrowX, speakerY - 16,
             BubbleBottomHole, BUBBLEBOTTOMHOLE_BANK);
     }
+
+    outCoord->x = speakerX;
+    outCoord->y = bubbleY;
 }
 
 #endif
