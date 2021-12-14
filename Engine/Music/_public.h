@@ -6,6 +6,7 @@
 #define ENGINE_MUSIC_PUBLIC_H
 #if ENABLE_MUSIC
 
+void MYX_StopMusic();
 void MYX_PlayMusic(const void* data, byte bank);
 
 #endif

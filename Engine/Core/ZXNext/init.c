@@ -9,8 +9,6 @@
 #pragma constseg MYX_STARTUP
 #endif
 
-void MYXP_InitMusicPlayer();
-
 void MYXP_PlatformInit()
 {
     MYXP_SetLowerMemoryBank(5);
@@ -102,8 +100,4 @@ void MYXP_PlatformInit()
     MYX_ClearLayer2(0);
 
     NEXT_Layer2AccessPort = NEXT_LAYER2_VISIBLE;
-
-  #if ENABLE_MUSIC
-    MYXP_InitMusicPlayer();
-  #endif
 }
