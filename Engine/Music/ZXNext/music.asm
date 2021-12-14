@@ -12,6 +12,7 @@
                 PUBLIC  PT3_play
                 PUBLIC  PT3_mute
                 PUBLIC  PT3_enabled
+                PUBLIC  PT3_WriteAY
 
                 EXTERN  MYXP_NoteTable
                 EXTERN  MYXP_VolumeTable
@@ -634,15 +635,17 @@ PT3_PL2:        ld      ix, PT3_ChanA
                 xor     a
                 ld      hl, PT3_CurEDel
                 or      (hl)
-                jr      z, PT3_ROUT_A0
+                ret     z
                 dec     (hl)
-                jr      nz, PT3_ROUT
+                ret     nz
                 ld      a, (PT3_Env_Del)
                 ld      (hl), a
                 ld      hl, (PT3_ESldAdd)
                 add     hl, de
                 ld      (PT3_CurESld), hl
-PT3_ROUT:       xor     a
+                ret
+
+PT3_WriteAY:    xor     a
 PT3_ROUT_A0:    ld      de, 0xffbf
                 ld      bc, 0xfffd
                 ld      hl, PT3_AYREGS

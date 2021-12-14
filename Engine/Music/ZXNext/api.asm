@@ -12,6 +12,7 @@
                 EXTERN  PT3_play
                 EXTERN  PT3_mute
                 EXTERN  PT3_enabled
+                EXTERN  PT3_WriteAY
 
                 PUBLIC  _MYX_PlayMusic
                 PUBLIC  _MYX_StopMusic
@@ -124,9 +125,6 @@ _MYXP_UpdateMusicPlayer:
                 ld      l, 3        ; BANK_3
                 call    _MYXP_SetUpperMemoryBank
 
-                ld      bc, 0xfffd
-                ld      a, 0xff     ; chip 1
-                out     (c), a
                 ld      a, 3*2+1
                 nextreg 0x57, a
                 ld      a, (MusicBank+0)
@@ -134,9 +132,6 @@ _MYXP_UpdateMusicPlayer:
                 call    _MYXP_SetLowerMemoryBank
                 call    PT3_play
 
-                ld      bc, 0xfffd
-                ld      a, 0xfe     ; chip 2
-                out     (c), a
                 ld      a, 3*2+2
                 nextreg 0x57, a
                 ld      a, (MusicBank+1)
@@ -144,15 +139,45 @@ _MYXP_UpdateMusicPlayer:
                 call    _MYXP_SetLowerMemoryBank
                 call    PT3_play
 
-                ld      bc, 0xfffd
-                ld      a, 0xfd     ; chip 3
-                out     (c), a
                 ld      a, 3*2+3
                 nextreg 0x57, a
                 ld      a, (MusicBank+2)
                 ld      l, a
                 call    _MYXP_SetLowerMemoryBank
                 call    PT3_play
+
+                ld      a, 3*2+1
+                nextreg 0x57, a
+                ld      a, (PT3_enabled)
+                or      a
+                jr      z, NoAY1
+                ld      bc, 0xfffd
+                ld      a, 0xff     ; chip 1
+                out     (c), a
+                call    PT3_WriteAY
+NoAY1:
+
+                ld      a, 3*2+2
+                nextreg 0x57, a
+                ld      a, (PT3_enabled)
+                or      a
+                jr      z, NoAY2
+                ld      bc, 0xfffd
+                ld      a, 0xfe     ; chip 2
+                out     (c), a
+                call    PT3_WriteAY
+NoAY2:
+
+                ld      a, 3*2+3
+                nextreg 0x57, a
+                ld      a, (PT3_enabled)
+                or      a
+                jr      z, NoAY3
+                ld      bc, 0xfffd
+                ld      a, 0xfd     ; chip 3
+                out     (c), a
+                call    PT3_WriteAY
+NoAY3:
 
                 pop     af
                 ld      l, a

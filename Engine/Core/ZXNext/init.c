@@ -101,4 +101,8 @@ void MYXP_PlatformInit()
     MYX_ClearLayer2(0);
 
     NEXT_Layer2AccessPort = NEXT_LAYER2_VISIBLE;
+
+  #if ENABLE_MUSIC
+    MYX_StopMusic(MYX_AY_ALL);
+  #endif
 }
