@@ -54,7 +54,7 @@ void MYX_AssertBankFailed(const char* file, word line, byte bank)
     x1 += MYX_CalcStringWidth(" != ");
 
     MYX_DrawString(x1, y,
-        MYX_ByteToString(buf, MYXP_CurrentBank), MYX_ASSERT_TEXT_COLOR);
+        MYX_ByteToString(buf, MYXP_CurrentUpperBank), MYX_ASSERT_TEXT_COLOR);
 }
 
 #endif

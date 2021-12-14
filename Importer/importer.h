@@ -97,6 +97,10 @@ void loadTileset(const char* file);
 Tileset* findTileset(const char* file);
 void outputTileset4Bit(const char* file);
 
+void unloadPT3();
+void loadPT3(const char* file, const char* symbol);
+void writeMusicList(const char* file);
+
 void clearTileCache();
 int addTile(const unsigned char* pixels);
 

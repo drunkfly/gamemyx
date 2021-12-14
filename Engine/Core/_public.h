@@ -19,7 +19,8 @@ typedef enum Direction {
 #if defined(ENABLE_ASSERTIONS) \
     && defined(TARGET_ZXNEXT) \
     && !defined(NDEBUG)
-extern byte MYXP_CurrentBank;
+extern byte MYXP_CurrentUpperBank;
+extern byte MYXP_CurrentLowerBank;
 #endif
 
 void MYX_Cleanup();

@@ -41,7 +41,9 @@ STRUCT(MapInfo)
     byte infoBank;
 };
 
+#ifndef __SDCC
 #pragma pack(push, 1)
+#endif
 
 STRUCT(MapObject)
 {
@@ -51,7 +53,9 @@ STRUCT(MapObject)
     byte dir;
 };
 
+#ifndef __SDCC
 #pragma pack(pop)
+#endif
 
 extern byte MYX_PlayerX;
 extern byte MYX_PlayerY;

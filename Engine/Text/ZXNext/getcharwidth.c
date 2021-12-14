@@ -15,7 +15,7 @@ byte MYX_GetCharWidth(char c)
     if ((byte)c < firstChar)
         return 0;
 
-    byte oldBank = MYXP_CurrentBank;
+    byte oldBank = MYXP_CurrentUpperBank;
     MYXP_SetUpperMemoryBank(MYXP_CurrentFont.bank);
 
     byte w = MYXP_CurrentFont.chars[(byte)c - firstChar].xadv;

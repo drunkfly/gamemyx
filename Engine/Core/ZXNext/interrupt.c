@@ -10,8 +10,10 @@
 #endif
 
 void MYXP_ReadInput() __preserves_regs(a, iyl, iyh);
+void MYXP_UpdateMusicPlayer();
 
 void MYXP_InterruptHandler()
 {
     MYXP_ReadInput();
+    MYXP_UpdateMusicPlayer();
 }

@@ -18,7 +18,7 @@ byte MYX_DrawChar(int x, int y, char ch, byte color)
     x += MYX_NEXT_BORDER_SIZE;
     y += MYX_NEXT_BORDER_SIZE;
 
-    byte oldBank = MYXP_CurrentBank;
+    byte oldBank = MYXP_CurrentUpperBank;
     MYXP_SetUpperMemoryBank(MYXP_CurrentFont.bank);
 
     const FontChar* p = &MYXP_CurrentFont.chars[(byte)ch - firstChar];

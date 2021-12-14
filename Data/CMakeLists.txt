@@ -140,3 +140,9 @@ IMPORTER(
     -loadfnt "${src}/BitPotion/BitPotionExt_Black.fnt"
     -outfontlist "${bin}/Fonts.h"
     )
+
+IMPORTER(
+    -startbank 14
+    -loadpt3 "${src}/Music/nq-MMA-ingame-28.pt3" "music_ingame"
+    -outsymlist "${bin}/Music.h"
+    )

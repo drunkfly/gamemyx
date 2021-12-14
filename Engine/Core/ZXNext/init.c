@@ -9,8 +9,20 @@
 #pragma constseg MYX_STARTUP
 #endif
 
+void MYXP_InitMusicPlayer();
+
 void MYXP_PlatformInit()
 {
+    MYXP_SetLowerMemoryBank(5);
+
+    NEXT_TurboSoundControl = NEXT_TURBOSOUNDCONTROL_MASK
+                           | NEXT_TURBOSOUNDCONTROL_ENABLE_LEFT
+                           | NEXT_TURBOSOUNDCONTROL_ENABLE_RIGHT
+                           | NEXT_TURBOSOUNDCONTROL_CHIP1
+                           ;
+
+    NEXT_SETREG(9, 0xe0); // FIXME
+
     NEXT_SETREG(NEXT_SPRITELAYERMODE,
         NEXT_SPRITE_127_ON_TOP |
         NEXT_ORDER_LAYER2_SPRITES_ULA |
@@ -30,8 +42,20 @@ void MYXP_PlatformInit()
         (NEXT_GETREG(NEXT_PERIPHERALCONTROL1) & NEXT_ENABLE_SCANDOUBLER));
 
     NEXT_SETREG(NEXT_PERIPHERALCONTROL2,
+      #ifndef NDEBUG
+        NEXT_ENABLE_MULTIFACE_NMI |
+      #endif
         NEXT_PS2MODE_KEYBOARD |
-        NEXT_AUDIOCHIP_AY);
+        NEXT_AUDIOCHIP_YAMAHA);
+
+    NEXT_SETREG(NEXT_PERIPHERALCONTROL3,
+        NEXT_UNLOCK_PORT_7FFD |
+        NEXT_DISABLE_RAM_CONTENTION |
+        NEXT_AY_STEREO_ABC |
+        NEXT_ENABLE_INTERNAL_SPEAKER |
+        NEXT_ENABLE_8BIT_DACS |
+        NEXT_ENABLE_PORT_FF_READ |
+        NEXT_ENABLE_TURBOSOUND);
 
     NEXT_SETREG(NEXT_TURBOMODE, NEXT_28MHZ);
 
@@ -78,4 +102,8 @@ void MYXP_PlatformInit()
     MYX_ClearLayer2(0);
 
     NEXT_Layer2AccessPort = NEXT_LAYER2_VISIBLE;
+
+  #if ENABLE_MUSIC
+    MYXP_InitMusicPlayer();
+  #endif
 }

@@ -37,5 +37,6 @@ void GameMain();
 #include "Maps/_public.h"
 #include "Render/_public.h"
 #include "Text/_public.h"
+#include "Music/_public.h"
 
 #endif

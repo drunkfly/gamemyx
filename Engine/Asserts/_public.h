@@ -16,7 +16,7 @@
         ? (void)0 \
         : MYX_AssertFailed(__FILE__, __LINE__, #X))
   #define ASSERT_NEXT_BANK(NUM) \
-    ((MYXP_CurrentBank == (NUM)) \
+    ((MYXP_CurrentUpperBank == (NUM)) \
         ? (void)0 \
         : MYX_AssertBankFailed(__FILE__, __LINE__, NUM))
  #endif

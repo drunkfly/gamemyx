@@ -33,7 +33,7 @@ bool MYX_IsSmallTileBlocking(byte x, byte y)
     const byte* collisionMap = MYX_CollisionMap;
 
   #ifdef TARGET_ZXNEXT
-    byte bank = MYXP_CurrentBank;
+    byte bank = MYXP_CurrentUpperBank;
     MYXP_SetUpperMemoryBank(MYX_CollisionBank);
   #endif
 
@@ -77,7 +77,7 @@ void MYX_SetMapVisibleCenter(int x, int y)
         byte w = MYX_TilemapWidth;
 
       #ifdef TARGET_ZXNEXT
-        byte bank = MYXP_CurrentBank;
+        byte bank = MYXP_CurrentUpperBank;
         MYXP_SetUpperMemoryBank(MYX_TilemapBank);
       #endif
 
@@ -92,7 +92,7 @@ void MYX_SetMapVisibleCenter(int x, int y)
 void MYX_LoadMap(const MapInfo* map, PFNMAPOBJECTHANDLERPROC handler)
 {
   #ifdef TARGET_ZXNEXT
-    byte bank = MYXP_CurrentBank;
+    byte bank = MYXP_CurrentUpperBank;
   #endif
 
     MYX_CollisionMap = map->collision;

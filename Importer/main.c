@@ -86,6 +86,11 @@ int main(int argc, char** argv)
         } else if (!strcmp(argv[i], "-outsymlist")) {
             CHECK_ARG
             writeSymbolList(argv[++i]);
+        } else if (!strcmp(argv[i], "-loadpt3")) {
+            CHECK_ARG
+            const char* file = argv[++i];
+            CHECK_ARG
+            loadPT3(file, argv[++i]);
         } else {
             fprintf(stderr, "error: unknown command line argument \"%s\".\n", argv[i]);
             return 1;

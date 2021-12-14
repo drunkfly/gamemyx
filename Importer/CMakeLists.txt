@@ -13,6 +13,7 @@ add_executable(Importer
     image.c
     importer.h
     main.c
+    music.c
     output.c
     stb_image.h
     tilecache.c

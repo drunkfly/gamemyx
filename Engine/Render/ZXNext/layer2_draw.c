@@ -14,7 +14,7 @@ void MYX_DrawLayer2Bitmap(int x, int y, const void* data, byte bank)
     x += MYX_NEXT_BORDER_SIZE;
     y += MYX_NEXT_BORDER_SIZE;
 
-    byte oldBank = MYXP_CurrentBank;
+    byte oldBank = MYXP_CurrentUpperBank;
     MYXP_SetUpperMemoryBank(bank);
 
     const byte* p = (const byte*)data;

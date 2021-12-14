@@ -16,5 +16,6 @@
 #include "Maps/_private.h"
 #include "Render/_private.h"
 #include "Text/_private.h"
+#include "Music/_private.h"
 
 #endif

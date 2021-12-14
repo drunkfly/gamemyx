@@ -11,5 +11,6 @@
 #define ENABLE_ANIMATED_SPRITES             1
 #define ENABLE_ASSERTIONS                   1
 #define ENABLE_DIALOGS                      1
+#define ENABLE_MUSIC                        1
 
 #endif

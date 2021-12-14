@@ -12,12 +12,14 @@
 #include "ZXNext/zxmem.h"
 #endif
 
-extern byte MYXP_CurrentBank;
+extern byte MYXP_CurrentUpperBank;
+extern byte MYXP_CurrentLowerBank;
 
 void MYXP_PlatformInit();
 void MYXP_EngineMain();
 
-void MYXP_SetUpperMemoryBank(byte bank);
+void MYXP_SetUpperMemoryBank(byte bank) Z88DK_FASTCALL;
+void MYXP_SetLowerMemoryBank(byte bank) Z88DK_FASTCALL;
 
 void MYXP_WaitVSync();
 

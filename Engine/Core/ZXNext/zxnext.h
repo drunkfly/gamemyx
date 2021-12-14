@@ -70,6 +70,22 @@
 #define NEXT_28MHZ                          0x03
 
 /*
+ * Peripheral 3 register
+ */
+
+#define NEXT_PERIPHERALCONTROL3             0x08
+
+#define NEXT_UNLOCK_PORT_7FFD               0x80
+#define NEXT_DISABLE_RAM_CONTENTION         0x40
+#define NEXT_AY_STEREO_ABC                  0x00
+#define NEXT_AY_STEREO_ACB                  0x20
+#define NEXT_ENABLE_INTERNAL_SPEAKER        0x10
+#define NEXT_ENABLE_8BIT_DACS               0x08
+#define NEXT_ENABLE_PORT_FF_READ            0x04
+#define NEXT_ENABLE_TURBOSOUND              0x02
+#define NEXT_ENABLE_ISSUE2_KEYBOARD         0x01
+
+/*
  * Layer 2 RAM Bank
  */
 
@@ -304,6 +320,15 @@
 #define NEXT_LAYER2_VISIBLE                 0x02
 #define NEXT_ENABLE_LAYER2_WRITEONLY        0x01
 
+// NEXT_TurboSoundControl
+
+#define NEXT_TURBOSOUNDCONTROL_MASK         0x9c
+#define NEXT_TURBOSOUNDCONTROL_ENABLE_LEFT  0x40
+#define NEXT_TURBOSOUNDCONTROL_ENABLE_RIGHT 0x20
+#define NEXT_TURBOSOUNDCONTROL_CHIP3        0x01
+#define NEXT_TURBOSOUNDCONTROL_CHIP2        0x02
+#define NEXT_TURBOSOUNDCONTROL_CHIP1        0x03
+
 /**********************************************************************/
 
 #define NEXT_GETREG(reg) \
@@ -321,5 +346,8 @@ __sfr __banked __at 0x253b NEXT_RegisterValue;
 __sfr __banked __at 0x123b NEXT_Layer2AccessPort;
 
 __sfr __banked __at 0x303b NEXT_SpriteControl;
+
+__sfr __banked __at 0xfffd NEXT_TurboSoundControl;
+__sfr __banked __at 0xbffd NEXT_SoundChipRegister;
 
 #endif
