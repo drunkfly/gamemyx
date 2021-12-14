@@ -44,8 +44,12 @@ EnableDisable:  ld      a, (_MYXP_CurrentUpperBank)
                 ld      a, h
                 ld      (PT3_enabled), a
                 or      a
+                jr      nz, SkipAY1
                 push    hl
-                call    z, PT3_mute
+                ld      bc, 0xfffd
+                ld      a, 0xff     ; chip 1
+                out     (c), a
+                call    PT3_mute
                 pop     hl
 SkipAY1:        bit     1, l
                 jr      z, SkipAY2
@@ -54,8 +58,12 @@ SkipAY1:        bit     1, l
                 ld      a, h
                 ld      (PT3_enabled), a
                 or      a
+                jr      nz, SkipAY3
                 push    hl
-                call    z, PT3_mute
+                ld      bc, 0xfffd
+                ld      a, 0xfe     ; chip 2
+                out     (c), a
+                call    PT3_mute
                 pop     hl
 SkipAY2:        bit     2, l
                 jr      z, SkipAY3
@@ -64,8 +72,12 @@ SkipAY2:        bit     2, l
                 ld      a, h
                 ld      (PT3_enabled), a
                 or      a
+                jr      nz, SkipAY3
                 push    hl
-                call    z, PT3_mute
+                ld      bc, 0xfffd
+                ld      a, 0xfd     ; chip 3
+                out     (c), a
+                call    PT3_mute
                 pop     hl
 SkipAY3:        ei
                 pop     af

@@ -197,8 +197,8 @@ set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank8.c"
     PROPERTIES GENERATED TRUE) # FIXME
 set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank14.c"
     PROPERTIES GENERATED TRUE) # FIXME
-set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank15.c"
-    PROPERTIES GENERATED TRUE) # FIXME
+#set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank15.c"
+#    PROPERTIES GENERATED TRUE) # FIXME
 
 add_executable(Game WIN32
     ${game_src}
@@ -206,7 +206,7 @@ add_executable(Game WIN32
     "${CMAKE_BINARY_DIR}/Data/bank7.c"          # FIXME
     "${CMAKE_BINARY_DIR}/Data/bank8.c"          # FIXME
     "${CMAKE_BINARY_DIR}/Data/bank14.c"         # FIXME
-    "${CMAKE_BINARY_DIR}/Data/bank15.c"         # FIXME
+    #"${CMAKE_BINARY_DIR}/Data/bank15.c"         # FIXME
     )
 
 add_dependencies(Game Assets)

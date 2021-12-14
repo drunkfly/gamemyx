@@ -144,5 +144,8 @@ IMPORTER(
 IMPORTER(
     -startbank 14
     -loadpt3 "${src}/Music/nq-MMA-ingame-28.pt3" "music_ingame"
+    #-loadpt3 "${src}/Music/1.pt3"                "music_ingame_1"
+    #-loadpt3 "${src}/Music/2.pt3"                "music_ingame_2"
+    #-loadpt3 "${src}/Music/3.pt3"                "music_ingame_3"
     -outsymlist "${bin}/Music.h"
     )
