@@ -11,11 +11,12 @@
                 PUBLIC  PT3_init
                 PUBLIC  PT3_play
                 PUBLIC  PT3_mute
+                PUBLIC  PT3_enabled
 
                 EXTERN  MYXP_NoteTable
                 EXTERN  MYXP_VolumeTable
 
-                SECTION BANK_3
+                SECTION BANK_3_LO
 
 PT3_init:       ld      (PT3_MODADDR), hl
                 ld      (PT3_MDADDR2), hl
@@ -526,7 +527,9 @@ PT3_CH_ONDL:    ld      (ix+PT3_CHP_COnOff), a
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-PT3_play:       nop
+PT3_play:       ld      a, (PT3_enabled)
+                or      a
+                ret     z
                 xor     a
                 ld      (PT3_AddToEn), a
                 ld      (PT3_Mixer), a
@@ -660,6 +663,9 @@ PT3_LOUT:       out     (c), a
 
 PT3_EMPTYSAMORN:db      0, 1, 0, 0x90
 
+                SECTION BANK_3_HI
+
+PT3_enabled:    db      0
 PT3_SamPtrs:    dw      0
 PT3_MODADDR:    dw      0
 PT3_PrNote:     db      0

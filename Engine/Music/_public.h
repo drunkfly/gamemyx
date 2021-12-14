@@ -6,8 +6,15 @@
 #define ENGINE_MUSIC_PUBLIC_H
 #if ENABLE_MUSIC
 
-void MYX_StopMusic();
-void MYX_PlayMusic(const void* data, byte bank);
+#define MYX_AY_CHIP1    1
+#define MYX_AY_CHIP2    2
+#define MYX_AY_CHIP3    4
+#define MYX_AY_ALL      (MYX_AY_CHIP1 | MYX_AY_CHIP2 | MYX_AY_CHIP3)
+
+void MYX_StopMusic(byte ayMask) Z88DK_FASTCALL;
+void MYX_PlayMusic(byte ayMask) Z88DK_FASTCALL;
+
+void MYX_SetMusic(byte ay, const void* data, byte bank);
 
 #endif
 #endif

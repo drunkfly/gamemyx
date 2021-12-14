@@ -11,7 +11,7 @@
                 PUBLIC  MYXP_NoteTable
                 PUBLIC  MYXP_VolumeTable
 
-                SECTION BANK_3
+                SECTION BANK_3_LO
 
 MYXP_VolumeTable:
                 db      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

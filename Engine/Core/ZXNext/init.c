@@ -19,7 +19,8 @@ void MYXP_PlatformInit()
                            | NEXT_TURBOSOUNDCONTROL_CHIP1
                            ;
 
-    NEXT_SETREG(9, 0xe0); // FIXME
+    //NEXT_SETREG(9, 0xe0); // FIXME
+    NEXT_SETREG(9, 0); // FIXME
 
     NEXT_SETREG(NEXT_SPRITELAYERMODE,
         NEXT_SPRITE_127_ON_TOP |
