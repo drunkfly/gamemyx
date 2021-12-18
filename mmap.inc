@@ -18,6 +18,7 @@ SECTION code_error
 SECTION code_l
 SECTION code_l_sdcc
 SECTION code_math
+SECTION code_string
 SECTION data_threads
 SECTION data_stdio
 SECTION MYX_CORE
@@ -34,6 +35,7 @@ SECTION MYX_ASSERT
 SECTION MYX_LAYER2
 SECTION MYX_DIALOGS
 SECTION MYX_MUSIC
+SECTION MYX_QUESTS
 SECTION bss_compiler
 SECTION bss_stdio
 SECTION bss_stdlib
@@ -47,6 +49,7 @@ org 0xc000
 SECTION BANK_1
 org 0xc000
 SECTION code_compiler
+SECTION data_compiler
 SECTION rodata_compiler
 SECTION BSS_UNINITIALIZED
 

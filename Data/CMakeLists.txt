@@ -40,17 +40,6 @@ IMPORTER(
     -area16x16 4 2
     -outsprite4 "${bin}/Sprites/SwordsmanWalkRight4.h"
 
-    -area16x16 0 3
-    -outsprite4 "${bin}/Sprites/SwordsmanIdleLeft.h"
-    -area16x16 1 3
-    -outsprite4 "${bin}/Sprites/SwordsmanWalkLeft1.h"
-    -area16x16 2 3
-    -outsprite4 "${bin}/Sprites/SwordsmanWalkLeft2.h"
-    -area16x16 3 3
-    -outsprite4 "${bin}/Sprites/SwordsmanWalkLeft3.h"
-    -area16x16 4 3
-    -outsprite4 "${bin}/Sprites/SwordsmanWalkLeft4.h"
-
     -area16x16 0 4
     -outsprite4 "${bin}/Sprites/SwordsmanMeleeDown1.h"
     -area16x16 1 4
@@ -138,18 +127,48 @@ IMPORTER(
     -area16x16 4 2
     -outsprite4 "${bin}/Sprites/RedDemonWalkRight4.h"
 
-    -area16x16 0 3
-    -outsprite4 "${bin}/Sprites/RedDemonIdleLeft.h"
-    -area16x16 1 3
-    -outsprite4 "${bin}/Sprites/RedDemonWalkLeft1.h"
-    -area16x16 2 3
-    -outsprite4 "${bin}/Sprites/RedDemonWalkLeft2.h"
-    -area16x16 3 3
-    -outsprite4 "${bin}/Sprites/RedDemonWalkLeft3.h"
-    -area16x16 4 3
-    -outsprite4 "${bin}/Sprites/RedDemonWalkLeft4.h"
-
     -outpalette4 "${bin}/Palettes/RedDemonPalette.h"
+    )
+
+IMPORTER(
+    -loadimage "${src}/MiniWorldSprites/FarmerPurple.png"
+    -histogram
+    -palette4
+
+    -area16x16 0 0
+    -outsprite4 "${bin}/Sprites/FarmerPurpleIdleFront.h"
+    -area16x16 1 0
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkFront1.h"
+    -area16x16 2 0
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkFront2.h"
+    -area16x16 3 0
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkFront3.h"
+    -area16x16 4 0
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkFront4.h"
+
+    -area16x16 0 1
+    -outsprite4 "${bin}/Sprites/FarmerPurpleIdleBack.h"
+    -area16x16 1 1
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkBack1.h"
+    -area16x16 2 1
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkBack2.h"
+    -area16x16 3 1
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkBack3.h"
+    -area16x16 4 1
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkBack4.h"
+
+    -area16x16 0 2
+    -outsprite4 "${bin}/Sprites/FarmerPurpleIdleRight.h"
+    -area16x16 1 2
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkRight1.h"
+    -area16x16 2 2
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkRight2.h"
+    -area16x16 3 2
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkRight3.h"
+    -area16x16 4 2
+    -outsprite4 "${bin}/Sprites/FarmerPurpleWalkRight4.h"
+
+    -outpalette4 "${bin}/Palettes/FarmerPurplePalette.h"
     )
 
 IMPORTER(

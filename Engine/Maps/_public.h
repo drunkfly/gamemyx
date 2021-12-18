@@ -29,6 +29,15 @@ typedef enum Func {
     FUNC_ENEMY7,
     FUNC_ENEMY8,
     FUNC_ENEMY9,
+    FUNC_NPC1,
+    FUNC_NPC2,
+    FUNC_NPC3,
+    FUNC_NPC4,
+    FUNC_NPC5,
+    FUNC_NPC6,
+    FUNC_NPC7,
+    FUNC_NPC8,
+    FUNC_NPC9,
 } Func;
 
 STRUCT(MapInfo)
@@ -63,12 +72,12 @@ extern byte MYX_PlayerY;
 extern int MYX_MapWidth;
 extern int MYX_MapHeight;
 
-typedef void (*PFNMAPOBJECTHANDLERPROC)(const MapObject* obj);
+typedef void (*MYX_PFNMAPOBJECTHANDLERPROC)(const MapObject* obj);
 
 bool MYX_IsSmallTileBlocking(byte x, byte y);
 
 void MYX_SetMapVisibleCenter(int x, int y);
 
-void MYX_LoadMap(const MapInfo* map, PFNMAPOBJECTHANDLERPROC handler);
+void MYX_LoadMap(const MapInfo* map, MYX_PFNMAPOBJECTHANDLERPROC handler);
 
 #endif

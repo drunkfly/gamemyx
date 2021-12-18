@@ -89,7 +89,7 @@ void MYX_SetMapVisibleCenter(int x, int y)
     }
 }
 
-void MYX_LoadMap(const MapInfo* map, PFNMAPOBJECTHANDLERPROC handler)
+void MYX_LoadMap(const MapInfo* map, MYX_PFNMAPOBJECTHANDLERPROC handler)
 {
   #ifdef TARGET_ZXNEXT
     byte bank = MYXP_CurrentUpperBank;

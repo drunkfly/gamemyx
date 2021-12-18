@@ -7,6 +7,9 @@
 
 #include "engine.h"
 
+#define MAX_ENEMIES 16
+#define MAX_NPCS 16
+
 enum State
 {
     CHAR_IDLE,
@@ -19,7 +22,8 @@ enum
 {
     TAG_PLAYER,
     TAG_PLAYER_ATTACK,
-    TAG_ENEMY,      // + N
+    TAG_ENEMY,                              // + N
+    TAG_NPC = TAG_ENEMY + MAX_ENEMIES,      // + N
 };
 
 #define REF_SPRITE          0x40

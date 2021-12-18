@@ -64,6 +64,24 @@ bool decodeFunc(Func *func, const char* value)
         return *func = FUNC_ENEMY8, true;
     else if (!strcmp(value, "enemy9"))
         return *func = FUNC_ENEMY9, true;
+    else if (!strcmp(value, "npc1"))
+        return *func = FUNC_NPC1, true;
+    else if (!strcmp(value, "npc2"))
+        return *func = FUNC_NPC2, true;
+    else if (!strcmp(value, "npc3"))
+        return *func = FUNC_NPC3, true;
+    else if (!strcmp(value, "npc4"))
+        return *func = FUNC_NPC4, true;
+    else if (!strcmp(value, "npc5"))
+        return *func = FUNC_NPC5, true;
+    else if (!strcmp(value, "npc6"))
+        return *func = FUNC_NPC6, true;
+    else if (!strcmp(value, "npc7"))
+        return *func = FUNC_NPC7, true;
+    else if (!strcmp(value, "npc8"))
+        return *func = FUNC_NPC8, true;
+    else if (!strcmp(value, "npc9"))
+        return *func = FUNC_NPC9, true;
     else
         return false;
 }

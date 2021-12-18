@@ -20,6 +20,10 @@ void MYX_BeginFrame()
   #if ENABLE_ANIMATED_SPRITES
     MYXP_UpdateAnimSprites();
   #endif
+
+  #if ENABLE_QUESTS
+    MYXP_UpdateQuests();
+  #endif
 }
 
 void MYX_EndFrame()

@@ -29,13 +29,17 @@ void MYXP_EndCollisions()
                 p1->y2 >= p2->y1 && p1->y1 <= p2->y2 &&
                 p1->tag != p2->tag) {
 
-                MYXCOLLISIONCALLBACK cb1 = MYXP_Callbacks[p1->tag];
-                if (cb1)
-                    cb1(p2->tag);
+                if (p1->tag < MAX_COLLISION_CALLBACKS) {
+                    MYXCOLLISIONCALLBACK cb1 = MYXP_Callbacks[p1->tag];
+                    if (cb1)
+                        cb1(p2->tag);
+                }
 
-                MYXCOLLISIONCALLBACK cb2 = MYXP_Callbacks[p2->tag];
-                if (cb2)
-                    cb2(p1->tag);
+                if (p2->tag < MAX_COLLISION_CALLBACKS) {
+                    MYXCOLLISIONCALLBACK cb2 = MYXP_Callbacks[p2->tag];
+                    if (cb2)
+                        cb2(p1->tag);
+                }
             }
         }
     }

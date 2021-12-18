@@ -8,12 +8,11 @@
 #include "Data/Maps.h"
 #include "Data/Music.h"
 
-#define MAX_ENEMIES 16
-
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
 #include "Data/Palettes/SwordsmanDeathPalette.h"
 #include "Data/Palettes/RedDemonPalette.h"
+#include "Data/Palettes/FarmerPurplePalette.h"
 };
 
 static const byte TilesetData[] = {
@@ -22,23 +21,107 @@ static const byte TilesetData[] = {
 
 #include "Data/swordsman.h"
 #include "Data/reddemon.h"
+#include "Data/farmerpurple.h"
+
+static void CheckQuest1(Quest* quest);
 
 static MYXSprite RedDemonIdleFrontSprite;
 
 static Character player;
 static Character enemies[MAX_ENEMIES];
+static Character npcs[MAX_NPCS];
 static const Character* firstRedDemon;
+static const Character* firstFarmer;
 static byte enemyCount;
+static byte npcCount;
+
+static Quest quest1 = { "Quest 1", CheckQuest1 };
+
+void MYXP_WaitVSync(); // FIXME
+
+static void Npc1Dialog(Character* c)
+{
+    MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+
+    switch (quest1.state) {
+        case QUEST_NOT_STARTED: {
+            MYX_DrawDialogBubble(c->x, c->y, 16, "Do you want quest?");
+
+            static const DialogChoice choices[] = {
+                    { "Yes", NULL, 1 },
+                    { "No", NULL, 1 },
+                    { NULL, NULL, 0 },
+                };
+
+            int r = MYX_DialogChoice(player.x, player.y, 16, choices);
+
+            MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+
+            if (r == 0)
+                MYX_StartQuest(&quest1);
+
+            break;
+        }
+
+        case QUEST_ACTIVE:
+            while (MYX_IsAnyKeyPressed())
+                MYXP_WaitVSync();
+
+            MYX_DrawDialogBubble(c->x, c->y,
+                16, "Return when you're done.");
+
+            while (!MYX_IsAnyKeyPressed())
+                MYXP_WaitVSync();
+
+            MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+
+            break;
+
+        case QUEST_COMPLETED:
+            while (MYX_IsAnyKeyPressed())
+                MYXP_WaitVSync();
+
+            MYX_DrawDialogBubble(c->x, c->y,
+                16, "Congratulations!");
+
+            while (!MYX_IsAnyKeyPressed())
+                MYXP_WaitVSync();
+
+            MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+
+            break;
+    }
+}
+
+static void CheckQuest1(Quest* quest)
+{
+    for (byte i = 0; i < enemyCount; i++) {
+        if (enemies[i].state != CHAR_DEAD)
+            return;
+    }
+
+    MYX_CompleteQuest(&quest1);
+}
+
+static bool npcCollided; // FIXME
+static bool npcCollidedThisFrame;
 
 static void OnPlayerCollision(byte tag)
 {
-    if (tag >= TAG_ENEMY)
+    if (tag >= TAG_ENEMY && tag < TAG_NPC)
         Character_Kill(&player);
+    else if (tag >= TAG_NPC) {
+        npcCollidedThisFrame = true;
+        if (!npcCollided) {
+            Npc1Dialog(&npcs[tag - TAG_NPC]);
+            npcCollided = true;
+        }
+    }
 }
 
 static void OnPlayerAttackCollision(byte tag)
 {
-    if (tag >= TAG_ENEMY)
+    if (tag >= TAG_ENEMY && tag < TAG_NPC)
         Character_Kill(&enemies[tag - TAG_ENEMY]);
 }
 
@@ -58,6 +141,19 @@ void MapObjectHandler(const MapObject* obj)
             }
             enemies[enemyCount].direction = obj->dir;
             ++enemyCount;
+            break;        
+
+        case FUNC_NPC1:
+            if (firstFarmer) {
+                Character_Copy(&npcs[npcCount], firstFarmer, obj->x, obj->y);
+                npcs[npcCount].tag = TAG_NPC + npcCount;
+                npcs[npcCount].attackTag = npcs[npcCount].tag;
+            } else {
+                Character_Init(&npcs[npcCount], obj->x, obj->y, TAG_NPC + npcCount, FarmerPurpleData);
+                firstFarmer = &npcs[npcCount];
+            }
+            npcs[npcCount].direction = obj->dir;
+            ++npcCount;
             break;        
 
         default:
@@ -82,9 +178,11 @@ void GameMain()
     MYX_SetFont(&font_BitPotionExt);
     MYX_DrawString(0, -30, "Hello, world!", 0xff);
 
-    MYX_SetSpritePalette(0, SpritePalette, 3*16);
+    MYX_SetSpritePalette(0, SpritePalette, 4*16);
 
+    firstFarmer = NULL;
     firstRedDemon = NULL;
+    npcCount = 0;
     enemyCount = 0;
     MYX_LoadTileset(TilesetData);
     MYX_LoadMap(&map_park_tmx, &MapObjectHandler);
@@ -112,30 +210,19 @@ void GameMain()
             Character_ForwardBackwardMove(&enemies[i]);
         }
 
+        for (byte i = 0; i < npcCount; i++)
+            Character_Draw(&npcs[i]);
+
         Character_Draw(&player);
-        if (Character_HandleInput(&player)) {
-            /*
-            MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
-
-            MYX_DrawDialogBubble(demon.x, demon.y, 16,
-                "Lorem Ipsum is simply dummy text of the printing "
-                "and typesetting industry.");
-
-            static const DialogChoice choices[] = {
-                    { "Choice 1", NULL, 1 },
-                    { "Another choice", NULL, 1 },
-                    { "Bad choice", NULL, 0xe0 },
-                    { NULL, NULL, 0 },
-                };
-
-            MYX_DialogChoice(player.x, player.y, 16, choices);
-            */
-        }
+        Character_HandleInput(&player);
 
         MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
 
         MYX_SetMapVisibleCenter(player.x, player.y);
 
+        npcCollidedThisFrame = false;
         MYX_EndFrame();
+        if (!npcCollidedThisFrame)
+            npcCollided = false;
     }
 }
