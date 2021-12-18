@@ -19,6 +19,8 @@ STRUCT(Character)
     MYXAnimSprite idle[4];
     MYXAnimSprite walk[4];
     MYXAnimSprite death;
+    byte idleFlags[4];
+    byte walkFlags[4];
     int x;
     int y;
     byte direction;

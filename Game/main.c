@@ -68,8 +68,10 @@ void MapObjectHandler(const MapObject* obj)
 
 void GameMain()
 {
+    /*
     MYX_SetMusic(0, music_ingame, MUSIC_INGAME_BANK);
     MYX_PlayMusic(MYX_AY_CHIP1);
+    */
 
     /*
     MYX_SetMusic(0, music_ingame_1, MUSIC_INGAME_1_BANK);

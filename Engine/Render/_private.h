@@ -14,6 +14,9 @@
         byte attr4;
     };
 
+    extern MYXPSprite MYXP_Sprites[];
+    extern byte MYXP_DrawnSpriteCount;
+
 #elif defined(TARGET_SDL2)
 
     STRUCT(MYXPSprite)

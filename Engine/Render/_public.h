@@ -11,6 +11,9 @@
 #define MYX_SPRITE_FLAG_16COLOR         0x00
 #define MYX_SPRITE_FLAG_256COLOR        0x01
 
+#define MYX_FLIP_X                      8
+#define MYX_FLIP_Y                      4
+
 #define MYX_SCREEN_MAIN_WIDTH           256
 #define MYX_SCREEN_MAIN_HEIGHT          192
 #define MYX_SCREEN_BORDER_WIDTH         32
@@ -30,6 +33,7 @@ void MYX_SetSpritePalette(byte index, const void* data, byte count);
 void MYX_SetTilemapPalette(byte index, const void* data, byte count);
 
 void MYX_PutSprite(int x, int y, MYXSprite sprite);
+void MYX_PutSpriteEx(int x, int y, MYXSprite sprite, byte flags);
 
 void MYX_SetTilemapOffset(byte x, byte y);
 

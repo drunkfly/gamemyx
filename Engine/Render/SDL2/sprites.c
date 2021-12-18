@@ -23,6 +23,11 @@ void MYXP_EndSprites()
 
 void MYX_PutSprite(int x, int y, MYXSprite sprite)
 {
+    MYX_PutSpriteEx(x, y, sprite, 0);
+}
+
+void MYX_PutSpriteEx(int x, int y, MYXSprite sprite, byte flags)
+{
     const MYXPSprite* pSprite = &Sprites[sprite];
     x -= MYXP_MapVisibleCenterX;
     y -= MYXP_MapVisibleCenterY;
@@ -30,20 +35,32 @@ void MYX_PutSprite(int x, int y, MYXSprite sprite)
     const byte* s = pSprite->data;
     bool first = true;
 
-    for (int yy = 0; yy < pSprite->h; yy++) {
+    for (int yc = 0; yc < pSprite->h; yc++) {
+        int yy = yc;
+        if (flags & MYX_FLIP_Y)
+            yy = (pSprite->h - 1 - yc);
+
         if (y + yy >= MYX_SDL2_CONTENT_HEIGHT)
             continue;
 
         Uint32* p = &MYXP_ScreenBuffer[(y + yy) * MYX_SDL2_CONTENT_WIDTH + x];
-        for (int xx = 0; xx < pSprite->w; xx++) {
-            if (x + xx >= MYX_SDL2_CONTENT_WIDTH)
-                break;
+        if (flags & MYX_FLIP_X)
+            p += pSprite->w;
+
+        for (int xc = 0; xc < pSprite->w; xc++) {
+            int xx = xc;
+            if (flags & MYX_FLIP_X)
+                xx = (pSprite->w - 1 - xc);
 
             byte index;
             if (pSprite->is256Color) {
                 index = *s++;
                 if (index == MYX_TRANSPARENT_COLOR_INDEX8) {
-                    ++p;
+                  next: /* omg! */
+                    if (flags & MYX_FLIP_X)
+                        --p;
+                    else
+                        ++p;
                     continue;
                 }
             } else {
@@ -52,19 +69,19 @@ void MYX_PutSprite(int x, int y, MYXSprite sprite)
                 else
                     index = ((*s++) & 0xF);
                 first = !first;
-                if (index == MYX_TRANSPARENT_COLOR_INDEX4) {
-                    ++p;
-                    continue;
-                }
+                if (index == MYX_TRANSPARENT_COLOR_INDEX4)
+                    goto next;
                 index += pSprite->paletteIndex * 16;
             }
 
-            if (x + xx < 0 || y + yy < 0) {
-                ++p;
-                continue;
-            }
+            if (x + xx < 0 || y + yy < 0 || x + xx >= MYX_SDL2_CONTENT_WIDTH)
+                goto next;
 
-            *p++ = MYXP_SpritePalette[index];
+            Uint32 pixel = MYXP_SpritePalette[index];
+            if (flags & MYX_FLIP_X)
+                *--p = pixel;
+            else
+                *p++ = pixel;
         }
     }
 

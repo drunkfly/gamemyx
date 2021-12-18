@@ -15,6 +15,7 @@ MYXAnimSprite MYX_LoadAnimSprite(const void** data);
 
 void MYX_SetAnimSpritePlayOnce(MYXAnimSprite sprite);
 void MYX_PutAnimSprite(int x, int y, MYXAnimSprite sprite);
+void MYX_PutAnimSpriteEx(int x, int y, MYXAnimSprite sprite, byte flags);
 
 #endif
 #endif

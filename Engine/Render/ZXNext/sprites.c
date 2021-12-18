@@ -10,27 +10,25 @@
 #endif
 
 static byte LastDrawnSpriteCount;
-static byte DrawnSpriteCount;
 
-static MYXPSprite Sprites[NEXT_MAX_SPRITES];
 static byte SpriteCount;
 
 void MYXP_BeginSprites()
 {
-    DrawnSpriteCount = 0;
+    MYXP_DrawnSpriteCount = 0;
     NEXT_SpriteControl = 0;
 }
 
 void MYXP_EndSprites()
 {
-    for (byte i = DrawnSpriteCount; i < LastDrawnSpriteCount; i++) {
+    for (byte i = MYXP_DrawnSpriteCount; i < LastDrawnSpriteCount; i++) {
         NEXT_SpriteAttribute = 0; /* X */
         NEXT_SpriteAttribute = 0; /* Y */
         NEXT_SpriteAttribute = 0; /* Attribute 2 */
         NEXT_SpriteAttribute = 0; /* Attribute 3 */
     }
 
-    LastDrawnSpriteCount = DrawnSpriteCount;
+    LastDrawnSpriteCount = MYXP_DrawnSpriteCount;
 }
 
 void MYX_PutSprite(int x, int y, MYXSprite sprite)
@@ -43,18 +41,18 @@ void MYX_PutSprite(int x, int y, MYXSprite sprite)
     if (x < 16 || y < 16 || x >= 256+32 || y >= 192+32)
         return;
 
-    const MYXPSprite* pSprite = &Sprites[sprite];
+    const MYXPSprite* pSprite = &MYXP_Sprites[sprite];
     NEXT_SpriteAttribute = (byte)(x & 0xff);
     NEXT_SpriteAttribute = y;
     NEXT_SpriteAttribute = pSprite->attr2 | (byte)((byte)(x >> 8) & 1);
     NEXT_SpriteAttribute = pSprite->attr3;
     NEXT_SpriteAttribute = pSprite->attr4;
-    ++DrawnSpriteCount;
+    ++MYXP_DrawnSpriteCount;
 }
 
 MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex)
 {
-    MYXPSprite* pSprite = &Sprites[SpriteCount];
+    MYXPSprite* pSprite = &MYXP_Sprites[SpriteCount];
     pSprite->attr2 = (paletteIndex << 4);
     pSprite->attr3 = 0x80 | /* sprite visible */
                      0x40 | /* enable attribute byte 4 */

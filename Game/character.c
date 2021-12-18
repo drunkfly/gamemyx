@@ -6,18 +6,45 @@
 
 void Character_Init(Character* c, int x, int y, const void* sprites)
 {
+    const byte* p = (const byte*)sprites;
+
     c->state = CHAR_IDLE;
     c->direction = DIR_DOWN;
     c->x = x;
     c->y = y;
     c->timer = 0;
 
+    byte mirrorIdleSource[4] = { 0, 0, 0, 0 };
+    byte mirrorWalkSource[4] = { 0, 0, 0, 0 };
+
     for (byte dir = 0; dir < 4; dir++) {
-        c->idle[dir] = MYX_LoadAnimSprite(&sprites);
-        c->walk[dir] = MYX_LoadAnimSprite(&sprites);
+        byte flags = *p++;
+        if ((flags & (MYX_FLIP_X | MYX_FLIP_Y)) == 0) {
+            c->idle[dir] = MYX_LoadAnimSprite(&p);
+            c->idleFlags[dir] = 0;
+        } else {
+            c->idleFlags[dir] = flags;
+            mirrorIdleSource[dir] = *p++;
+        }
+
+        flags = *p++;
+        if ((flags & (MYX_FLIP_X | MYX_FLIP_Y)) == 0) {
+            c->walk[dir] = MYX_LoadAnimSprite(&p);
+            c->walkFlags[dir] = 0;
+        } else {
+            c->walkFlags[dir] = flags;
+            mirrorWalkSource[dir] = *p++;
+        }
     }    
 
-    c->death = MYX_LoadAnimSprite(&sprites);
+    for (byte dir = 0; dir < 4; dir++) {
+        if (c->idleFlags[dir] != 0)
+            c->idle[dir] = c->idle[mirrorIdleSource[dir]];
+        if (c->walkFlags[dir] != 0)
+            c->walk[dir] = c->walk[mirrorWalkSource[dir]];
+    }
+
+    c->death = MYX_LoadAnimSprite(&p);
     MYX_SetAnimSpritePlayOnce(c->death);
 }
 
@@ -30,6 +57,8 @@ void Character_Copy(Character* c, const Character* src, int x, int y)
     c->timer = 0;
 
     for (byte dir = 0; dir < 4; dir++) {
+        c->idleFlags[dir] = src->idleFlags[dir];
+        c->walkFlags[dir] = src->walkFlags[dir];
         c->idle[dir] = src->idle[dir];
         c->walk[dir] = src->walk[dir];
     }
@@ -41,11 +70,13 @@ void Character_Draw(Character* c)
 {
     switch (c->state) {
         case CHAR_IDLE:
-            MYX_PutAnimSprite(c->x, c->y, c->idle[c->direction]);
+            MYX_PutAnimSpriteEx(c->x, c->y,
+                c->idle[c->direction], c->idleFlags[c->direction]);
             break;
         case CHAR_WALK:
             c->state = CHAR_IDLE;
-            MYX_PutAnimSprite(c->x, c->y, c->walk[c->direction]);
+            MYX_PutAnimSpriteEx(c->x, c->y,
+                c->walk[c->direction], c->idleFlags[c->direction]);
             break;
         case CHAR_DEAD:
             if (c->timer < 32) {
