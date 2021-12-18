@@ -52,6 +52,8 @@ void MYX_PutSprite(int x, int y, MYXSprite sprite)
 
 MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex)
 {
+    ASSERT(SpriteCount < MYX_NEXT_MAX_SPRITES);
+
     MYXPSprite* pSprite = &MYXP_Sprites[SpriteCount];
     pSprite->attr2 = (paletteIndex << 4);
     pSprite->attr3 = 0x80 | /* sprite visible */

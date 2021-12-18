@@ -51,6 +51,33 @@ IMPORTER(
     -area16x16 4 3
     -outsprite4 "${bin}/Sprites/SwordsmanWalkLeft4.h"
 
+    -area16x16 0 4
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeDown1.h"
+    -area16x16 1 4
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeDown2.h"
+    -area16x16 2 4
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeDown3.h"
+    -area16x16 3 4
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeDown4.h"
+
+    -area16x16 0 5
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeUp1.h"
+    -area16x16 1 5
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeUp2.h"
+    -area16x16 2 5
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeUp3.h"
+    -area16x16 3 5
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeUp4.h"
+
+    -area16x16 0 6
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeRight1.h"
+    -area16x16 1 6
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeRight2.h"
+    -area16x16 2 6
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeRight3.h"
+    -area16x16 3 6
+    -outsprite4 "${bin}/Sprites/SwordsmanMeleeRight4.h"
+
     -outpalette4 "${bin}/Palettes/SwordsmanPalette.h"
     )
 

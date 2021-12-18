@@ -10,4 +10,4 @@
 #endif
 
 byte MYXP_DrawnSpriteCount;
-MYXPSprite MYXP_Sprites[NEXT_MAX_SPRITES];
+MYXPSprite MYXP_Sprites[MYX_NEXT_MAX_SPRITES];

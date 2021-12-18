@@ -8,12 +8,6 @@
 #include "Data/Maps.h"
 #include "Data/Music.h"
 
-enum
-{
-    TAG_PLAYER,
-    TAG_ENEMY,
-};
-
 #define MAX_ENEMIES 16
 
 static const byte SpritePalette[] = {
@@ -38,11 +32,14 @@ static byte enemyCount;
 
 static void OnPlayerCollision(byte tag)
 {
-    switch (tag) {
-        case TAG_ENEMY:
-            Character_Kill(&player);
-            break;
-    }
+    if (tag >= TAG_ENEMY)
+        Character_Kill(&player);
+}
+
+static void OnPlayerAttackCollision(byte tag)
+{
+    if (tag >= TAG_ENEMY)
+        Character_Kill(&enemies[tag - TAG_ENEMY]);
 }
 
 void MapObjectHandler(const MapObject* obj)
@@ -51,10 +48,12 @@ void MapObjectHandler(const MapObject* obj)
 
     switch (obj->func) {
         case FUNC_ENEMY1:
-            if (firstRedDemon)
+            if (firstRedDemon) {
                 Character_Copy(&enemies[enemyCount], firstRedDemon, obj->x, obj->y);
-            else {
-                Character_Init(&enemies[enemyCount], obj->x, obj->y, RedDemonData);
+                enemies[enemyCount].tag = TAG_ENEMY + enemyCount;
+                enemies[enemyCount].attackTag = enemies[enemyCount].tag;
+            } else {
+                Character_Init(&enemies[enemyCount], obj->x, obj->y, TAG_ENEMY + enemyCount, RedDemonData);
                 firstRedDemon = &enemies[enemyCount];
             }
             enemies[enemyCount].direction = obj->dir;
@@ -92,7 +91,8 @@ void GameMain()
 
     int px = MYX_PlayerX * MYX_TILE_WIDTH;
     int py = MYX_PlayerY * MYX_TILE_HEIGHT;
-    Character_Init(&player, px, py, SwordsmanData);
+    Character_Init(&player, px, py, TAG_PLAYER, SwordsmanData);
+    player.attackTag = TAG_PLAYER_ATTACK;
 
     /*
     int demonX = 14 * MYX_TILE_WIDTH;
@@ -102,6 +102,7 @@ void GameMain()
     */
 
     MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
+    MYX_SetCollisionCallback(TAG_PLAYER_ATTACK, OnPlayerAttackCollision);
 
     for (;;) {
         MYX_BeginFrame();
@@ -109,7 +110,6 @@ void GameMain()
         for (byte i = 0; i < enemyCount; i++) {
             Character_Draw(&enemies[i]);
             Character_ForwardBackwardMove(&enemies[i]);
-            MYX_AddCollision(enemies[i].x, enemies[i].y, 16, 16, TAG_ENEMY);
         }
 
         Character_Draw(&player);

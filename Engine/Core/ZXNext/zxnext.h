@@ -7,7 +7,7 @@
 
 #define MYX_NEXT_BORDER_SIZE                32
 
-#define NEXT_MAX_SPRITES                    64
+#define MYX_NEXT_MAX_SPRITES                128
 
 #define NEXT_SPRITESIZE4                    (16*16/2)
 #define NEXT_SPRITESIZE8                    (16*16)

@@ -92,6 +92,8 @@ MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex)
 {
     MYXPSprite* pSprite = &Sprites[SpriteCount];
 
+    ASSERT(SpriteCount < MYX_SDL2_MAX_SPRITES);
+
     const byte* p = (const byte*)data;
     size_t size;
     if ((*p & MYX_SPRITE_FLAG_256COLOR) == 0) { // if set, 256 color

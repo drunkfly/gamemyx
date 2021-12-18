@@ -4,7 +4,24 @@
  */
 #include "character.h"
 
-void Character_Init(Character* c, int x, int y, const void* sprites)
+static void LoadSprites(const byte **p,
+    MYXAnimSprite* outSprites, byte* outFlags, byte* outMirror)
+{
+    for (byte dir = 0; dir < 4; dir++) {
+        byte flags = *(*p)++;
+        outFlags[dir] = flags;
+        if ((flags & NO_SPRITE) == 0) {
+            if ((flags & REF_SPRITE) == 0)
+                outSprites[dir] = MYX_LoadAnimSprite(p);
+            else {
+                ASSERT(**p < 4);
+                outMirror[dir] = *(*p)++;
+            }
+        }
+    }
+}
+
+void Character_Init(Character* c, int x, int y, byte tag, const void* sprites)
 {
     const byte* p = (const byte*)sprites;
 
@@ -13,39 +30,39 @@ void Character_Init(Character* c, int x, int y, const void* sprites)
     c->x = x;
     c->y = y;
     c->timer = 0;
+    c->tag = c->attackTag = tag;
+    c->collisionX = 3;
+    c->collisionY = 3;
+    c->collisionW = 16 - 6;
+    c->collisionH = 16 - 6;
 
     byte mirrorIdleSource[4] = { 0, 0, 0, 0 };
     byte mirrorWalkSource[4] = { 0, 0, 0, 0 };
+    byte mirrorMeleeSource[4] = { 0, 0, 0, 0 };
+    byte mirrorDeathSource[4] = { 0, 0, 0, 0 };
+
+    LoadSprites(&p, c->idle, c->idleFlags, mirrorIdleSource);
+    LoadSprites(&p, c->walk, c->walkFlags, mirrorWalkSource);
+    LoadSprites(&p, c->meleeAttack, c->meleeAttackFlags, mirrorMeleeSource);
+    LoadSprites(&p, c->death, c->deathFlags, mirrorDeathSource);
 
     for (byte dir = 0; dir < 4; dir++) {
-        byte flags = *p++;
-        if ((flags & (MYX_FLIP_X | MYX_FLIP_Y)) == 0) {
-            c->idle[dir] = MYX_LoadAnimSprite(&p);
-            c->idleFlags[dir] = 0;
-        } else {
-            c->idleFlags[dir] = flags;
-            mirrorIdleSource[dir] = *p++;
-        }
-
-        flags = *p++;
-        if ((flags & (MYX_FLIP_X | MYX_FLIP_Y)) == 0) {
-            c->walk[dir] = MYX_LoadAnimSprite(&p);
-            c->walkFlags[dir] = 0;
-        } else {
-            c->walkFlags[dir] = flags;
-            mirrorWalkSource[dir] = *p++;
-        }
-    }    
-
-    for (byte dir = 0; dir < 4; dir++) {
-        if (c->idleFlags[dir] != 0)
+        if (c->idleFlags[dir] & REF_SPRITE)
             c->idle[dir] = c->idle[mirrorIdleSource[dir]];
-        if (c->walkFlags[dir] != 0)
-            c->walk[dir] = c->walk[mirrorWalkSource[dir]];
-    }
+        c->idleFlags[dir] &= MYX_FLIP_X | MYX_FLIP_Y;
 
-    c->death = MYX_LoadAnimSprite(&p);
-    MYX_SetAnimSpritePlayOnce(c->death);
+        if (c->walkFlags[dir] & REF_SPRITE)
+            c->walk[dir] = c->walk[mirrorWalkSource[dir]];
+        c->walkFlags[dir] &= MYX_FLIP_X | MYX_FLIP_Y;
+
+        if (c->meleeAttackFlags[dir] & REF_SPRITE)
+            c->meleeAttack[dir] = c->meleeAttack[mirrorMeleeSource[dir]];
+        c->meleeAttackFlags[dir] &= MYX_FLIP_X | MYX_FLIP_Y;
+
+        if (c->deathFlags[dir] & REF_SPRITE)
+            c->death[dir] = c->death[mirrorDeathSource[dir]];
+        c->deathFlags[dir] &= MYX_FLIP_X | MYX_FLIP_Y;
+    }
 }
 
 void Character_Copy(Character* c, const Character* src, int x, int y)
@@ -55,33 +72,96 @@ void Character_Copy(Character* c, const Character* src, int x, int y)
     c->x = x;
     c->y = y;
     c->timer = 0;
+    c->tag = src->tag;
+    c->collisionX = src->collisionX;
+    c->collisionY = src->collisionY;
+    c->collisionW = src->collisionW;
+    c->collisionH = src->collisionH;
 
     for (byte dir = 0; dir < 4; dir++) {
-        c->idleFlags[dir] = src->idleFlags[dir];
-        c->walkFlags[dir] = src->walkFlags[dir];
         c->idle[dir] = src->idle[dir];
+        c->idleFlags[dir] = src->idleFlags[dir];
         c->walk[dir] = src->walk[dir];
+        c->walkFlags[dir] = src->walkFlags[dir];
+        c->meleeAttack[dir] = src->meleeAttack[dir];
+        c->meleeAttackFlags[dir] = src->meleeAttackFlags[dir];
+        c->death[dir] = src->death[dir];
+        c->deathFlags[dir] = src->deathFlags[dir];
     }
+}
 
-    c->death = src->death;
+static void AddCollision(Character* c)
+{
+    MYX_AddCollision(c->x + c->collisionX, c->y + c->collisionY,
+        c->collisionW, c->collisionH, c->tag);
 }
 
 void Character_Draw(Character* c)
 {
     switch (c->state) {
         case CHAR_IDLE:
+            AddCollision(c);
             MYX_PutAnimSpriteEx(c->x, c->y,
                 c->idle[c->direction], c->idleFlags[c->direction]);
             break;
         case CHAR_WALK:
             c->state = CHAR_IDLE;
+            AddCollision(c);
             MYX_PutAnimSpriteEx(c->x, c->y,
                 c->walk[c->direction], c->idleFlags[c->direction]);
             break;
         case CHAR_DEAD:
-            if (c->timer < 32) {
-                MYX_PutAnimSprite(c->x, c->y, c->death);
+            if (c->timer < 32) { // FIXME: hardcoded
+                MYX_PutAnimSpriteEx(c->x, c->y,
+                    c->death[c->direction], c->deathFlags[c->direction]);
                 ++(c->timer);
+            }
+            break;
+        case CHAR_MELEE_ATTACK:
+            AddCollision(c);
+            if (c->timer < 32) {
+                MYX_PutAnimSpriteEx(c->x, c->y,
+                    c->meleeAttack[c->direction],
+                    c->meleeAttackFlags[c->direction]);
+
+                if (c->timer > 8 && c->timer < 24) { // FIXME: hardcoded
+                    int x, y;
+                    byte w, h;
+                    switch (c->direction) {
+                        case DIR_LEFT:
+                            x = c->x - 8; // FIXME: hardcoded
+                            y = c->y;
+                            w = 8;
+                            h = 16;
+                            break;
+                        case DIR_RIGHT:
+                            x = c->x + 16; // FIXME: hardcoded
+                            y = c->y;
+                            w = 8;
+                            h = 16;
+                            break;
+                        case DIR_UP:
+                            x = c->x;
+                            y = c->y - 8; // FIXME: hardcoded
+                            w = 16;
+                            h = 8;
+                            break;
+                        case DIR_DOWN:
+                            x = c->x;
+                            y = c->y + 16; // FIXME: hardcoded
+                            w = 16;
+                            h = 8;
+                            break;
+                    }
+
+                    MYX_AddCollision(x, y, w, h, c->attackTag);
+                }
+
+                ++(c->timer);
+                if (c->timer == 32) { // FIXME: hardcoded
+                    c->state = CHAR_IDLE;
+                    c->timer = 0;
+                }
             }
             break;
     }
@@ -98,7 +178,7 @@ void Character_Kill(Character* c)
 
 bool Character_MoveLeft(Character* c)
 {
-    if (c->state == CHAR_DEAD)
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
         return false;
 
     c->state = CHAR_WALK;
@@ -116,7 +196,7 @@ bool Character_MoveLeft(Character* c)
 
 bool Character_MoveRight(Character* c)
 {
-    if (c->state == CHAR_DEAD)
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
         return false;
 
     c->state = CHAR_WALK;
@@ -134,7 +214,7 @@ bool Character_MoveRight(Character* c)
 
 bool Character_MoveUp(Character* c)
 {
-    if (c->state == CHAR_DEAD)
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
         return false;
 
     c->state = CHAR_WALK;
@@ -152,7 +232,7 @@ bool Character_MoveUp(Character* c)
 
 bool Character_MoveDown(Character* c)
 {
-    if (c->state == CHAR_DEAD)
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
         return false;
 
     c->state = CHAR_WALK;
@@ -168,9 +248,20 @@ bool Character_MoveDown(Character* c)
     return false;
 }
 
+bool Character_MeleeAttack(Character* c)
+{
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
+        return false;
+
+    c->state = CHAR_MELEE_ATTACK;
+    c->timer = 0;
+
+    return true;
+}
+
 bool Character_HandleInput(Character* c)
 {
-    if (c->state == CHAR_DEAD)
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
         return false;
 
     bool result = false;
@@ -187,12 +278,15 @@ bool Character_HandleInput(Character* c)
     if (MYX_IsKeyPressed(KEY_A) || MYX_IsGamepad1Pressed(GAMEPAD_DOWN))
         result |= Character_MoveDown(c);
 
+    if (MYX_IsKeyPressed(KEY_SPACE) || MYX_IsGamepad1Pressed(GAMEPAD_A))
+        result |= Character_MeleeAttack(c);
+
     return result;
 }
 
 void Character_ForwardBackwardMove(Character* c)
 {
-    if (c->state == CHAR_DEAD)
+    if (c->state == CHAR_DEAD || c->state == CHAR_MELEE_ATTACK)
         return;
 
     (c->timer)++;
