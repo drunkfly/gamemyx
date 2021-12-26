@@ -9,8 +9,11 @@
 #pragma constseg MYX_TILES
 #endif
 
-void MYX_LoadTileset(const byte* tileset)
+void MYX_LoadTileset(const byte* tileset, byte bank)
 {
+    byte oldBank = MYXP_CurrentUpperBank;
+    MYXP_SetUpperMemoryBank(bank);
+
     byte paletteCount = *tileset++;
     byte n = (paletteCount << 4);
     MYX_SetTilemapPalette(0, tileset, n);
@@ -18,6 +21,8 @@ void MYX_LoadTileset(const byte* tileset)
 
     byte tileCount = *tileset++;
     memcpy((void*)0x4000, tileset, (tileCount << 5));
+
+    MYXP_SetUpperMemoryBank(oldBank);
 }
 
 void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w)

@@ -26,7 +26,7 @@ typedef byte MYXSprite;
 MYXSprite MYX_CreateSprite(const void* data, byte paletteIndex);
 void MYX_DestroyAllSprites();
 
-void MYX_LoadTileset(const byte* tileset);
+void MYX_LoadTileset(const byte* tileset, byte bank);
 void MYX_UploadVisibleTilemap(const byte* tilemap, byte x, byte y, byte w);
 
 void MYX_SetSpritePalette(byte index, const void* data, byte count);

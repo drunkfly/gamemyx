@@ -95,7 +95,7 @@ void outputTilemapList(const char* file);
 void unloadTilesets(void);
 void loadTileset(const char* file);
 Tileset* findTileset(const char* file);
-void outputTileset4Bit(const char* file);
+void outputTileset4Bit(const char* symbol);
 
 void unloadPT3();
 void loadPT3(const char* file, const char* symbol);

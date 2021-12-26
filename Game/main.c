@@ -5,6 +5,7 @@
 #include "engine.h"
 #include "character.h"
 #include "Data/HeartBitmaps.h"
+#include "Data/Tilesets.h"
 #include "Data/Fonts.h"
 #include "Data/Maps.h"
 #include "Data/Music.h"
@@ -14,10 +15,6 @@ static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanDeathPalette.h"
 #include "Data/Palettes/RedDemonPalette.h"
 #include "Data/Palettes/FarmerPurplePalette.h"
-};
-
-static const byte TilesetData[] = {
-#include "Data/Map/Tileset.h"
 };
 
 #include "Data/swordsman.h"
@@ -216,7 +213,7 @@ void RunLevel()
     firstRedDemon = NULL;
     npcCount = 0;
     enemyCount = 0;
-    MYX_LoadTileset(TilesetData);
+    MYX_LoadTileset(Tileset, TILESET_BANK);
     MYX_LoadMap(&map_park_tmx, &MapObjectHandler);
 
     int px = MYX_PlayerX * MYX_TILE_WIDTH;

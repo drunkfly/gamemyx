@@ -75,7 +75,7 @@ static bool paletteCanFitColors(Palette* palette, unsigned char* pixels)
     return true;
 }
 
-void outputTileset4Bit(const char* file)
+void outputTileset4Bit(const char* symbol)
 {
     for (int i = 0; i < cachedCount; i++) {
         HistogramEntry histogram[256];
@@ -125,25 +125,26 @@ void outputTileset4Bit(const char* file)
         cachedTiles[i].paletteIndex = paletteIndex;
     }
 
-    createDirectories(file);
-    FILE* f = fopen(file, "w");
-    if (!f) {
-        fprintf(stderr, "error: can't write file \"%s\": %s\n", file, strerror(errno));
-        exit(1);
-    }
+    int size = 1
+             + tilesetPaletteCount * 16
+             + 1
+             + cachedCount * MYX_TILE_SMALL_WIDTH * MYX_TILE_SMALL_HEIGHT / 2
+             ;
 
-    fprintf(f, "%d,\n", tilesetPaletteCount);
+    byte bank;
+    byte* out = produceOutput(symbol, size, &bank);
+    addSymbolInBank(symbol, bank);
+
+    *out++ = tilesetPaletteCount;
 
     for (int i = 0; i < tilesetPaletteCount; i++) {
-        fprintf(f, "\n");
         for (int j = 0; j < 16; j++)
-            fprintf(f, "0x%02X,\n", tilesetPalette[i].colors[j]);
+            *out++ = tilesetPalette[i].colors[j];
     }
 
-    fprintf(f, "\n%d,\n", cachedCount);
+    *out++ = cachedCount;
 
     for (int i = 0; i < cachedCount; i++) {
-        fprintf(f, "\n");
         for (int y = 0; y < MYX_TILE_SMALL_WIDTH; y++) {
             unsigned char pixel = 0;
             for (int x = 0; x < MYX_TILE_SMALL_HEIGHT; x++) {
@@ -189,12 +190,9 @@ void outputTileset4Bit(const char* file)
                     pixel = (colorIndex << 4);
                 else {
                     pixel |= colorIndex;
-                    fprintf(f, "0x%02X,", pixel);
+                    *out++ = pixel;
                 }
             }
-            fprintf(f, "\n");
         }
     }
-
-    fclose(f);
 }

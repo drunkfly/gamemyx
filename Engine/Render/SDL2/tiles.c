@@ -18,8 +18,10 @@ static Tile MYXP_Tilemap[(MYX_TILEMAP_VISIBLE_WIDTH + 1) * (MYX_TILEMAP_VISIBLE_
 static byte MYXP_TilemapOffsetX;
 static byte MYXP_TilemapOffsetY;
 
-void MYX_LoadTileset(const byte* tileset)
+void MYX_LoadTileset(const byte* tileset, byte bank)
 {
+    (void)bank;
+
     byte paletteCount = *tileset++;
     byte n = (paletteCount << 4);
     MYX_SetTilemapPalette(0, tileset, n);

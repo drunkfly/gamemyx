@@ -202,7 +202,8 @@ IMPORTER(
 
     -loadtmx "${src}/park.tmx"
     #-loadtmx "${src}/stone.tmx"
-    -outtiles4 "${bin}/Map/Tileset.h"
+    -outtiles4 Tileset
+    -outsymlist "${bin}/Tilesets.h"
     -outmaps "${bin}/Maps.h"
 
     -loadfnt "${src}/BitPotion/BitPotionExt.fnt"
