@@ -35,6 +35,7 @@ void GameMain();
 #include "Dialogs/_public.h"
 #include "Input/_public.h"
 #include "Quests/_public.h"
+#include "Inventory/_public.h"
 #include "Maps/_public.h"
 #include "Render/_public.h"
 #include "Text/_public.h"

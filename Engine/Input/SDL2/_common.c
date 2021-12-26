@@ -5,6 +5,7 @@
 #include "engine_p.h"
 
 const int KEY_A         = SDL_SCANCODE_A;
+const int KEY_I         = SDL_SCANCODE_I;
 const int KEY_O         = SDL_SCANCODE_O;
 const int KEY_P         = SDL_SCANCODE_P;
 const int KEY_Q         = SDL_SCANCODE_Q;
@@ -15,6 +16,7 @@ bool MYX_IsAnyKeyPressed()
     // FIXME
     const Uint8* keys = SDL_GetKeyboardState(NULL);
     return keys[KEY_A] ||
+           keys[KEY_I] ||
            keys[KEY_O] ||
            keys[KEY_P] ||
            keys[KEY_Q] ||

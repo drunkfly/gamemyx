@@ -9,19 +9,26 @@
 #include "Data/Fonts.h"
 #include "Data/Maps.h"
 #include "Data/Music.h"
+#include "Data/Items.h"
 
 static const byte SpritePalette[] = {
 #include "Data/Palettes/SwordsmanPalette.h"
 #include "Data/Palettes/SwordsmanDeathPalette.h"
 #include "Data/Palettes/RedDemonPalette.h"
 #include "Data/Palettes/FarmerPurplePalette.h"
+#include "Data/Palettes/CogPalette.h"
 };
 
 #include "Data/swordsman.h"
 #include "Data/reddemon.h"
 #include "Data/farmerpurple.h"
 
+static const byte CogSpriteData[] = {
+#include "Data/Sprites/Cog.h"
+};
+
 static void CheckQuest1(Quest* quest);
+static void CheckQuest2(Quest* quest);
 
 static MYXSprite RedDemonIdleFrontSprite;
 
@@ -38,7 +45,23 @@ static byte playerCurLives;
 
 static byte playerInvincible;
 
+#define MAX_COGS 16
+
+STRUCT(CogOnMap)
+{
+    bool present;
+    int x;
+    int y;
+};
+
+static CogOnMap cogOnMap[MAX_COGS];
+static byte cogOnMapCount;
+static MYXSprite cogImage;
+
 static Quest quest1 = { "Quest 1", CheckQuest1 };
+static Quest quest2 = { "Collect all cogs", CheckQuest2 };
+
+static ITEM cog = { "Cog", Cog, COG_BANK, 0, NULL };
 
 void MYXP_WaitVSync(); // FIXME
 
@@ -107,7 +130,15 @@ static void CheckQuest1(Quest* quest)
             return;
     }
 
-    MYX_CompleteQuest(&quest1);
+    MYX_CompleteQuest(quest);
+}
+
+static void CheckQuest2(Quest* quest)
+{
+    if (MYX_GetInventoryCount(&cog) == cogOnMapCount) {
+        MYX_RemoveInventory(&cog, cogOnMapCount);
+        MYX_CompleteQuest(quest);
+    }
 }
 
 static bool npcCollided; // FIXME
@@ -142,9 +173,16 @@ void DrawLives()
     }
 }
 
+extern ITEM* MYXP_Inventory;
+
+static char buf[20];
+
 static void OnPlayerCollision(byte tag)
 {
-    if (tag >= TAG_ENEMY && tag < TAG_NPC) {
+    if (tag >= TAG_COG) {
+        cogOnMap[tag - TAG_COG].present = false;
+        MYX_AddInventory(&cog, 1);
+    } if (tag >= TAG_ENEMY && tag < TAG_NPC) {
         if (playerInvincible == 0) {
             if (playerCurLives != 0) {
                 playerCurLives--;
@@ -156,7 +194,7 @@ static void OnPlayerCollision(byte tag)
             else
                 playerInvincible = 2 * 50;
         }
-    } else if (tag >= TAG_NPC) {
+    } else if (tag >= TAG_NPC && tag < TAG_COG) {
         npcCollidedThisFrame = true;
         if (!npcCollided) {
             Npc1Dialog(&npcs[tag - TAG_NPC]);
@@ -202,9 +240,43 @@ void MapObjectHandler(const MapObject* obj)
             ++npcCount;
             break;        
 
+        case FUNC_ITEM1:
+            cogOnMap[cogOnMapCount].present = true;
+            cogOnMap[cogOnMapCount].x = obj->x;
+            cogOnMap[cogOnMapCount].y = obj->y;
+            ++cogOnMapCount;
+            break;
+
         default:
             ASSERT(false);
     }
+}
+
+void DrawInventory()
+{
+    MYX_WaitKeyReleased();
+    MYX_ClearLayer2(1);
+
+    int x = 8;
+    int y = 0;
+
+    for (const ITEM* p = MYX_GetInventory(); p; p = p->next) {
+        MYX_DrawLayer2Bitmap(x, y, p->imageData, p->imageBank);
+
+        char buf[4] = {0};
+        MYX_DrawString(x, y + 16, MYX_ByteToString(buf, p->count), 255);
+
+        x += 32;
+        if (x >= 256) {
+            x = 0;
+            y += 32;
+        }
+    }
+
+    MYX_WaitKeyPressed();
+    MYX_WaitKeyReleased();
+
+    MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
 }
 
 void RunLevel()
@@ -212,6 +284,10 @@ void RunLevel()
     MYX_ResetQuests();
     MYX_DestroyAllAnimSprites();
     MYX_DestroyAllSprites();
+    MYX_ClearInventory();
+
+    cogImage = MYX_CreateSprite(CogSpriteData, 4);
+    cogOnMapCount = 0;
 
     firstFarmer = NULL;
     firstRedDemon = NULL;
@@ -239,8 +315,17 @@ void RunLevel()
     playerInvincible = 0;
     MYX_DrawHUD();
 
+    MYX_StartQuest(&quest2);
+
     while (playerCurLives != 0 || !Character_FinishedDying(&player)) {
         MYX_BeginFrame();
+
+        for (byte i = 0; i < cogOnMapCount; i++) {
+            if (cogOnMap[i].present) {
+                MYX_PutSprite(cogOnMap[i].x, cogOnMap[i].y, cogImage);
+                MYX_AddCollision(cogOnMap[i].x, cogOnMap[i].y, 16, 16, TAG_COG + i);
+            }
+        }
 
         for (byte i = 0; i < enemyCount; i++) {
             Character_Draw(&enemies[i]);
@@ -266,6 +351,9 @@ void RunLevel()
         MYX_EndFrame();
         if (!npcCollidedThisFrame)
             npcCollided = false;
+
+        if (MYX_IsKeyPressed(KEY_I))
+            DrawInventory();
     }
 
     MYX_DisplayNotification("You Died!");
@@ -286,7 +374,7 @@ void GameMain()
     */
 
     MYX_SetFont(&font_BitPotionExt);
-    MYX_SetSpritePalette(0, SpritePalette, 4*16);
+    MYX_SetSpritePalette(0, SpritePalette, 5*16);
 
     MYX_LoadTileset(Tileset, TILESET_BANK);
 

@@ -24,6 +24,7 @@ enum
     TAG_PLAYER_ATTACK,
     TAG_ENEMY,                              // + N
     TAG_NPC = TAG_ENEMY + MAX_ENEMIES,      // + N
+    TAG_COG = TAG_NPC + MAX_NPCS,            // + N
 };
 
 #define REF_SPRITE          0x40

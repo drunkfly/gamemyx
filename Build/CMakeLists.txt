@@ -135,12 +135,52 @@ elseif(TARGET_SDL2)
     add_definitions(-DTARGET_SDL2)
 endif()
 
-file(GLOB_RECURSE engine_src
+file(GLOB_RECURSE engine1_src
     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     #CONFIGURE_DEPENDS
-    ${ROOT_DIR}/Engine/*.c
-    ${ROOT_DIR}/Engine/*.h
-    ${ROOT_DIR}/Engine/*.asm
+    ${ROOT_DIR}/Engine/AnimSprites/*.c
+    ${ROOT_DIR}/Engine/AnimSprites/*.h
+    ${ROOT_DIR}/Engine/AnimSprites/*.asm
+    ${ROOT_DIR}/Engine/Asserts/*.c
+    ${ROOT_DIR}/Engine/Asserts/*.h
+    ${ROOT_DIR}/Engine/Asserts/*.asm
+    ${ROOT_DIR}/Engine/Collisions/*.c
+    ${ROOT_DIR}/Engine/Collisions/*.h
+    ${ROOT_DIR}/Engine/Collisions/*.asm
+    ${ROOT_DIR}/Engine/Core/*.c
+    ${ROOT_DIR}/Engine/Core/*.h
+    ${ROOT_DIR}/Engine/Core/*.asm
+    ${ROOT_DIR}/Engine/Input/*.c
+    ${ROOT_DIR}/Engine/Input/*.h
+    ${ROOT_DIR}/Engine/Input/*.asm
+    ${ROOT_DIR}/Engine/Quests/*.c
+    ${ROOT_DIR}/Engine/Quests/*.h
+    ${ROOT_DIR}/Engine/Quests/*.asm
+    ${ROOT_DIR}/engine.h
+    ${ROOT_DIR}/engine_p.h
+    )
+
+file(GLOB_RECURSE engine2_src
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    #CONFIGURE_DEPENDS
+    ${ROOT_DIR}/Engine/Dialogs/*.c
+    ${ROOT_DIR}/Engine/Dialogs/*.h
+    ${ROOT_DIR}/Engine/Dialogs/*.asm
+    ${ROOT_DIR}/Engine/Inventory/*.c
+    ${ROOT_DIR}/Engine/Inventory/*.h
+    ${ROOT_DIR}/Engine/Inventory/*.asm
+    ${ROOT_DIR}/Engine/Maps/*.c
+    ${ROOT_DIR}/Engine/Maps/*.h
+    ${ROOT_DIR}/Engine/Maps/*.asm
+    ${ROOT_DIR}/Engine/Music/*.c
+    ${ROOT_DIR}/Engine/Music/*.h
+    ${ROOT_DIR}/Engine/Music/*.asm
+    ${ROOT_DIR}/Engine/Render/*.c
+    ${ROOT_DIR}/Engine/Render/*.h
+    ${ROOT_DIR}/Engine/Render/*.asm
+    ${ROOT_DIR}/Engine/Text/*.c
+    ${ROOT_DIR}/Engine/Text/*.h
+    ${ROOT_DIR}/Engine/Text/*.asm
     )
 
 file(GLOB_RECURSE game_src
@@ -154,7 +194,7 @@ file(GLOB_RECURSE game_src
     ${ROOT_DIR}/mmap.inc
     )
 
-foreach(file ${engine_src} ${game_src})
+foreach(file ${engine1_src} ${engine2_src} ${game_src})
     if(NOT TARGET_ZXNEXT AND "${file}" MATCHES "\\/ZXNext\\/")
         set_source_files_properties("${file}"
             PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -166,7 +206,7 @@ foreach(file ${engine_src} ${game_src})
 endforeach()
 
 add_library(Engine STATIC
-    ${engine_src}
+    ${engine1_src}
     )
 
 set_target_properties(Engine PROPERTIES PREFIX "" SUFFIX ".lib")
@@ -175,6 +215,15 @@ add_dependencies(Engine DialogsAssets)
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(Engine PUBLIC "${ROOT_DIR}/Engine")
 
+add_library(Engine2 STATIC
+    ${engine2_src}
+    )
+
+set_target_properties(Engine2 PROPERTIES PREFIX "" SUFFIX ".lib")
+
+target_include_directories(Engine2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+target_link_libraries(Engine2 Engine)
+
 if(TARGET_SDL2)
     if(NOT WIN32)
         target_link_libraries(Engine SDL2)
@@ -182,9 +231,12 @@ if(TARGET_SDL2)
         target_link_libraries(Engine
             "${sdl2_libpath}/libSDL2.a" setupapi imm32 winmm version)
         target_include_directories(Engine PRIVATE "${sdl2_incpath}")
+        target_include_directories(Engine2 PRIVATE "${sdl2_incpath}")
     else()
         target_link_libraries(Engine "${sdl2_libpath}/SDL2.lib")
         target_include_directories(Engine PRIVATE
+            "${ROOT_DIR}/Build/SDL2/include")
+        target_include_directories(Engine2 PRIVATE
             "${ROOT_DIR}/Build/SDL2/include")
     endif()
 endif()
@@ -199,6 +251,8 @@ set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank14.c"
     PROPERTIES GENERATED TRUE) # FIXME
 set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank15.c"
     PROPERTIES GENERATED TRUE) # FIXME
+set_source_files_properties("${CMAKE_BINARY_DIR}/Data/bank16.c"
+    PROPERTIES GENERATED TRUE) # FIXME
 
 add_executable(Game WIN32
     ${game_src}
@@ -207,11 +261,12 @@ add_executable(Game WIN32
     "${CMAKE_BINARY_DIR}/Data/bank8.c"          # FIXME
     "${CMAKE_BINARY_DIR}/Data/bank14.c"         # FIXME
     "${CMAKE_BINARY_DIR}/Data/bank15.c"         # FIXME
+    "${CMAKE_BINARY_DIR}/Data/bank16.c"         # FIXME
     )
 
 add_dependencies(Game Assets)
 target_include_directories(Game PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-target_link_libraries(Game Engine)
+target_link_libraries(Game Engine Engine2)
 
 if(TARGET_SDL2)
     set_target_properties(Game PROPERTIES

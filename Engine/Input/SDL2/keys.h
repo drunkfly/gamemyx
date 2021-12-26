@@ -6,6 +6,7 @@
 #define MYX_SDL2_KEYS_H
 
 extern const int KEY_A;
+extern const int KEY_I;
 extern const int KEY_O;
 extern const int KEY_P;
 extern const int KEY_Q;

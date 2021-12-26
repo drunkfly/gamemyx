@@ -38,6 +38,15 @@ typedef enum Func {
     FUNC_NPC7,
     FUNC_NPC8,
     FUNC_NPC9,
+    FUNC_ITEM1,
+    FUNC_ITEM2,
+    FUNC_ITEM3,
+    FUNC_ITEM4,
+    FUNC_ITEM5,
+    FUNC_ITEM6,
+    FUNC_ITEM7,
+    FUNC_ITEM8,
+    FUNC_ITEM9,
 } Func;
 
 STRUCT(MapInfo)

@@ -172,6 +172,21 @@ IMPORTER(
     )
 
 IMPORTER(
+    -loadimage "${src}/MiniWorldSprites/UiIcons.png"
+    -histogram
+    -palette4
+
+    -startbank 16
+
+    -area16x16 3 10
+    -outsprite4 "${bin}/Sprites/Cog.h"
+    -outbitmap Cog
+
+    -outsymlist "${bin}/Items.h"
+    -outpalette4 "${bin}/Palettes/CogPalette.h"
+    )
+
+IMPORTER(
     -loadimage "${src}/Hearts/heart_animated_1.png"
     -transparent 0xff00ff
     -startbank 15

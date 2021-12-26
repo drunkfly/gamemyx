@@ -14,6 +14,7 @@
 #include "Dialogs/_private.h"
 #include "Input/_private.h"
 #include "Quests/_private.h"
+#include "Inventory/_private.h"
 #include "Maps/_private.h"
 #include "Render/_private.h"
 #include "Text/_private.h"

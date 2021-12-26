@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define MAX_COLLISION_CALLBACKS             32
+#define MAX_COLLISION_CALLBACKS             48
 #define MAX_COLLISION_RECTANGLES            32
 
 #define MAX_HUD_PROCS                       4
@@ -13,6 +13,7 @@
 #define ENABLE_ANIMATED_SPRITES             1
 #define ENABLE_ASSERTIONS                   1
 #define ENABLE_DIALOGS                      1
+#define ENABLE_INVENTORY                    1
 #define ENABLE_QUESTS                       1
 #define ENABLE_MUSIC                        1
 

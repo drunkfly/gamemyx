@@ -23,4 +23,7 @@ bool MYX_IsGamepad1Pressed(byte key)
 bool MYX_IsGamepad2Pressed(byte key)
     Z88DK_FASTCALL Z88DK_PRESERVES((b, c, d, e, h, iyl, iyh));
 
+void MYX_WaitKeyPressed();
+void MYX_WaitKeyReleased();
+
 #endif

@@ -48,9 +48,7 @@ int MYX_DialogChoice(int speakerX, int speakerY, byte speakerH, const DialogChoi
         }
 
         for (;;) {
-            while (MYX_IsAnyKeyPressed())
-                MYXP_WaitVSync();
-
+            MYX_WaitKeyReleased();
             MYXP_WaitVSync();
 
             if (MYX_IsKeyPressed(KEY_Q) || MYX_IsGamepad1Pressed(GAMEPAD_UP)) {
