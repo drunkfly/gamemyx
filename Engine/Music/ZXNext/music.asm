@@ -231,12 +231,10 @@ PT3_C_PORTM:    res     2, (ix+PT3_CHP_Flags-12)
                 sbc     hl, de
                 ld      (ix+PT3_CHP_TnDelt-12), l
                 ld      (ix+PT3_CHP_TnDelt-12+1), h
-                ld      e, (ix+PT3_CHP_CrTnSl-12)
-                ld      d, (ix+PT3_CHP_CrTnSl-12+1)
                 ld      de, (PT3_PrSlide)
                 ld      (ix+PT3_CHP_CrTnSl-12), e
                 ld      (ix+PT3_CHP_CrTnSl-12+1), d
-PT3_OLDPRTM:    ld      a, (bc)     ; SIGNED TONE STEP
+                ld      a, (bc)     ; SIGNED TONE STEP
                 inc     bc
                 ex      af, af'
                 ld      a, (bc)
@@ -727,17 +725,17 @@ PT3_DelyCnt:    db      0
 PT3_CurEDel:    db      0
 
 PT3_AYREGS:
-PT3_TonA:       dw      0
-PT3_TonB:       dw      0
-PT3_TonC:       dw      0
-PT3_Noise:      db      0
-PT3_Mixer:      db      0
-PT3_AmplA:      db      0
-PT3_AmplB:      db      0
+PT3_TonA:       dw      0   ; 0-1
+PT3_TonB:       dw      0   ; 2-3
+PT3_TonC:       dw      0   ; 4-5
+PT3_Noise:      db      0   ; 6
+PT3_Mixer:      db      0   ; 7
+PT3_AmplA:      db      0   ; 8
+PT3_AmplB:      db      0   ; 9
 PT3_Ampl:
-PT3_AmplC:      db      0
-PT3_Env:        dw      0
-PT3_EnvTp:      db      0
-PT3_EnvBase:    dw      0
+PT3_AmplC:      db      0   ; 10
+PT3_Env:        dw      0   ; 11-12
+PT3_EnvTp:      db      0   ; 13
+PT3_EnvBase:    dw      0   ; 14-15
 
 PT3_VARSEND:
