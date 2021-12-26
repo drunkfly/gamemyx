@@ -209,11 +209,16 @@ void MapObjectHandler(const MapObject* obj)
 
 void RunLevel()
 {
+    MYX_ResetQuests();
+    MYX_DestroyAllAnimSprites();
+    MYX_DestroyAllSprites();
+
     firstFarmer = NULL;
     firstRedDemon = NULL;
+    npcCollided = false;
+    npcCollidedThisFrame = false;
     npcCount = 0;
     enemyCount = 0;
-    MYX_LoadTileset(Tileset, TILESET_BANK);
     MYX_LoadMap(&map_park_tmx, &MapObjectHandler);
 
     int px = MYX_PlayerX * MYX_TILE_WIDTH;
@@ -224,14 +229,14 @@ void RunLevel()
     MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
     MYX_SetCollisionCallback(TAG_PLAYER_ATTACK, OnPlayerAttackCollision);
 
-    playerMaxLives = 2 * 4;
-    playerCurLives = playerMaxLives;
-    playerInvincible = 0;
-
     MYX_ResetHUD();
     MYX_RegisterHUD(DrawLives);
 
     MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+
+    playerMaxLives = 2 * 4;
+    playerCurLives = playerMaxLives;
+    playerInvincible = 0;
     MYX_DrawHUD();
 
     while (playerCurLives != 0 || !Character_FinishedDying(&player)) {
@@ -263,7 +268,6 @@ void RunLevel()
             npcCollided = false;
     }
 
-    MYX_ResetQuests();
     MYX_DisplayNotification("You Died!");
 }
 
@@ -283,6 +287,8 @@ void GameMain()
 
     MYX_SetFont(&font_BitPotionExt);
     MYX_SetSpritePalette(0, SpritePalette, 4*16);
+
+    MYX_LoadTileset(Tileset, TILESET_BANK);
 
     for (;;)
         RunLevel();

@@ -12,6 +12,7 @@
 
 void MYX_SetCollisionCallback(byte tag, MYXCOLLISIONCALLBACK callback)
 {
+    ASSERT(tag < MAX_COLLISION_CALLBACKS);
     MYXP_Callbacks[tag] = callback;
 }
 

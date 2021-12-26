@@ -10,8 +10,6 @@
 #pragma constseg MYX_QUESTS
 #endif
 
-static char buf[128]; // FIXME
-
 void MYX_ResetQuests()
 {
     Quest* p;

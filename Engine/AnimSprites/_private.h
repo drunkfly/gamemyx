@@ -22,7 +22,6 @@ STRUCT(MYXPAnimSprite)
 extern byte MYXP_AnimSpriteCount;
 extern MYXPAnimSprite MYXP_AnimSprites[MAX_ANIMATED_SPRITES];
 
-void MYXP_DestroyAllAnimSprites();
 void MYXP_UpdateAnimSprites();
 
 #endif

@@ -13,6 +13,8 @@
 MYXAnimSprite MYX_CreateAnimSprite(
     const void* data, byte count, byte delay, byte paletteIndex)
 {
+    ASSERT(MYXP_AnimSpriteCount < MAX_ANIMATED_SPRITES);
+
     MYXAnimSprite index = MYXP_AnimSpriteCount++;
     MYXPAnimSprite* anim = &MYXP_AnimSprites[index];
     anim->flags = 0;

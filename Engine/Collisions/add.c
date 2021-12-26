@@ -30,6 +30,9 @@ void MYX_AddCollision(int x, int y, byte w, byte h, byte tag)
         y2 = MYX_TILEMAP_VISIBLE_HEIGHT * MYX_TILE_SMALL_HEIGHT;
   #endif
 
+    ASSERT(MYXP_CurrentRect < MYXP_Rects + MAX_COLLISION_RECTANGLES);
+    ASSERT(tag < MAX_COLLISION_CALLBACKS);
+
     register MYXPCollisionRect* r = MYXP_CurrentRect++;
     r->x1 = x;
     r->y1 = y;

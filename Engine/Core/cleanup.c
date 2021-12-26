@@ -13,6 +13,6 @@ void MYX_Cleanup()
 {
     MYX_DestroyAllSprites();
   #if ENABLE_ANIMATED_SPRITES
-    MYXP_DestroyAllAnimSprites();
+    MYX_DestroyAllAnimSprites();
   #endif
 }
