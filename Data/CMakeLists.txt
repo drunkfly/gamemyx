@@ -172,6 +172,29 @@ IMPORTER(
     )
 
 IMPORTER(
+    -loadimage "${src}/Hearts/heart_animated_1.png"
+    -transparent 0xff00ff
+    -startbank 15
+
+    -area 0 0 17 17
+    -outbitmap Heart4
+
+    -area 17 0 17 17
+    -outbitmap Heart3
+
+    -area 34 0 17 17
+    -outbitmap Heart2
+
+    -area 51 0 17 17
+    -outbitmap Heart1
+
+    -area 68 0 17 17
+    -outbitmap Heart0
+
+    -outsymlist "${bin}/HeartBitmaps.h"
+    )
+
+IMPORTER(
     -loadtsx "${src}/tiles_new.tsx"
     -loadtsx "${src}/control.tsx"
 

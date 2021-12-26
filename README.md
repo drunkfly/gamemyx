@@ -53,7 +53,9 @@ own licenses instead:
 * Files under the *Importer/md5* directory.
 * Files under the *Data/16x16OutdoorsTileset* directory.
 * Files under the *Data/BitPotion* directory.
+* Files under the *Data/Hearts* directory.
 * Files under the *Data/MiniWorldSprites* directory.
+* Files under the *Data/Music* directory.
 * Files under the *Data/SereneVillage* directory.
 * Files under the *Tools* directory.
 * Files under the *Build/SDL2* directory.

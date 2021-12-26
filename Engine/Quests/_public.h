@@ -25,8 +25,12 @@ struct Quest
     Quest* next;
 };
 
+void MYX_ResetQuests();
+
 void MYX_StartQuest(Quest* quest);
 void MYX_CompleteQuest(Quest* quest);
+
+void MYX_DisplayNotification(const char* msg);
 
 #endif
 #endif

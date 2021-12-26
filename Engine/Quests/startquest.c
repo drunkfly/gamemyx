@@ -23,7 +23,7 @@ void MYX_StartQuest(Quest* quest)
 
     strcpy(buf, "Quest received:\n");
     strcat(buf, quest->title);
-    MYXP_DisplayNotification(buf);
+    MYX_DisplayNotification(buf);
 }
 
 #endif

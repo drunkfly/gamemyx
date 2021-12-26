@@ -46,6 +46,15 @@ int main(int argc, char** argv)
             imageAreaY = y * 16;
             imageAreaW = 16;
             imageAreaH = 16;
+        } else if (!strcmp(argv[i], "-area")) {
+            CHECK_ARG
+            imageAreaX = atoi(argv[++i]);
+            CHECK_ARG
+            imageAreaY = atoi(argv[++i]);
+            CHECK_ARG
+            imageAreaW = atoi(argv[++i]);
+            CHECK_ARG
+            imageAreaH = atoi(argv[++i]);
         } else if (!strcmp(argv[i], "-histogram")) {
             buildImageHistogram();
         } else if (!strcmp(argv[i], "-transparent")) {

@@ -9,8 +9,6 @@
 extern Quest* MYXP_ActiveQuests;
 extern Quest* MYXP_CompletedQuests;
 
-void MYXP_DisplayNotification(const char* msg);
-
 void MYXP_UpdateQuests();
 
 #endif

@@ -34,7 +34,7 @@ void MYX_CompleteQuest(Quest* quest)
 
     strcpy(buf, "Quest completed:\n");
     strcat(buf, quest->title);
-    MYXP_DisplayNotification(buf);
+    MYX_DisplayNotification(buf);
 }
 
 #endif

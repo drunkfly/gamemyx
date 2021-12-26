@@ -15,6 +15,9 @@
 extern byte MYXP_CurrentUpperBank;
 extern byte MYXP_CurrentLowerBank;
 
+extern MYX_PFNHUDPROC MYXP_HudProcs[];
+extern byte MYXP_HudProcCount;
+
 void MYXP_PlatformInit();
 void MYXP_EngineMain();
 

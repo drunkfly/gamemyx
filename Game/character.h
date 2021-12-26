@@ -55,6 +55,8 @@ STRUCT(Character)
 void Character_Init(Character* c, int x, int y, byte tag, const void* sprites);
 void Character_Copy(Character* c, const Character* src, int x, int y);
 
+bool Character_FinishedDying(Character* c);
+
 void Character_Draw(Character* c);
 
 void Character_Kill(Character* c);

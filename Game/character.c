@@ -4,6 +4,8 @@
  */
 #include "character.h"
 
+#define DEATH_TIME 32
+
 static void LoadSprites(const byte **p,
     MYXAnimSprite* outSprites, byte* outFlags, byte* outMirror)
 {
@@ -96,6 +98,11 @@ static void AddCollision(Character* c)
         c->collisionW, c->collisionH, c->tag);
 }
 
+bool Character_FinishedDying(Character* c)
+{
+    return (c->state == CHAR_DEAD && c->timer >= DEATH_TIME);
+}
+
 void Character_Draw(Character* c)
 {
     switch (c->state) {
@@ -111,7 +118,7 @@ void Character_Draw(Character* c)
                 c->walk[c->direction], c->idleFlags[c->direction]);
             break;
         case CHAR_DEAD:
-            if (c->timer < 32) { // FIXME: hardcoded
+            if (c->timer < DEATH_TIME) {
                 MYX_PutAnimSpriteEx(c->x, c->y,
                     c->death[c->direction], c->deathFlags[c->direction]);
                 ++(c->timer);

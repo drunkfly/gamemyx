@@ -4,6 +4,7 @@
  */
 #include "engine.h"
 #include "character.h"
+#include "Data/HeartBitmaps.h"
 #include "Data/Fonts.h"
 #include "Data/Maps.h"
 #include "Data/Music.h"
@@ -35,6 +36,11 @@ static const Character* firstFarmer;
 static byte enemyCount;
 static byte npcCount;
 
+static byte playerMaxLives;
+static byte playerCurLives;
+
+static byte playerInvincible;
+
 static Quest quest1 = { "Quest 1", CheckQuest1 };
 
 void MYXP_WaitVSync(); // FIXME
@@ -42,6 +48,7 @@ void MYXP_WaitVSync(); // FIXME
 static void Npc1Dialog(Character* c)
 {
     MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+    MYX_DrawHUD();
 
     switch (quest1.state) {
         case QUEST_NOT_STARTED: {
@@ -56,6 +63,7 @@ static void Npc1Dialog(Character* c)
             int r = MYX_DialogChoice(player.x, player.y, 16, choices);
 
             MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+            MYX_DrawHUD();
 
             if (r == 0)
                 MYX_StartQuest(&quest1);
@@ -74,6 +82,7 @@ static void Npc1Dialog(Character* c)
                 MYXP_WaitVSync();
 
             MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+            MYX_DrawHUD();
 
             break;
 
@@ -88,6 +97,7 @@ static void Npc1Dialog(Character* c)
                 MYXP_WaitVSync();
 
             MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+            MYX_DrawHUD();
 
             break;
     }
@@ -106,11 +116,50 @@ static void CheckQuest1(Quest* quest)
 static bool npcCollided; // FIXME
 static bool npcCollidedThisFrame;
 
+void DrawLives()
+{
+    const int y = -20;
+    byte x = 0;
+
+    byte n = playerCurLives >> 2;
+    for (byte i = 0; i < n; i++) {
+        MYX_DrawLayer2Bitmap(x, y, Heart4, HEART4_BANK);
+        x += 18;
+    }
+
+    byte nn = playerCurLives & 3;
+    if (nn != 0) {
+        n++;
+        switch (nn) {
+            case 1: MYX_DrawLayer2Bitmap(x, y, Heart1, HEART1_BANK); break;
+            case 2: MYX_DrawLayer2Bitmap(x, y, Heart2, HEART2_BANK); break;
+            case 3: MYX_DrawLayer2Bitmap(x, y, Heart3, HEART3_BANK); break;
+        }
+        x += 18;
+    }
+
+    byte max = (playerMaxLives + 3) >> 2;
+    for (; n < max; n++) {
+        MYX_DrawLayer2Bitmap(x, y, Heart0, HEART0_BANK);
+        x += 18;
+    }
+}
+
 static void OnPlayerCollision(byte tag)
 {
-    if (tag >= TAG_ENEMY && tag < TAG_NPC)
-        Character_Kill(&player);
-    else if (tag >= TAG_NPC) {
+    if (tag >= TAG_ENEMY && tag < TAG_NPC) {
+        if (playerInvincible == 0) {
+            if (playerCurLives != 0) {
+                playerCurLives--;
+                DrawLives();
+            }
+
+            if (playerCurLives == 0)
+                Character_Kill(&player);
+            else
+                playerInvincible = 2 * 50;
+        }
+    } else if (tag >= TAG_NPC) {
         npcCollidedThisFrame = true;
         if (!npcCollided) {
             Npc1Dialog(&npcs[tag - TAG_NPC]);
@@ -161,6 +210,66 @@ void MapObjectHandler(const MapObject* obj)
     }
 }
 
+void RunLevel()
+{
+    firstFarmer = NULL;
+    firstRedDemon = NULL;
+    npcCount = 0;
+    enemyCount = 0;
+    MYX_LoadTileset(TilesetData);
+    MYX_LoadMap(&map_park_tmx, &MapObjectHandler);
+
+    int px = MYX_PlayerX * MYX_TILE_WIDTH;
+    int py = MYX_PlayerY * MYX_TILE_HEIGHT;
+    Character_Init(&player, px, py, TAG_PLAYER, SwordsmanData);
+    player.attackTag = TAG_PLAYER_ATTACK;
+
+    MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
+    MYX_SetCollisionCallback(TAG_PLAYER_ATTACK, OnPlayerAttackCollision);
+
+    playerMaxLives = 2 * 4;
+    playerCurLives = playerMaxLives;
+    playerInvincible = 0;
+
+    MYX_ResetHUD();
+    MYX_RegisterHUD(DrawLives);
+
+    MYX_ClearLayer2(MYX_TRANSPARENT_COLOR_INDEX8);
+    MYX_DrawHUD();
+
+    while (playerCurLives != 0 || !Character_FinishedDying(&player)) {
+        MYX_BeginFrame();
+
+        for (byte i = 0; i < enemyCount; i++) {
+            Character_Draw(&enemies[i]);
+            Character_ForwardBackwardMove(&enemies[i]);
+        }
+
+        for (byte i = 0; i < npcCount; i++)
+            Character_Draw(&npcs[i]);
+
+        if (playerInvincible == 0)
+            Character_Draw(&player);
+        else {
+            --playerInvincible;
+            if ((playerInvincible & 15) < 8)
+                Character_Draw(&player);
+        }
+
+        Character_HandleInput(&player);
+
+        MYX_SetMapVisibleCenter(player.x, player.y);
+
+        npcCollidedThisFrame = false;
+        MYX_EndFrame();
+        if (!npcCollidedThisFrame)
+            npcCollided = false;
+    }
+
+    MYX_ResetQuests();
+    MYX_DisplayNotification("You Died!");
+}
+
 void GameMain()
 {
     /*
@@ -176,53 +285,8 @@ void GameMain()
     */
 
     MYX_SetFont(&font_BitPotionExt);
-    MYX_DrawString(0, -30, "Hello, world!", 0xff);
-
     MYX_SetSpritePalette(0, SpritePalette, 4*16);
 
-    firstFarmer = NULL;
-    firstRedDemon = NULL;
-    npcCount = 0;
-    enemyCount = 0;
-    MYX_LoadTileset(TilesetData);
-    MYX_LoadMap(&map_park_tmx, &MapObjectHandler);
-
-    int px = MYX_PlayerX * MYX_TILE_WIDTH;
-    int py = MYX_PlayerY * MYX_TILE_HEIGHT;
-    Character_Init(&player, px, py, TAG_PLAYER, SwordsmanData);
-    player.attackTag = TAG_PLAYER_ATTACK;
-
-    /*
-    int demonX = 14 * MYX_TILE_WIDTH;
-    int demonY = 2 * MYX_TILE_HEIGHT;
-    Character_Init(&demon, demonX, demonY, RedDemonData);
-    demon.direction = DIR_LEFT;
-    */
-
-    MYX_SetCollisionCallback(TAG_PLAYER, OnPlayerCollision);
-    MYX_SetCollisionCallback(TAG_PLAYER_ATTACK, OnPlayerAttackCollision);
-
-    for (;;) {
-        MYX_BeginFrame();
-
-        for (byte i = 0; i < enemyCount; i++) {
-            Character_Draw(&enemies[i]);
-            Character_ForwardBackwardMove(&enemies[i]);
-        }
-
-        for (byte i = 0; i < npcCount; i++)
-            Character_Draw(&npcs[i]);
-
-        Character_Draw(&player);
-        Character_HandleInput(&player);
-
-        MYX_AddCollision(player.x, player.y, 16, 16, TAG_PLAYER);
-
-        MYX_SetMapVisibleCenter(player.x, player.y);
-
-        npcCollidedThisFrame = false;
-        MYX_EndFrame();
-        if (!npcCollidedThisFrame)
-            npcCollided = false;
-    }
+    for (;;)
+        RunLevel();
 }
