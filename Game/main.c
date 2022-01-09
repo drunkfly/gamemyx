@@ -4,29 +4,19 @@
  */
 #include "engine.h"
 #include "character.h"
-#include "Data/Fonts.h"
-
-#define SPRITE_PALETTE_COUNT 2
-static const byte SpritePalette[] = {
-#include "Data/Palettes/SwordsmanPalette.h"
-#include "Data/Palettes/SwordsmanDeathPalette.h"
-};
-
-#include "Data/swordsman.h"
-
-void RunLevel()
-{
-    MYX_ResetQuests();
-    MYX_DestroyAllAnimSprites();
-    MYX_DestroyAllSprites();
-    MYX_ClearInventory();
-}
+#include "data/data.h"
+#include "level.h"
 
 void GameMain()
 {
-    MYX_SetFont(&font_BitPotionExt);
-    MYX_SetSpritePalette(0, SpritePalette, SPRITE_PALETTE_COUNT * 16);
+    /* load common data: sprites, palettes, etc. into memory */
+    GAME_LoadData();
 
-    for (;;)
-        RunLevel();
+    /* load first game level */
+    GAME_LoadLevel(&map_New_Year_Home_tmx);
+    MYX_LoadTileset(InsideTileset, INSIDETILESET_BANK);
+
+    for (;;) {
+        GAME_RunLevel();
+    }
 }

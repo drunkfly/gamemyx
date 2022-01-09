@@ -112,20 +112,33 @@ IMPORTER(
     )
 
 IMPORTER(
-    #-loadtsx "${src}/tiles_new.tsx"
+    -loadtsx "${src}/Tiles/inside.tsx"
+    -loadtsx "${src}/Tiles/village.tsx"
     -loadtsx "${src}/control.tsx"
 
     -startbank 7
 
-    #-loadtmx "${src}/park.tmx"
-    #-loadtmx "${src}/stone.tmx"
-    -outtiles4 Tileset
-    -outsymlist "${bin}/Tilesets.h"
-    -outmaps "${bin}/Maps.h"
+    -loadtmx "${src}/New_Year_Home.tmx"
+    -outtiles4 InsideTileset
+    -outsymlist "${bin}/InsideTilesets.h"
+    -outmaps "${bin}/InsideMaps.h"
 
     -loadfnt "${src}/BitPotion/BitPotionExt.fnt"
     -loadfnt "${src}/BitPotion/BitPotionExt_Black.fnt"
     -outfontlist "${bin}/Fonts.h"
+    )
+
+IMPORTER(
+    -loadtsx "${src}/Tiles/inside.tsx"
+    -loadtsx "${src}/Tiles/village.tsx"
+    -loadtsx "${src}/control.tsx"
+
+    -startbank 8
+
+    -loadtmx "${src}/New_Year_Forest.tmx"
+    -outtiles4 ForestTileset
+    -outsymlist "${bin}/ForestTilesets.h"
+    -outmaps "${bin}/ForestMaps.h"
     )
 
 IMPORTER(
